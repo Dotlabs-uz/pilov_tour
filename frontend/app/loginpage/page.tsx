@@ -2,6 +2,17 @@
 import { useState, ChangeEvent } from "react";
 import { account, ID } from "../appwrite";
 import type { Models } from "appwrite";
+import Image from "next/image";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Autoplay from "embla-carousel-autoplay";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface FormState {
   email: string;
@@ -65,35 +76,69 @@ export default function LoginPage() {
   }
 
   return (
-    <div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <input
-        name="email"
-        type="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-      />
-      <input
-        name="password"
-        type="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={handleChange}
-      />
-      <input
-        name="name"
-        type="text"
-        placeholder="Name"
-        value={form.name}
-        onChange={handleChange}
-      />
-      <button onClick={login} disabled={loading}>
-        Login
-      </button>
-      <button onClick={register} disabled={loading}>
-        Register
-      </button>
-    </div>
+    <>
+      <div className="flex p-10 pl-20 gap-50 justify-center">
+        <div className="flex flex-col gap-10">
+          <Image src={"/logo.png"} width={200} height={50} alt="Logo" />
+          <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-4">
+              <p className="text-5xl font-semibold ">Login</p>
+              <span className="">Login to access your Golobe account</span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-2 ">
+            <Input className="" placeholder="Enter your email" type="text" />
+            <Input className="" placeholder="Enter password" type="text" />
+            <div className="flex max-h-[100px] justify-between items-center">
+              <div className="flex items-center justify-center gap-2">
+                <input type="checkbox" />
+                <p className="text-gray-800 font-semibold">Remember Me</p>
+              </div>
+              <span className="text-red-400 text-xl font-semibold cursor-pointer">
+                Forgot Password
+              </span>
+            </div>
+          </div>
+          <Button className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold">
+            Login
+          </Button>
+          <div className="flex justify-center items-center gap-2">
+            <span className="">Don't have an account?</span>
+            <p className="text-red-400 cursor-pointer hover:text-red-500 hover:font-bold transition-all">
+              Sign up
+            </p>
+          </div>
+        </div>
+        <Carousel className="flex items-center justify-center"
+          plugins={[
+            Autoplay({
+              delay: 2000,
+            }),
+          ]}
+          opts={{
+            align: 'start',
+            slidesToScroll: 1,
+          }}>
+          <CarouselContent>
+            <CarouselItem>
+              <Image
+                src="/preview-login1.png"
+                alt="photo"
+                width={618}
+                height={816}
+              />
+            </CarouselItem>
+            <CarouselItem>
+              <Image
+                src="/preview-login2.png"
+                alt="photo"
+                width={618}
+                height={816}
+              />
+            </CarouselItem>
+          </CarouselContent>
+        </Carousel>
+      </div>
+    </>
   );
 }
