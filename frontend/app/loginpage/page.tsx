@@ -10,14 +10,11 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 
 interface FormState {
   email: string;
   password: string;
-  name: string;
 }
 
 export default function LoginPage() {
@@ -27,7 +24,6 @@ export default function LoginPage() {
   const [form, setForm] = useState<FormState>({
     email: "",
     password: "",
-    name: "",
   });
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
@@ -52,7 +48,7 @@ export default function LoginPage() {
   const register = async () => {
     try {
       setLoading(true);
-      await account.create(ID.unique(), form.email, form.password, form.name);
+      await account.create(ID.unique(), form.email, form.password);
       await login();
     } catch (err: any) {
       setError(err.message || "Registration failed");
@@ -87,8 +83,22 @@ export default function LoginPage() {
             </div>
           </div>
           <div className="flex flex-col gap-2 ">
-            <Input className="" placeholder="Enter your email" type="text" />
-            <Input className="" placeholder="Enter password" type="text" />
+            <Input
+              value={form.email}
+              name="email"
+              onChange={handleChange}
+              className=""
+              placeholder="Enter your email"
+              type="email"
+            />
+            <Input
+              value={form.password}
+              name="password"
+              onChange={handleChange}
+              className=""
+              placeholder="Enter password"
+              type="text"
+            />
             <div className="flex max-h-[100px] justify-between items-center">
               <div className="flex items-center justify-center gap-2">
                 <input type="checkbox" />
@@ -99,7 +109,10 @@ export default function LoginPage() {
               </span>
             </div>
           </div>
-          <Button className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold">
+          <Button
+            onClick={register}
+            className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold"
+          >
             Login
           </Button>
           <div className="flex justify-center items-center gap-2">
@@ -109,16 +122,18 @@ export default function LoginPage() {
             </p>
           </div>
         </div>
-        <Carousel className="flex items-center justify-center"
+        <Carousel
+          className="flex items-center justify-center"
           plugins={[
             Autoplay({
               delay: 2000,
             }),
           ]}
           opts={{
-            align: 'start',
+            align: "start",
             slidesToScroll: 1,
-          }}>
+          }}
+        >
           <CarouselContent>
             <CarouselItem>
               <Image
