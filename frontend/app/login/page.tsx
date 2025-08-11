@@ -11,6 +11,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
+import { useRouter } from "next/navigation";
 
 interface FormState {
   email: string;
@@ -18,6 +19,7 @@ interface FormState {
 }
 
 export default function LoginPage() {
+  const router = useRouter();
   const [user, setUser] = useState<Models.User<Models.Preferences> | null>(
     null
   );
@@ -79,7 +81,9 @@ export default function LoginPage() {
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-4">
               <p className="text-5xl font-semibold ">Login</p>
-              <span className="">Login to access your Golobe account</span>
+              <span className="text-[#112211] text-lg font-light">
+                Let’s get you all st up so you can access your personal account.
+              </span>
             </div>
           </div>
           <div className="flex flex-col gap-2 ">
@@ -117,7 +121,10 @@ export default function LoginPage() {
           </Button>
           <div className="flex justify-center items-center gap-2">
             <span className="">Don't have an account?</span>
-            <p className="text-red-400 cursor-pointer hover:text-red-500 hover:font-bold transition-all">
+            <p
+              onClick={() => router.push("/signup")}
+              className="text-red-400 cursor-pointer hover:text-red-500 hover:font-bold transition-all"
+            >
               Sign up
             </p>
           </div>
