@@ -55,13 +55,10 @@ export default function SignUp() {
       setLoading(true);
       setError("");
 
-      // Создаём пользователя
       await account.create(ID.unique(), form.email, form.password, form.name);
 
-      // Авторизуем сразу после создания
       await account.createEmailPasswordSession(form.email, form.password);
 
-      // Теперь можно обновить prefs
       await account.updatePrefs({
         phone: String(form.phone),
         surname: form.surname,
