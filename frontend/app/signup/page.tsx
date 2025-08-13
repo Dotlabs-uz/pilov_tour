@@ -65,7 +65,7 @@ export default function SignUp() {
       });
 
       setUser(await account.get());
-      router.push("/dashboard");
+      router.push("/");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Registration failed");
