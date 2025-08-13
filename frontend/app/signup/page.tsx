@@ -50,24 +50,27 @@ export default function SignUp() {
       setError("Passwords do not match");
       return;
     }
+
     try {
       setLoading(true);
       setError("");
+
       // Создаём пользователя
       await account.create(ID.unique(), form.email, form.password, form.name);
 
-      // Сохраняем доп. данные в prefs
+      // Авторизуем сразу после создания
+      await account.createEmailPasswordSession(form.email, form.password);
+
+      // Теперь можно обновить prefs
       await account.updatePrefs({
-        phone: form.phone,
+        phone: String(form.phone),
         surname: form.surname,
       });
 
-      // Авторизуем
-      await account.createEmailPasswordSession(form.email, form.password);
       setUser(await account.get());
-
       router.push("/dashboard");
     } catch (err: any) {
+      console.error(err);
       setError(err.message || "Registration failed");
     } finally {
       setLoading(false);
@@ -223,7 +226,7 @@ export default function SignUp() {
             onClick={register}
             className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold"
           >
-            Create account
+            {loading ? "Creating account..." : "Create account"}
           </Button>
           <div className="flex justify-center gap-2">
             <span>Already have an account?</span>

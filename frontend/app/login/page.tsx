@@ -39,9 +39,11 @@ export default function LoginPage() {
       setLoading(true);
       await account.createEmailPasswordSession(form.email, form.password);
       const currentUser = await account.get();
+      console.log("Logged in");
       setUser(currentUser);
     } catch (err: any) {
       setError(err.message || "Login failed");
+      console.log("Loggin error", err.message);
     } finally {
       setLoading(false);
     }
@@ -117,7 +119,7 @@ export default function LoginPage() {
             onClick={register}
             className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold"
           >
-            Login
+            {loading ? "Loging In...." : "Login"}
           </Button>
           <div className="flex justify-center items-center gap-2">
             <span className="">Don't have an account?</span>

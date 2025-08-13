@@ -1,0 +1,52 @@
+// const authInputs = [
+//   {
+//     name: "name",
+//     value: form.name,
+//     onChange: handleChange,
+//     className: "w-[308px] h-[56px]",
+//     placeholder: "Enter your name",
+//     type: "text",
+//   },
+//   {
+//     name: "email",
+//     value: form.email,
+//     onChange: handleChange,
+//     className: "w-[308px] h-[56px]",
+//     placeholder: "Enter email",
+//     type: "email",
+//   },
+//   {
+//     name: "surname",
+//     value: form.surname,
+//     onChange: handleChange,
+//     className: "w-[308px] h-[56px]",
+//     placeholder: "Surname",
+//     type: "text",
+//   },
+//   {
+//     name: "phone",
+//     value: form.phone,
+//     onChange: handleChange,
+//     className: "w-[308px] h-[56px]",
+//     placeholder: "Enter your phone number",
+//     type: "tel",
+//   },
+//   {
+//     name: "password",
+//     value: form.password,
+//     onChange: handleChange,
+//     className: "w-[640px] h-[56px]",
+//     placeholder: "Enter password",
+//     type: showPassword ? "text" : "password",
+//     withEye: true, // флаг для отображения кнопки-глаза
+//   },
+//   {
+//     name: "confirmPassword",
+//     value: form.confirmPassword,
+//     onChange: handleChange,
+//     className: "w-[640px] h-[56px]",
+//     placeholder: "Confirm password",
+//     type: showPassword ? "text" : "password",
+//     withEye: true,
+//   },
+// ];
