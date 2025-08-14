@@ -5,6 +5,7 @@ import Image from "next/image";
 import { account } from "./appwrite";
 import { useRouter } from "next/navigation";
 import type { Models } from "appwrite";
+import LandingPage from "@/containers/LandingPage";
 
 export default function Home() {
   const router = useRouter();
@@ -52,7 +53,9 @@ export default function Home() {
         </>
       ) : (
         <p>Loading...</p>
+      
       )}
+      {/* <LandingPage/> */}
     </div>
   );
 }

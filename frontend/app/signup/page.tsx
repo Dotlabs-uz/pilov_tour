@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Autoplay from "embla-carousel-autoplay";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaApple, FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
 
 import {
   Carousel,
@@ -14,6 +14,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 
 interface FormState {
   email: string;
@@ -136,7 +137,7 @@ export default function SignUp() {
 
         <div className="flex flex-col gap-10">
           <Image src={"/logo.png"} width={200} height={50} alt="Logo" />
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col mt-10 gap-5">
             <div className="flex flex-col gap-4">
               <p className="text-5xl font-semibold ">Sign Up</p>
               <span className="text-[#112211] text-lg font-light">
@@ -274,6 +275,24 @@ export default function SignUp() {
             >
               Login
             </p>
+          </div>
+          <div className="flex flex-col gap-5 items-center">
+            <div className="flex w-full max-w-[640px] items-center gap-2">
+              <hr className="bg-gray-500 border-1 w-62 border-gray-300" />
+              <p className="flex text-gray-500">Or Sign up with</p>
+              <hr className="bg-gray-500 border-1 w-62 border-gray-300" />
+            </div>
+            <div className="flex max-w-[640px] gap-5 items-center">
+              <Button className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
+                <FcGoogle className="w-[24px] h-[24px]" />
+              </Button>
+              <Button className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
+                <FaApple className="w-[24px] h-[24px]" color="black" />
+              </Button>
+              <Button className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
+                <FaFacebook className="fill-[#1877F2] w-[24px] h-[24px]" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
