@@ -46,6 +46,17 @@ export default function SignUp() {
   };
 
   const register = async () => {
+    if (
+      !form.name ||
+      !form.email ||
+      !form.confirmPassword ||
+      !form.password ||
+      !form.phone ||
+      !form.surname
+    ) {
+      setError("Please fill all fields");
+      return;
+    }
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -144,6 +155,11 @@ export default function SignUp() {
                   placeholder="Enter your name"
                   type="text"
                 />
+                {error && (
+                  <p className="text-red-500 text-center font-semibold text-lg">
+                    {error}!
+                  </p>
+                )}
                 <Input
                   value={form.email}
                   name="email"
@@ -152,6 +168,11 @@ export default function SignUp() {
                   placeholder="Enter email"
                   type="email"
                 />
+                {error && (
+                  <p className="text-red-500 text-center font-semibold text-lg">
+                    {error}!
+                  </p>
+                )}
               </div>
               <div className="flex flex-col gap-2">
                 <Input
@@ -162,6 +183,11 @@ export default function SignUp() {
                   placeholder="Surname"
                   type="text"
                 />
+                {error && (
+                  <p className="text-red-500 text-center font-semibold text-lg">
+                    {error}!
+                  </p>
+                )}
                 <Input
                   value={form.phone}
                   name="phone"
@@ -170,6 +196,11 @@ export default function SignUp() {
                   placeholder="Enter your phone number"
                   type="tel"
                 />
+                {error && (
+                  <p className="text-red-500 text-center font-semibold text-lg">
+                    {error}!
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex flex-col gap-2">
@@ -189,6 +220,11 @@ export default function SignUp() {
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
+                {error && (
+                  <p className="text-red-500 text-center font-semibold text-lg">
+                    {error}!
+                  </p>
+                )}
               </div>
               <div className="relative">
                 <Input
@@ -206,6 +242,11 @@ export default function SignUp() {
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
+                {error && (
+                  <p className="text-red-500 text-center font-semibold text-lg">
+                    {error}!
+                  </p>
+                )}
               </div>
             </div>
             <div className="flex max-h-[100px] justify-between items-center">
@@ -221,7 +262,7 @@ export default function SignUp() {
           </div>
           <Button
             onClick={register}
-            className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold"
+            className="w-[640px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold"
           >
             {loading ? "Creating account..." : "Create account"}
           </Button>
