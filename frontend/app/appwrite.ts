@@ -1,10 +1,23 @@
-import { Client, Account } from 'appwrite';
+import { Client, Account, Databases, Storage } from "appwrite";
 
-export const client = new Client();
+export const appwriteConfig = {
+  endpointUrl: process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "",
+  projectId: process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || "",
+  apiKey: process.env.NEXT_PUBLIC_APPWRITE_API_KEY || "",
+  databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
+  userCollectionId: process.env.NEXT_PUBLIC_APPWRITE_USERS_COLLECTION_ID || "",
+  tourCollectionId: process.env.NEXT_PUBLIC_APPWRITE_TOURS_COLLECTION_ID,
+};
+
+const client = new Client();
 
 client
-  .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "")
-  .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || ""); // Replace with your project ID
+  .setEndpoint(appwriteConfig.endpointUrl)
+  .setProject(appwriteConfig.projectId); // Replace with your project ID
 
-export const account = new Account(client);
-export { ID } from 'appwrite';
+const account = new Account(client);
+const database = new Databases(client);
+const storage = new Storage(client);
+
+export { account, database, storage, client };
+export { ID } from "appwrite";

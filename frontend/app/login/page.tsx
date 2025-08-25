@@ -1,7 +1,7 @@
 "use client";
 import { useState, ChangeEvent } from "react";
-import { account } from "../appwrite";
-import type { Models } from "appwrite";
+import { account, appwriteConfig, database } from "../appwrite";
+import { ID, OAuthProvider, Query, type Models } from "appwrite";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,46 @@ interface FormState {
   email: string;
   password: string;
 }
+
+export const loginWithGoogle = async () => {
+  try {
+    // Открываем OAuth окно
+    await account.createOAuth2Session(
+      OAuthProvider.Google,
+      `${window.location.origin}/`,
+      `${window.location.origin}/404`
+    );
+
+    // Получаем юзера
+    const currentUser = await account.get();
+
+    // Проверяем — есть ли он уже в базе
+    const existing = await database.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [
+        // фильтруем по email
+        Query.equal("email", currentUser.email),
+      ]
+    );
+
+    if (existing.documents.length === 0) {
+      // Создаём запись в базе, если нет
+      await database.createDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.userCollectionId,
+        ID.unique(),
+        {
+          userId: currentUser.$id,
+          email: currentUser.email,
+          name: currentUser.name || "",
+        }
+      );
+    }
+  } catch (e) {
+    console.error("OAuth login error:", e);
+  }
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -133,7 +173,10 @@ export default function LoginPage() {
             <hr className="bg-gray-500 border-1 w-50 border-gray-300" />
           </div>
           <div className="flex gap-5 items-center">
-            <Button className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
+            <Button
+              onClick={loginWithGoogle}
+              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer"
+            >
               <FcGoogle className="w-[24px] h-[24px]" />
             </Button>
             <Button className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">

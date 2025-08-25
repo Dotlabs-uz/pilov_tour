@@ -1,6 +1,6 @@
 "use client";
 import { useState, ChangeEvent } from "react";
-import { account, ID } from "../appwrite";
+import { account, appwriteConfig, database, ID } from "../appwrite";
 import type { Models } from "appwrite";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
+import { loginWithGoogle } from "../login/page";
 
 interface FormState {
   email: string;
@@ -82,6 +83,18 @@ export default function SignUp() {
       console.error(err);
       setError(err.message || "Registration failed");
     } finally {
+      await database.createDocument(
+        appwriteConfig.databaseId,
+        appwriteConfig.userCollectionId,
+        ID.unique(),
+        {
+          name: form.name,
+          surname: form.surname,
+          email: form.email,
+          phone: form.phone,
+          password: form.password,
+        }
+      );
       setLoading(false);
     }
   };
@@ -283,7 +296,10 @@ export default function SignUp() {
               <hr className="bg-gray-500 border-1 w-62 border-gray-300" />
             </div>
             <div className="flex max-w-[640px] gap-5 items-center">
-              <Button className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
+              <Button
+                onClick={loginWithGoogle}
+                className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer"
+              >
                 <FcGoogle className="w-[24px] h-[24px]" />
               </Button>
               <Button className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
