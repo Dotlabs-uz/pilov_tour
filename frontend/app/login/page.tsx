@@ -22,28 +22,23 @@ interface FormState {
 
 export const loginWithGoogle = async () => {
   try {
-    // Открываем OAuth окно
     await account.createOAuth2Session(
       OAuthProvider.Google,
       `${window.location.origin}/`,
       `${window.location.origin}/404`
     );
 
-    // Получаем юзера
     const currentUser = await account.get();
 
-    // Проверяем — есть ли он уже в базе
     const existing = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
       [
-        // фильтруем по email
         Query.equal("email", currentUser.email),
       ]
     );
 
     if (existing.documents.length === 0) {
-      // Создаём запись в базе, если нет
       await database.createDocument(
         appwriteConfig.databaseId,
         appwriteConfig.userCollectionId,

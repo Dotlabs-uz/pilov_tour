@@ -20,7 +20,7 @@ export default function Home() {
       try {
         const currentUser = await account.get();
 
-        // 🔥 проверка — есть ли уже юзер в базе
+        // проверка — есть ли уже юзер в базе
         const existing = await database.listDocuments(
           appwriteConfig.databaseId,
           appwriteConfig.userCollectionId,
@@ -35,7 +35,7 @@ export default function Home() {
             {
               email: currentUser.email,
               name: currentUser.name || "",
-              avatar: currentUser.prefs?.oauth2?.avatar || "", // 🖼️ сохраняем фото
+              avatar: currentUser.prefs?.oauth2?.avatar || "", 
             }
           );
         }
@@ -64,7 +64,7 @@ export default function Home() {
         {user ? (
           <>
             <Image
-              src={user.prefs?.avatarUrl   || "/avatar-default.svg"}
+              src={user.prefs?.avatarUrl|| "/avatar-default.svg"}
               alt={user.name || "User"}
               width={40}
               height={40}
