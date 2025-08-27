@@ -73,14 +73,11 @@ export default function LoginPage() {
       setLoading(true);
       setError("");
 
-      // создаём сессию
       await account.createEmailPasswordSession(form.email, form.password);
 
-      // получаем данные пользователя
       const currentUser = await account.get();
       setUser(currentUser);
 
-      // редирект на главную
       router.push("/");
     } catch (err: any) {
       console.error("Login error:", err);

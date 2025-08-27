@@ -20,7 +20,6 @@ export default function Home() {
       try {
         const currentUser = await account.get();
 
-        // проверка — есть ли уже юзер в базе
         const existing = await database.listDocuments(
           appwriteConfig.databaseId,
           appwriteConfig.userCollectionId,
