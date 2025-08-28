@@ -8,6 +8,7 @@ import { ID, Query } from "appwrite";
 import LandingPage from "@/containers/LandingPage";
 import RecTrips from "@/containers/RecTrips";
 import Image from "next/image";
+import Reviews from "@/containers/Reviews";
 
 export default function Home() {
   const router = useRouter();
@@ -59,6 +60,7 @@ export default function Home() {
     <div className="mx-auto flex max-w-[1450px] mt-2 flex-col pr-2 pl-2">
       <LandingPage />
       <RecTrips />
+      <Reviews/>
       <div className="min-h-screen flex flex-col items-center justify-center gap-6">
         {user ? (
           <>

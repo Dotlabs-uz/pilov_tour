@@ -1,6 +1,8 @@
 "use client";
 
+import Card from "@/components/custom/Card";
 import { Button } from "@/components/ui/button";
+import { HotelsFlights } from "@/utils/Flights&Hotels";
 
 const recTrip = [
   {
@@ -48,7 +50,7 @@ const recTrip = [
 
 const RecTrips = () => {
   return (
-    <div className="flex flex-col mt-50 gap-6">
+    <div className="flex max-w-[1232px] mx-auto flex-col mt-50 gap-6">
       {/* Заголовок */}
       <div className="flex w-full justify-between items-center">
         <div className="flex flex-col gap-1">
@@ -79,6 +81,18 @@ const RecTrips = () => {
               <span className="text-sm text-gray-500">{trip.desc}</span>
             </div>
           </div>
+        ))}
+      </div>
+
+      <div className="flex mt-10 items-center gap-20 justify-between">
+        {HotelsFlights.map((item, i) => (
+          <Card
+            key={i}
+            name={item.name}
+            description={item.description}
+            image={item.imageUrl}
+            button={item.button}
+          />
         ))}
       </div>
     </div>
