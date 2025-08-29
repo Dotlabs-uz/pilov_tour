@@ -1,5 +1,6 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { account, appwriteConfig, database, ID } from "../appwrite";
 import type { Models } from "appwrite";
 import Image from "next/image";
@@ -7,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Autoplay from "embla-carousel-autoplay";
 import { FaApple, FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
-
 import {
   Carousel,
   CarouselContent,
@@ -17,13 +17,14 @@ import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { loginWithGoogle } from "../login/page";
 
-interface FormState {
+interface FormData {
   email: string;
   password: string;
   name: string;
-  phone: number;
+  phone: string;
   surname: string;
   confirmPassword: string;
+  agreeToTerms: boolean;
 }
 
 export default function SignUp() {
@@ -32,70 +33,66 @@ export default function SignUp() {
     null
   );
   const [showPassword, setShowPassword] = useState(false);
-  const [form, setForm] = useState<FormState>({
-    email: "",
-    password: "",
-    name: "",
-    surname: "",
-    phone: 0,
-    confirmPassword: "",
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+    watch,
+    trigger,
+  } = useForm<FormData>({
+    defaultValues: {
+      email: "",
+      password: "",
+      name: "",
+      surname: "",
+      phone: "",
+      confirmPassword: "",
+      agreeToTerms: false,
+    },
   });
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const password = watch("password");
+  const agreeToTerms = watch("agreeToTerms");
 
-  const register = async () => {
-    if (
-      !form.name ||
-      !form.email ||
-      !form.confirmPassword ||
-      !form.password ||
-      !form.phone ||
-      !form.surname
-    ) {
-      setError("Please fill all fields");
-      return;
-    }
-    if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
-
+  const onSubmit = async (data: FormData) => {
     try {
-      setLoading(true);
-      setError("");
+      if (!data.agreeToTerms) {
+        setError("agreeToTerms", {
+          message: "You must agree to the Terms and Privacy Policies",
+        });
+        return;
+      }
 
-      await account.create(ID.unique(), form.email, form.password, form.name);
-
-      await account.createEmailPasswordSession(form.email, form.password);
-
+      await account.create(ID.unique(), data.email, data.password, data.name);
+      await account.createEmailPasswordSession(data.email, data.password);
       await account.updatePrefs({
-        phone: String(form.phone),
-        surname: form.surname,
+        phone: data.phone,
+        surname: data.surname,
       });
 
-      setUser(await account.get());
-      router.push("/");
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || "Registration failed");
-    } finally {
+      // Create user document in database
       await database.createDocument(
         appwriteConfig.databaseId,
         appwriteConfig.userCollectionId,
         ID.unique(),
         {
-          name: form.name,
-          surname: form.surname,
-          email: form.email,
-          phone: form.phone,
-          password: form.password,
+          name: data.name,
+          surname: data.surname,
+          email: data.email,
+          phone: data.phone,
         }
       );
-      setLoading(false);
+
+      setUser(await account.get());
+      router.push("/");
+    } catch (err: any) {
+      console.error(err);
+      setError("root", {
+        message: err.message || "Registration failed. Please try again.",
+      });
     }
   };
 
@@ -154,75 +151,104 @@ export default function SignUp() {
             <div className="flex flex-col gap-4">
               <p className="text-5xl font-semibold ">Sign Up</p>
               <span className="text-[#112211] text-lg font-light">
-                Let’s get you all st up so you can access your personal account.
+                Let’s get you all set up so you can access your personal
+                account.
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-2 ">
+
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-2"
+          >
             <div className="flex items-center justify-between">
               <div className="flex pr-5 flex-col gap-2">
                 <Input
-                  value={form.name}
-                  name="name"
-                  onChange={handleChange}
+                  {...register("name", {
+                    required: "Name is required",
+                    minLength: {
+                      value: 2,
+                      message: "Name must be at least 2 characters",
+                    },
+                  })}
                   className="w-[308px] h-[56px]"
                   placeholder="Enter your name"
                   type="text"
                 />
-                {error && (
-                  <p className="text-red-500 text-center font-semibold text-lg">
-                    {error}!
+                {errors.name && (
+                  <p className="text-red-500 text-sm -mt-1">
+                    {errors.name.message}
                   </p>
                 )}
+
                 <Input
-                  value={form.email}
-                  name="email"
-                  onChange={handleChange}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
                   className="w-[308px] h-[56px]"
                   placeholder="Enter email"
                   type="email"
                 />
-                {error && (
-                  <p className="text-red-500 text-center font-semibold text-lg">
-                    {error}!
+                {errors.email && (
+                  <p className="text-red-500 text-sm -mt-1">
+                    {errors.email.message}
                   </p>
                 )}
               </div>
+
               <div className="flex flex-col gap-2">
                 <Input
-                  value={form.surname}
-                  name="surname"
-                  onChange={handleChange}
+                  {...register("surname", {
+                    required: "Surname is required",
+                    minLength: {
+                      value: 2,
+                      message: "Surname must be at least 2 characters",
+                    },
+                  })}
                   className="w-[308px] h-[56px]"
                   placeholder="Surname"
                   type="text"
                 />
-                {error && (
-                  <p className="text-red-500 text-center font-semibold text-lg">
-                    {error}!
+                {errors.surname && (
+                  <p className="text-red-500 text-sm -mt-1">
+                    {errors.surname.message}
                   </p>
                 )}
+
                 <Input
-                  value={form.phone}
-                  name="phone"
-                  onChange={handleChange}
+                  {...register("phone", {
+                    required: "Phone number is required",
+                    pattern: {
+                      value: /^[+]?[0-9]{8,15}$/,
+                      message: "Please enter a valid phone number",
+                    },
+                  })}
                   className="w-[308px] h-[56px]"
                   placeholder="Enter your phone number"
                   type="tel"
                 />
-                {error && (
-                  <p className="text-red-500 text-center font-semibold text-lg">
-                    {error}!
+                {errors.phone && (
+                  <p className="text-red-500 text-sm -mt-1">
+                    {errors.phone.message}
                   </p>
                 )}
               </div>
             </div>
+
             <div className="flex flex-col gap-2">
               <div className="relative">
                 <Input
-                  value={form.password}
-                  name="password"
-                  onChange={handleChange}
+                  {...register("password", {
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                  })}
                   className="w-[640px] h-[56px]"
                   placeholder="Enter password"
                   type={showPassword ? "text" : "password"}
@@ -234,61 +260,84 @@ export default function SignUp() {
                 >
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
-                {error && (
-                  <p className="text-red-500 text-center font-semibold text-lg">
-                    {error}!
+                {errors.password && (
+                  <p className="text-red-500 text-sm -mt-1">
+                    {errors.password.message}
                   </p>
                 )}
               </div>
+
               <div className="relative">
                 <Input
-                  value={form.confirmPassword}
-                  name="confirmPassword"
-                  onChange={handleChange}
+                  {...register("confirmPassword", {
+                    required: "Please confirm your password",
+                    validate: (value) =>
+                      value === password || "Passwords do not match",
+                  })}
                   className="w-[640px] h-[56px]"
-                  placeholder="Enter password"
-                  type={showPassword ? "text" : "password"}
+                  placeholder="Confirm password"
+                  type={showConfirmPassword ? "text" : "password"}
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
                   className="absolute top-1/2 right-3 -translate-y-1/2 transform cursor-pointer text-gray-500"
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                 </button>
-                {error && (
-                  <p className="text-red-500 text-center font-semibold text-lg">
-                    {error}!
+                {errors.confirmPassword && (
+                  <p className="text-red-500 text-sm -mt-1">
+                    {errors.confirmPassword.message}
                   </p>
                 )}
               </div>
             </div>
+
             <div className="flex max-h-[100px] justify-between items-center">
-              <div className="flex items-center justify-center gap-2">
-                <input type="checkbox" />
+              <label className="flex items-center justify-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  {...register("agreeToTerms", {
+                    required:
+                      "You must agree to the Terms and Privacy Policies",
+                  })}
+                />
                 <p className="text-gray-800 flex gap-1 font-semibold">
                   I agree to all the <span className="text-red-400">Terms</span>{" "}
                   and
                   <span className="text-red-400">Privacy Policies</span>
                 </p>
-              </div>
+              </label>
             </div>
-          </div>
-          <Button
-            onClick={register}
-            className="w-[640px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold"
-          >
-            {loading ? "Creating account..." : "Create account"}
-          </Button>
+            {errors.agreeToTerms && (
+              <p className="text-red-500 text-sm -mt-2">
+                {errors.agreeToTerms.message}
+              </p>
+            )}
+
+            {errors.root && (
+              <p className="text-red-500 text-sm">{errors.root.message}</p>
+            )}
+
+            <Button
+              type="submit"
+              disabled={isSubmitting || !agreeToTerms}
+              className="w-[640px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] cursor-pointer text-black text-lg text-center font-semibold disabled:opacity-50"
+            >
+              {isSubmitting ? "Creating account..." : "Create account"}
+            </Button>
+          </form>
+
           <div className="flex justify-center gap-2">
             <span>Already have an account?</span>
             <p
               onClick={() => router.push("/login")}
-              className="text-red-400 cursor-pointer"
+              className="text-red-400 cursor-pointer hover:text-red-500"
             >
               Login
             </p>
           </div>
+
           <div className="flex flex-col gap-5 items-center">
             <div className="flex w-full max-w-[640px] items-center gap-2">
               <hr className="bg-gray-500 border-1 w-62 border-gray-300" />

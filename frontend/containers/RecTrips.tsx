@@ -1,57 +1,37 @@
 "use client";
 
+import { appwriteConfig, database } from "@/app/appwrite";
 import Card from "@/components/custom/Card";
 import { Button } from "@/components/ui/button";
 import { HotelsFlights } from "@/utils/Flights&Hotels";
+import { useEffect, useState } from "react";
 
-const recTrip = [
-  {
-    name: "Istanbul, Turkey",
-    img: "/stanbul.png",
-    desc: "Flights • Hotels • Resorts",
-  },
-  {
-    name: "Sydney, Australia",
-    img: "/sydney.png",
-    desc: "Flights • Hotels • Resorts",
-  },
-  {
-    name: "Baku, Azerbaijan",
-    img: "/baku.png",
-    desc: "Flights • Hotels • Resorts",
-  },
-  {
-    name: "Malé, Maldives",
-    img: "/male.png",
-    desc: "Flights • Hotels • Resorts",
-  },
-  {
-    name: "Paris, France",
-    img: "/paris.png",
-    desc: "Flights • Hotels • Resorts",
-  },
-  {
-    name: "New York, US",
-    img: "/newyork.png",
-    desc: "Flights • Hotels • Resorts",
-  },
-  {
-    name: "London, UK",
-    img: "/london.png",
-    desc: "Flights • Hotels • Resorts",
-  },
-  {
-    name: "Tokyo, Japan",
-    img: "/tokyo.png",
-    desc: "Flights • Hotels • Resorts",
-  },
-  { name: "Dubai, UAE", img: "/dubai.png", desc: "Flights • Hotels • Resorts" },
-];
+interface TripDocument {
+  name: string;
+  imgUrl: string;
+  description: string;
+}
 
 const RecTrips = () => {
+  const [tours, setTours] = useState<TripDocument[]>();
+
+  useEffect(() => {
+    const fetchTrips = async () => {
+      try {
+        const response = await database.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.tourCollectionId
+        );
+        setTours(response.documents as unknown as TripDocument[]);
+      } catch (e) {
+        console.error("Something went wrong", e);
+      }
+    };
+    fetchTrips();
+  }, []);
+
   return (
     <div className="flex max-w-[1232px] mx-auto flex-col mt-50 gap-6">
-      {/* Заголовок */}
       <div className="flex w-full justify-between items-center">
         <div className="flex flex-col gap-1">
           <p className="text-xl font-semibold">Plan your perfect trip</p>
@@ -64,21 +44,20 @@ const RecTrips = () => {
         </Button>
       </div>
 
-      {/* Сетка карточек */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {recTrip.map((trip, i) => (
+        {tours?.map((trip, i) => (
           <div
             key={i}
             className="flex items-center gap-4 p-4 rounded-2xl border shadow-md hover:shadow-lg transition"
           >
             <img
-              src={trip.img}
+              src={trip.imgUrl}
               alt={trip.name}
               className="w-[90px] h-[90px] object-cover rounded-xl"
             />
             <div className="flex flex-col">
               <p className="font-medium text-gray-900">{trip.name}</p>
-              <span className="text-sm text-gray-500">{trip.desc}</span>
+              <span className="text-sm text-gray-500">{trip.description}</span>
             </div>
           </div>
         ))}

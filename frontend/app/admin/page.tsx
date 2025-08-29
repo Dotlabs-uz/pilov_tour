@@ -1,7 +1,9 @@
 const AdminPage = () => {
     return (
         <>
-        <div></div>
+        <div>
+            <p>Hello Admin!</p>
+        </div>
         </>
     );
 }

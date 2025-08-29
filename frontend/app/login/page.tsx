@@ -1,5 +1,6 @@
 "use client";
-import { useState, ChangeEvent } from "react";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { account, appwriteConfig, database } from "../appwrite";
 import { ID, OAuthProvider, Query, type Models } from "appwrite";
 import Image from "next/image";
@@ -15,9 +16,10 @@ import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
 
-interface FormState {
+interface FormData {
   email: string;
   password: string;
+  rememberMe: boolean;
 }
 
 export const loginWithGoogle = async () => {
@@ -33,9 +35,7 @@ export const loginWithGoogle = async () => {
     const existing = await database.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.userCollectionId,
-      [
-        Query.equal("email", currentUser.email),
-      ]
+      [Query.equal("email", currentUser.email)]
     );
 
     if (existing.documents.length === 0) {
@@ -60,30 +60,57 @@ export default function LoginPage() {
   const [user, setUser] = useState<Models.User<Models.Preferences> | null>(
     null
   );
-  const [form, setForm] = useState<FormState>({ email: "", password: "" });
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [socialLoading, setSocialLoading] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    setError,
+    setValue,
+  } = useForm<FormData>();
 
-  const login = async () => {
+  // Check for saved email on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberedEmail");
+    if (savedEmail) {
+      setValue("email", savedEmail);
+      setValue("rememberMe", true);
+    }
+  }, [setValue]);
+
+  const onSubmit = async (data: FormData) => {
     try {
-      setLoading(true);
-      setError("");
+      if (data.rememberMe) {
+        localStorage.setItem("rememberedEmail", data.email);
+      } else {
+        localStorage.removeItem("rememberedEmail");
+      }
 
-      await account.createEmailPasswordSession(form.email, form.password);
-
+      await account.createEmailPasswordSession(data.email, data.password);
       const currentUser = await account.get();
       setUser(currentUser);
 
       router.push("/");
     } catch (err: any) {
       console.error("Login error:", err);
-      setError(err.message || "Login failed");
+      setError("root", {
+        message: err.message || "Login failed. Please check your credentials.",
+      });
+    }
+  };
+
+  const handleSocialLogin = async (loginFunction: () => Promise<void>) => {
+    try {
+      setSocialLoading(true);
+      await loginFunction();
+    } catch (err: any) {
+      console.error("Social login error:", err);
+      setError("root", {
+        message: "Social login failed. Please try again.",
+      });
     } finally {
-      setLoading(false);
+      setSocialLoading(false);
     }
   };
 
@@ -113,27 +140,49 @@ export default function LoginPage() {
             </span>
           </div>
         </div>
-        <div className="flex flex-col gap-2 ">
+
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
           <Input
-            value={form.email}
-            name="email"
-            onChange={handleChange}
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
             placeholder="Enter your email"
             type="email"
           />
+          {errors.email && (
+            <p className="text-red-500 text-sm -mt-1">{errors.email.message}</p>
+          )}
+
           <Input
-            value={form.password}
-            name="password"
-            onChange={handleChange}
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 8,
+                message: "Password must be at least 8 characters",
+              },
+            })}
             placeholder="Enter password"
             type="password"
           />
-          {error && <p className="text-red-500">{error}</p>}
+          {errors.password && (
+            <p className="text-red-500 text-sm -mt-1">
+              {errors.password.message}
+            </p>
+          )}
+
+          {errors.root && (
+            <p className="text-red-500 text-sm">{errors.root.message}</p>
+          )}
+
           <div className="flex max-h-[100px] justify-between items-center">
-            <div className="flex items-center justify-center gap-2">
-              <input type="checkbox" />
+            <label className="flex items-center justify-center gap-2 cursor-pointer">
+              <input type="checkbox" {...register("rememberMe")} />
               <p className="text-gray-800 font-semibold">Remember Me</p>
-            </div>
+            </label>
             <span
               onClick={() => router.push("/forgot-password")}
               className="text-red-400 text-xl font-semibold cursor-pointer"
@@ -141,13 +190,16 @@ export default function LoginPage() {
               Forgot Password
             </span>
           </div>
-        </div>
-        <Button
-          onClick={login}
-          className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] text-black text-lg font-semibold"
-        >
-          {loading ? "Logging In..." : "Login"}
-        </Button>
+
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] text-black text-lg font-semibold"
+          >
+            {isSubmitting ? "Logging In..." : "Login"}
+          </Button>
+        </form>
+
         <div className="flex justify-center items-center gap-2">
           <span>Don't have an account?</span>
           <p
@@ -166,15 +218,22 @@ export default function LoginPage() {
           </div>
           <div className="flex gap-5 items-center">
             <Button
-              onClick={loginWithGoogle}
-              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer"
+              onClick={() => handleSocialLogin(loginWithGoogle)}
+              disabled={socialLoading}
+              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer disabled:opacity-50"
             >
               <FcGoogle className="w-[24px] h-[24px]" />
             </Button>
-            <Button className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
+            <Button
+              disabled={socialLoading}
+              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer disabled:opacity-50"
+            >
               <FaApple className="w-[24px] h-[24px]" color="black" />
             </Button>
-            <Button className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
+            <Button
+              disabled={socialLoading}
+              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer disabled:opacity-50"
+            >
               <FaFacebook className="fill-[#1877F2] w-[24px] h-[24px]" />
             </Button>
           </div>
