@@ -1,59 +1,22 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { account, appwriteConfig, database } from "../appwrite";
-import { ID, OAuthProvider, Query, type Models } from "appwrite";
+import { account } from "@/app/(public)/appwrite";
+import { type Models } from "appwrite";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Autoplay from "embla-carousel-autoplay";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
+import AuthSlider from "@/containers/auth-slider";
+import { loginWithGoogle } from "@/lib/loginWithGoogle";
 
 interface FormData {
   email: string;
   password: string;
   rememberMe: boolean;
 }
-
-export const loginWithGoogle = async () => {
-  try {
-    await account.createOAuth2Session(
-      OAuthProvider.Google,
-      `${window.location.origin}/`,
-      `${window.location.origin}/404`
-    );
-
-    const currentUser = await account.get();
-
-    const existing = await database.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.userCollectionId,
-      [Query.equal("email", currentUser.email)]
-    );
-
-    if (existing.documents.length === 0) {
-      await database.createDocument(
-        appwriteConfig.databaseId,
-        appwriteConfig.userCollectionId,
-        ID.unique(),
-        {
-          userId: currentUser.$id,
-          email: currentUser.email,
-          name: currentUser.name || "",
-        }
-      );
-    }
-  } catch (e) {
-    console.error("OAuth login error:", e);
-  }
-};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -239,38 +202,10 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-
-      <Carousel
-        className="flex items-center justify-center"
-        plugins={[
-          Autoplay({
-            delay: 2000,
-          }),
-        ]}
-        opts={{
-          align: "start",
-          slidesToScroll: 1,
-        }}
-      >
-        <CarouselContent>
-          <CarouselItem>
-            <Image
-              src="/preview-login1.png"
-              alt="photo"
-              width={618}
-              height={816}
-            />
-          </CarouselItem>
-          <CarouselItem>
-            <Image
-              src="/preview-login2.png"
-              alt="photo"
-              width={618}
-              height={816}
-            />
-          </CarouselItem>
-        </CarouselContent>
-      </Carousel>
+      <AuthSlider
+        images={["/preview-login1.png", "/preview-login2.png"]}
+        delay={2000}
+      />
     </div>
   );
 }

@@ -1,21 +1,16 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { account, appwriteConfig, database, ID } from "../appwrite";
+import { account, appwriteConfig, database, ID } from "@/app/(public)/appwrite";
 import type { Models } from "appwrite";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Autoplay from "embla-carousel-autoplay";
 import { FaApple, FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
-import { loginWithGoogle } from "../login/page";
+import { loginWithGoogle } from "@/lib/loginWithGoogle";
+import AuthSlider from "@/containers/auth-slider";
 
 interface FormData {
   email: string;
@@ -56,7 +51,8 @@ export default function SignUp() {
 
   const password = watch("password");
   const agreeToTerms = watch("agreeToTerms");
-
+  // fix: Slider containered
+  // feat: Reviews are ready
   const onSubmit = async (data: FormData) => {
     try {
       if (!data.agreeToTerms) {
@@ -113,37 +109,10 @@ export default function SignUp() {
   return (
     <>
       <div className="flex p-10 pl-20 gap-50 justify-center">
-        <Carousel
-          className="flex items-center justify-center"
-          plugins={[
-            Autoplay({
-              delay: 2000,
-            }),
-          ]}
-          opts={{
-            align: "start",
-            slidesToScroll: 1,
-          }}
-        >
-          <CarouselContent>
-            <CarouselItem>
-              <Image
-                src="/preview-login1.png"
-                alt="photo"
-                width={618}
-                height={816}
-              />
-            </CarouselItem>
-            <CarouselItem>
-              <Image
-                src="/preview-login2.png"
-                alt="photo"
-                width={618}
-                height={816}
-              />
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
+        <AuthSlider
+          images={["/preview-login1.png", "/preview-login2.png"]}
+          delay={2000}
+        />
 
         <div className="flex flex-col gap-10">
           <Image src={"/logo.png"} width={200} height={50} alt="Logo" />

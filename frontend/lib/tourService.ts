@@ -1,6 +1,6 @@
 // lib/tourService.ts
-import { database, storage, ID } from "@/app/appwrite";
-import { appwriteConfig } from "@/app/appwrite";
+import { database, storage, ID } from "@/app/(public)/appwrite";
+import { appwriteConfig } from "@/app/(public)/appwrite";
 
 export interface TourData {
   name: string;
@@ -50,7 +50,7 @@ export const createTour = async (tourData: TourData, imageFiles: File[]) => {
 };
 
 export const getImageUrl = (fileId: string): string => {
-  return storage.getFileView(appwriteConfig.bucketId, fileId).href;
+  return storage.getFileView(appwriteConfig.bucketId, fileId);
 };
 
 export const getAllTours = async () => {

@@ -6,6 +6,7 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Input } from "@/components/ui/input";
+import AuthSlider from "@/containers/auth-slider";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -60,38 +61,10 @@ const Reset = () => {
             </div>
           </div>
         </div>
-
-        <Carousel
-          className="flex items-center justify-center"
-          plugins={[
-            Autoplay({
-              delay: 2000,
-            }),
-          ]}
-          opts={{
-            align: "start",
-            slidesToScroll: 1,
-          }}
-        >
-          <CarouselContent>
-            <CarouselItem>
-              <Image
-                src="/preview-login1.png"
-                alt="photo"
-                width={618}
-                height={816}
-              />
-            </CarouselItem>
-            <CarouselItem>
-              <Image
-                src="/preview-login2.png"
-                alt="photo"
-                width={618}
-                height={816}
-              />
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
+        <AuthSlider
+          images={["/preview-login1.png", "/preview-login2.png"]}
+          delay={2000}
+        />
       </div>
     </>
   );

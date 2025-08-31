@@ -8,7 +8,7 @@ import { IoBed } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ID, Models, Query } from "appwrite";
-import { account, appwriteConfig, database } from "@/app/appwrite";
+import { account, appwriteConfig, database } from "@/app/(public)/appwrite";
 
 const Header = () => {
   const router = useRouter();
@@ -69,7 +69,7 @@ const Header = () => {
           {user ? (
             <>
               <Image
-                src={user.prefs?.avatarUrl || "/avatar-default.svg"}
+                src={user.avatar || "/avatar-default.svg"}
                 alt={user.name || "User"}
                 width={45}
                 height={45}

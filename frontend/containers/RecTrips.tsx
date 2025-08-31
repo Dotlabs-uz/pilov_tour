@@ -1,6 +1,6 @@
 "use client";
 
-import { appwriteConfig, database } from "@/app/appwrite";
+import { appwriteConfig, database } from "@/app/(public)/appwrite";
 import Card from "@/components/custom/Card";
 import { Button } from "@/components/ui/button";
 import { HotelsFlights } from "@/utils/Flights&Hotels";
