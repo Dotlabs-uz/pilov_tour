@@ -44,7 +44,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.appwrite_api.loadbalancer.server.port=80
-      - traefik.http.routers.appwrite_api.rule=Host(`api.${HOST}`) && PathPrefix(`/`)
+      - traefik.http.routers.appwrite_api.rule=Host(`appwrite.${HOST}`) && PathPrefix(`/`)
       - traefik.http.routers.appwrite_api.entrypoints=websecure
       - traefik.http.routers.appwrite_api.tls.certresolver=resolver
     volumes:
@@ -173,7 +173,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.appwrite-console.loadbalancer.server.port=80
-      - traefik.http.routers.appwrite-console.rule=Host(`console.${HOST}`) && PathPrefix(`/`)
+      - traefik.http.routers.appwrite-console.rule=Host(`appwrite.${HOST}`) && PathPrefix(`/v1/console`)
       - traefik.http.routers.appwrite-console.entrypoints=websecure
       - traefik.http.routers.appwrite-console.tls.certresolver=resolver
 
@@ -186,7 +186,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.appwrite-realtime.loadbalancer.server.port=80
-      - traefik.http.routers.appwrite-realtime.rule=Host(`realtime.${HOST}`) && PathPrefix(`/`)
+      - traefik.http.routers.appwrite-realtime.rule=Host(`appwrite.${HOST}`) && PathPrefix(`/v1/realtime`)
       - traefik.http.routers.appwrite-realtime.entrypoints=websecure
       - traefik.http.routers.appwrite-realtime.tls.certresolver=resolver
     networks:
