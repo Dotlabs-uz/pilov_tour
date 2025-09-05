@@ -171,19 +171,11 @@ services:
       - appwrite
       - dropin
     labels:
-      - "traefik.enable=true"
-      - "traefik.constraint-label-stack=appwrite"
-      - "traefik.docker.network=appwrite"
-      - "traefik.http.services.appwrite_console.loadbalancer.server.port=80"
-      #ws
-      - traefik.http.routers.appwrite_console_http.entrypoints=appwrite_web
-      - traefik.http.routers.appwrite_console_http.rule=PathPrefix(`/console`)
-      - traefik.http.routers.appwrite_console_http.service=appwrite_console
-      # wss
-      - traefik.http.routers.appwrite_console_https.entrypoints=appwrite_websecure
-      - traefik.http.routers.appwrite_console_https.rule=PathPrefix(`/console`)
-      - traefik.http.routers.appwrite_console_https.service=appwrite_console
-      - traefik.http.routers.appwrite_console_https.tls=true
+      - traefik.enable=true
+      - traefik.http.services.appwrite-console.loadbalancer.server.port=80
+      - traefik.http.routers.appwrite-console.rule=Host(`console.${HOST}`) && PathPrefix(`/`)
+      - traefik.http.routers.appwrite-console.entrypoints=websecure
+      - traefik.http.routers.appwrite-console.tls.certresolver=resolver
 
   appwrite-realtime:
     image: appwrite/appwrite:1.7.4
@@ -192,19 +184,11 @@ services:
     <<: *x-logging
     restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.constraint-label-stack=appwrite"
-      - "traefik.docker.network=appwrite"
-      - "traefik.http.services.appwrite_realtime.loadbalancer.server.port=80"
-      #ws
-      - traefik.http.routers.appwrite_realtime_ws.entrypoints=appwrite_web
-      - traefik.http.routers.appwrite_realtime_ws.rule=PathPrefix(`/v1/realtime`)
-      - traefik.http.routers.appwrite_realtime_ws.service=appwrite_realtime
-      # wss
-      - traefik.http.routers.appwrite_realtime_wss.entrypoints=appwrite_websecure
-      - traefik.http.routers.appwrite_realtime_wss.rule=PathPrefix(`/v1/realtime`)
-      - traefik.http.routers.appwrite_realtime_wss.service=appwrite_realtime
-      - traefik.http.routers.appwrite_realtime_wss.tls=true
+      - traefik.enable=true
+      - traefik.http.services.appwrite-realtime.loadbalancer.server.port=80
+      - traefik.http.routers.appwrite-realtime.rule=Host(`realtime.${HOST}`) && PathPrefix(`/`)
+      - traefik.http.routers.appwrite-realtime.entrypoints=websecure
+      - traefik.http.routers.appwrite-realtime.tls.certresolver=resolver
     networks:
       - appwrite
       - dropin
