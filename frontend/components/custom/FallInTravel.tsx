@@ -7,7 +7,7 @@ const FallInTravel = () => {
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-2">
               <p className="text-2xl font-semibold">Fall into travel</p>
-              <span className="text-lg font-light">
+              <span className="text-lg max-w-[800px] font-light">
                 Going somewhere to celebrate this season? Whether you’re going
                 home or somewhere to roam, we’ve got the travel tools to get you
                 to your destination.
@@ -19,7 +19,7 @@ const FallInTravel = () => {
           </div>
           <div className="flex gap-4 items-center justify-center">
             <TravelCard />
-            <TravelCard /> 
+            <TravelCard />
             <TravelCard />
             <TravelCard />
           </div>
