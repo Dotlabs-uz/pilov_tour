@@ -137,7 +137,7 @@ const FilterBlock = () => {
             >
               + Add Promo Code
             </button>
-            <Button className="bg-green-600 hover:bg-green-700 px-6 py-3">
+            <Button className="bg-green-600 cursor-pointer hover:bg-green-700 px-6 py-3">
               Show Flights
             </Button>
           </div>

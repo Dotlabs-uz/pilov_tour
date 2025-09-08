@@ -39,7 +39,7 @@ const RecTrips = () => {
             Search Flights & Places Hire to our most popular destinations
           </span>
         </div>
-        <Button className="bg-white text-[#112211] border border-[#8DD3BB]">
+        <Button className="bg-white cursor-pointer hover:bg-[#8DD3BB] text-[#112211] border border-[#8DD3BB]">
           See more places
         </Button>
       </div>

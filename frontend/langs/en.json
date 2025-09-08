@@ -1,3 +1,14 @@
 {
-    
+  "Header": {
+    "btn1": "Find Flight",
+    "btn2": "Find Stays",
+    "login": "Login",
+    "signup": "Sign up"
+  },
+
+  "LifeTravel": {
+    "title1": "Helping Others",
+    "title2": "Life & Travel",
+    "title3": "Special offers to suit your plan"
+  }
 }

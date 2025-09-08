@@ -1,9 +1,10 @@
-"use client";
-
-import FilterBlock from "@/components/custom/FilterBlock";
 import Header from "@/components/custom/Header";
+import { getTranslations } from "next-intl/server";
 
-const LifeTravel = ({ component }: { component: any }) => {
+export default async function LifeTravel({ component }: { component: any }) {
+  
+  const t = await getTranslations("LifeTravel");
+
   return (
     <>
       <section
@@ -14,25 +15,20 @@ const LifeTravel = ({ component }: { component: any }) => {
       >
         <Header />
 
-        {/* Текст */}
         <div className="flex h-[80%] flex-col items-center justify-center gap-2 text-center">
           <span className="text-white font-semibold text-[45px]">
-            Helping Others
+            {t("title1")}
           </span>
-          <p className="text-white font-bold text-[80px]">Life & Travel</p>
+          <p className="text-white font-bold text-[80px]">{t("title2")}</p>
           <span className="text-white font-semibold text-[20px]">
-            Special offers to suit your plan
+            {t("title3")}
           </span>
         </div>
 
-        {/* Фильтр */}
         <div className="absolute left-1/2 bottom-[-100px] -translate-x-1/2">
-          {/* <FilterBlock /> */}
           {component}
         </div>
       </section>
     </>
   );
-};
-
-export default LifeTravel;
+}

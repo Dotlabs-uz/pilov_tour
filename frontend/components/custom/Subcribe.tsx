@@ -28,8 +28,8 @@ const Subscribe: React.FC = () => {
             />
             <Button
               type="button"
-              className="w-[104px] h-[56px] rounded-md "
-                >
+              className="w-[104px] cursor-pointer hover:bg-[#8DD3BB] hover:border-white hover:border-1 hover:text-black transition-all h-[56px] rounded-md "
+            >
               Subscribe
             </Button>
           </div>

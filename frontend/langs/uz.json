@@ -1,3 +1,13 @@
 {
-    
+  "Header": {
+    "btn1": "Parvozni toping",
+    "btn2": "Joy toping",
+    "login": "Tizimga kirish",
+    "signup": "Ro'yxatdan o'tish"
+  },
+  "LifeTravel": {
+    "title1": "Boshqalarga yordam",
+    "title2": "Hayot va sayohat",
+    "title3": "Sizning rejangizga muvofiq maxsus takliflar"
+  }
 }
