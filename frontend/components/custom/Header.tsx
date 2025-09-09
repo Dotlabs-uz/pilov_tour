@@ -19,12 +19,16 @@ import {
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
+interface User {
+  name: string;
+  avatar: string;
+  email:string;
+}
+
 const Header = () => {
   const t = useTranslations("Header");
   const router = useRouter();
-  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(
-    null
-  );
+  const [user, setUser] = useState<User | null>(null);
 
   function handleChange(lang: string): void {
     document.cookie = `locale=${lang}; path=/`;
