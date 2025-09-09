@@ -7,13 +7,20 @@ const Footer: React.FC = () => {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-6 gap-8 mb-10">
           <div>
-            <Image
+            {/* <Image
               src="/logo-footer.png"
               alt="Golobe Logo"
               width={120}
               height={40}
               className="mb-6"
-            />
+            /> */}
+
+            <p className="text-2xl flex font-bold text-black mb-10 ">
+              Pilov{" "}
+              <span className="text-white">
+                Tour <u>Agency</u>
+              </span>
+            </p>
             <div className="flex gap-4 text-2xl text-gray-800">
               <a href="#">
                 <FaFacebookF />
@@ -108,7 +115,7 @@ const Footer: React.FC = () => {
 
         {/* Bottom */}
         <div className="text-center text-sm text-gray-800">
-          <p>© 2025 Golobe. All rights reserved.</p>
+          <p>© 2025 PilovTour. All rights reserved.</p>
         </div>
       </div>
     </footer>

@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const Header = () => {
   const t = useTranslations("Header");
@@ -67,7 +68,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="flex justify-between items-center px-4 lg:px-8 py-2 text-white">
+      <header className="flex pt-4 justify-between items-center px-4 lg:px-8 text-white">
         <div className="hidden lg:flex items-center gap-4">
           <p className="flex items-center cursor-pointer gap-2">
             <CiPlane size={24} /> {t("btn1")}
@@ -116,13 +117,10 @@ const Header = () => {
         <div className="hidden lg:flex items-center gap-4">
           {user ? (
             <>
-              <Image
-                src={user.avatar || "/avatar-default.svg"}
-                alt={user.name || "User"}
-                width={45}
-                height={45}
-                className="rounded-full bg-gray-200 object-cover"
-              />
+              <Avatar className="bg-white p-1">
+                <AvatarImage src={user.avatar || "/avatar-default.svg"} />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
               <p className="text-lg">{user.name || user.email}</p>
             </>
           ) : (
