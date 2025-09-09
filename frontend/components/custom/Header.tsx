@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "../ui/button";
-import Image from "next/image";
 import { CiPlane } from "react-icons/ci";
 import { IoBed } from "react-icons/io5";
 import { useRouter } from "next/navigation";
