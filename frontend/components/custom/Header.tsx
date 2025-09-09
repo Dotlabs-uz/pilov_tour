@@ -15,20 +15,27 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from "../ui/dropdown-menu";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
-interface User {
+interface CustomUser extends Models.User<Models.Preferences> {
+  avatar?: string;
+}
+
+interface DatabaseUser {
+  $id: string;
   name: string;
-  avatar: string;
-  email:string;
+  email: string;
+  avatar?: string;
+  [key: string]: any;
 }
 
 const Header = () => {
   const t = useTranslations("Header");
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<CustomUser | null>(null);
+  const [dbUser, setDbUser] = useState<DatabaseUser | null>(null);
 
   function handleChange(lang: string): void {
     document.cookie = `locale=${lang}; path=/`;
@@ -46,8 +53,10 @@ const Header = () => {
           [Query.equal("email", currentUser.email)]
         );
 
+        let userFromDb: DatabaseUser;
+
         if (existing.documents.length === 0) {
-          await database.createDocument(
+          const newUser = (await database.createDocument(
             appwriteConfig.databaseId,
             appwriteConfig.userCollectionId,
             ID.unique(),
@@ -56,13 +65,25 @@ const Header = () => {
               name: currentUser.name || "",
               avatar: currentUser.prefs?.oauth2?.avatar || "",
             }
-          );
+          )) as unknown as DatabaseUser;
+
+          userFromDb = newUser;
+        } else {
+          userFromDb = existing.documents[0] as unknown as DatabaseUser;
         }
 
-        setUser(currentUser);
+        setDbUser(userFromDb);
+
+        const combinedUser: CustomUser = {
+          ...currentUser,
+          avatar: userFromDb.avatar,
+        };
+
+        setUser(combinedUser);
       } catch (error) {
         console.error("Failed to fetch user:", error);
         setUser(null);
+        setDbUser(null);
       }
     };
 
@@ -108,7 +129,6 @@ const Header = () => {
           </DropdownMenu>
         </div>
 
-        {/* <Image width={110} height={36} src="/logo-header.png" alt="Logo" /> */}
         <p className="text-2xl flex font-bold text-[#8DD3BB]">
           Pilov{" "}
           <span className="text-white">
@@ -116,13 +136,16 @@ const Header = () => {
           </span>
         </p>
 
-        {}
         <div className="hidden lg:flex items-center gap-4">
           {user ? (
             <>
               <Avatar className="bg-white p-1">
                 <AvatarImage src={user.avatar || "/avatar-default.svg"} />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarFallback>
+                  {user.name?.[0]?.toUpperCase() ||
+                    user.email?.[0]?.toUpperCase() ||
+                    "CN"}
+                </AvatarFallback>
               </Avatar>
               <p className="text-lg">{user.name || user.email}</p>
             </>
