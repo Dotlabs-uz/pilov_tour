@@ -41,6 +41,22 @@ const Header = () => {
     document.cookie = `locale=${lang}; path=/`;
     router.refresh();
   }
+  
+  // const getProfileAvatar = async (accessToken: string) => {
+  //   try {
+  //     const response = fetch(
+  //       "https://people.googleapis.com/v1/people/me?personFields=photos",
+  //       { headers: { Authorization: `Bearer ${accessToken}` } }
+  //     );
+  //     if (!response.ok)
+  //       throw new Error("Failed to fetch Google profile picture");
+
+  //     const { photos } = await response.json();
+  //     return photos?.[0]?.url || null;
+  //   } catch (e) {
+  //     console.log(e, "Somithing went wrong");
+  //   }
+  // };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -109,22 +125,47 @@ const Header = () => {
                 className="cursor-pointer"
                 onClick={() => handleChange("ru")}
               >
-                RU
+                RUS
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => handleChange("en")}
               >
-                EN
+                ENG
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => handleChange("uz")}
               >
-                UZ
+                UZB
               </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleChange("sp")}
+              >
+                SPAIN
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleChange("ge")}
+              >
+                GERMAN
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleChange("it")}
+              >
+                ITALIAN
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => handleChange("uk")}
+              >
+                UKR
+              </DropdownMenuItem>
+
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
