@@ -31,7 +31,7 @@ const RecTrips = () => {
   }, []);
 
   return (
-    <div className="flex max-w-[1232px] mx-auto flex-col mt-50 gap-6">
+    <div className="flex max-w-[1232px] mx-auto flex-col mt-10 lg:mt-50 gap-6">
       <div className="flex w-full justify-between items-center">
         <div className="flex flex-col gap-1">
           <p className="text-xl font-semibold">Plan your perfect trip</p>
@@ -48,7 +48,7 @@ const RecTrips = () => {
         {tours?.map((trip, i) => (
           <div
             key={i}
-            className="flex items-center gap-4 p-4 rounded-2xl border shadow-md hover:shadow-lg transition"
+            className="flex items-center gap-4 max-w-[450px] p-4 rounded-2xl border shadow-md hover:shadow-lg transition"
           >
             <img
               src={trip.imgUrl}
@@ -63,7 +63,7 @@ const RecTrips = () => {
         ))}
       </div>
 
-      <div className="flex mt-10 items-center gap-20 justify-between">
+      <div className="flex flex-col lg:flex-row mt-10 items-center gap-20 justify-between">
         {HotelsFlights.map((item, i) => (
           <Card
             key={i}

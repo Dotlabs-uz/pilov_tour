@@ -45,8 +45,7 @@ const reviews = [
 
 const Reviews: React.FC = () => {
   return (
-    <section className="max-w-[1232px] mx-auto flex flex-col gap-10 px-4 mt-20">
-      {/* Header */}
+    <section className="lg:max-w-[1232px] mx-auto flex flex-col gap-10 px-4 mt-20">
       <div className="flex items-center w-full justify-between">
         <div className="flex flex-col gap-2">
           <p className="text-3xl font-bold">Reviews</p>
@@ -59,7 +58,6 @@ const Reviews: React.FC = () => {
         </button>
       </div>
 
-      {/* Carousel */}
       <Carousel opts={{ align: "start" }}>
         <CarouselContent>
           {reviews.map((review) => (
@@ -105,7 +103,6 @@ const Reviews: React.FC = () => {
           ))}
         </CarouselContent>
 
-        {/* Навигация */}
         <CarouselPrevious className="hidden md:flex" />
         <CarouselNext className="hidden md:flex" />
       </Carousel>

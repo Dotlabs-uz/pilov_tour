@@ -5,7 +5,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-[#8DD3BB] pt-28 pb-5 px-6 relative z-0">
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-6 gap-8 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-6 gap-8 mb-10">
           <div>
             {/* <Image
               src="/logo-footer.png"
