@@ -30,4 +30,5 @@ jobs:
           command_timeout: 10m
           script: |
             docker compose --env-file ~/www/.env -f  ~/www/app/docker-compose.yml down
+            docker container prune -f
             docker compose --env-file ~/www/.env -f  ~/www/app/docker-compose.yml up -d --build
