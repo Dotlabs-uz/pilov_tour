@@ -4,7 +4,7 @@ import { Input } from "../ui/input";
 
 const Subscribe: React.FC = () => {
   return (
-    <section className="bg-[#CDEAE1] max-w-[1232px] w-full mt-20 mx-auto py-12 px-6 rounded-xl relative -mb-20 z-10">
+    <section className="bg-[#CDEAE1] w-[500px] lg:max-w-[1232px] lg:w-full mt-20 mx-auto py-12 px-6 rounded-xl relative -mb-20 z-10">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
         <div className="flex-1 text-left">
           <div className="flex flex-col max-w-[250px]">
@@ -28,8 +28,8 @@ const Subscribe: React.FC = () => {
             />
             <Button
               type="button"
-              className="w-[104px] h-[56px] rounded-md "
-                >
+              className="w-[104px] cursor-pointer hover:bg-[#8DD3BB] hover:border-white hover:border-1 hover:text-black transition-all h-[56px] rounded-md "
+            >
               Subscribe
             </Button>
           </div>

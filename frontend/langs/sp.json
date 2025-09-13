@@ -1,0 +1,14 @@
+{
+  "Header": {
+    "btn1": "Buscar vuelos",
+    "btn2": "Buscar hoteles",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse"
+  },
+
+  "LifeTravel": {
+    "title1": "Ayudando a los demás",
+    "title2": "Vida y viajes",
+    "title3": "Ofertas especiales que se adaptan a tu plan"
+  }
+}

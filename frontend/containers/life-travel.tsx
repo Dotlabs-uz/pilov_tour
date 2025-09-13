@@ -1,9 +1,12 @@
-"use client";
-
-import FilterBlock from "@/components/custom/FilterBlock";
 import Header from "@/components/custom/Header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { getTranslations } from "next-intl/server";
+import { FaSearch } from "react-icons/fa";
 
-const LifeTravel = ({ component }: { component: any }) => {
+export default async function LifeTravel({ component }: { component: any }) {
+  const t = await getTranslations("LifeTravel");
+
   return (
     <>
       <section
@@ -12,27 +15,33 @@ const LifeTravel = ({ component }: { component: any }) => {
           backgroundImage: `url('/bg.png')`,
         }}
       >
-        <Header />
-
-        {/* Текст */}
+        <div className="lg:block hidden">
+          <Header />
+        </div>
         <div className="flex h-[80%] flex-col items-center justify-center gap-2 text-center">
-          <span className="text-white font-semibold text-[45px]">
-            Helping Others
+          <span className="text-white font-semibold lg:text-[45px]">
+            {t("title1")}
           </span>
-          <p className="text-white font-bold text-[80px]">Life & Travel</p>
-          <span className="text-white font-semibold text-[20px]">
-            Special offers to suit your plan
+          <p className="text-white font-bold text-[80px]">{t("title2")}</p>
+          <span className="text-white font-semibold lg:text-[20px]">
+            {t("title3")}
           </span>
         </div>
 
-        {/* Фильтр */}
-        <div className="absolute left-1/2 bottom-[-100px] -translate-x-1/2">
-          {/* <FilterBlock /> */}
+        <div className="lg:block absolute hidden left-1/2 bottom-[-100px] -translate-x-1/2">
           {component}
+        </div>
+
+        <div className="flex items-center justify-center lg:hidden">
+          <Input
+            className="w-[325px] h-[48px] bg-white"
+            placeholder="Search for Tours"
+          ></Input>
+          <Button className="w-[48px] h-[48px] hover:bg-green-800 cursor-pointer bg-[#8DD3BB] rounded-sm ">
+            <FaSearch />
+          </Button>
         </div>
       </section>
     </>
   );
-};
-
-export default LifeTravel;
+}

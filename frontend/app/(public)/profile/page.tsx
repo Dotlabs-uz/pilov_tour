@@ -1,8 +1,8 @@
 const Profile = () => {
   return (
     <>
-      <div>
-                
+      <div className="flex flex-col gap-10">
+          
       </div>
     </>
   );
