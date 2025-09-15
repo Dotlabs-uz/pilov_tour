@@ -31,9 +31,9 @@ const RecTrips = () => {
   }, []);
 
   return (
-    <div className="flex max-w-[1232px] mx-auto flex-col mt-10 lg:mt-50 gap-6">
+    <div className="flex max-w-[400px] lg:max-w-[1232px] mx-auto flex-col mt-10 lg:mt-50 gap-6">
       <div className="flex w-full justify-between items-center">
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1">w
           <p className="text-xl font-semibold">Plan your perfect trip</p>
           <span className="text-gray-500 text-sm">
             Search Flights & Places Hire to our most popular destinations

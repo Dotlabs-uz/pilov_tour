@@ -10,7 +10,7 @@ const Card = ({ name, description, button, image }: CardProps) => {
   return (
     <>
       <div
-        className="lg:w-[604px] bg-cover relative flex flex-col gap-2 justify-end items-center text-white p-7 h-[559px] rounded-lg"
+        className="lg:w-[604px] w-[312px] h-[400px] bg-cover relative flex flex-col gap-2 justify-end items-center text-white p-7 lg:h-[559px] rounded-lg"
         style={{
           backgroundImage: `url(${image})`,
         }}

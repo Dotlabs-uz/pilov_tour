@@ -18,6 +18,9 @@ export default async function LifeTravel({ component }: { component: any }) {
         <div className="lg:block hidden">
           <Header />
         </div>
+        <div className="flex lg:hidden">
+
+        </div>
         <div className="flex h-[80%] flex-col items-center justify-center gap-2 text-center">
           <span className="text-white font-semibold lg:text-[45px]">
             {t("title1")}

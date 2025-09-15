@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { langs } from "@/lib/langs";
 
 interface CustomUser extends Models.User<Models.Preferences> {
   avatar?: string;
@@ -41,7 +42,7 @@ const Header = () => {
     document.cookie = `locale=${lang}; path=/`;
     router.refresh();
   }
-  
+
   // const getProfileAvatar = async (accessToken: string) => {
   //   try {
   //     const response = fetch(
@@ -116,56 +117,21 @@ const Header = () => {
           <p className="flex cursor-pointer items-center gap-2">
             <IoBed size={24} /> {t("btn2")}
           </p>
+
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer">
               <AiOutlineGlobal size={24} />
             </DropdownMenuTrigger>
             <DropdownMenuContent className="pt-2">
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleChange("ru")}
-              >
-                RUS
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleChange("en")}
-              >
-                ENG
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleChange("uz")}
-              >
-                UZB
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleChange("sp")}
-              >
-                SPAIN
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleChange("ge")}
-              >
-                GERMAN
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleChange("it")}
-              >
-                ITALIAN
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={() => handleChange("uk")}
-              >
-                UKR
-              </DropdownMenuItem>
-
+              {langs.map(({ lang }, i) => (
+                <DropdownMenuItem
+                  key={i}
+                  className="cursor-pointer"
+                  onClick={() => handleChange(lang.toLowerCase())}
+                >
+                  {lang}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
