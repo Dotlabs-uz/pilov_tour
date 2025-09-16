@@ -1,7 +1,13 @@
+"use client"
+
+import HeaderforOther from "@/components/custom/Header-otherPages";
+
 const TourPage = () => {
   return (
     <>
-      <div></div>
+      <div className="flex flex-col gap-2">
+        <HeaderforOther/>
+      </div>
     </>
   );
 };
