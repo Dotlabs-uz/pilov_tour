@@ -53,7 +53,7 @@ const HeaderforOther = () => {
         </div>
 
         <p className="text-2xl flex font-bold text-[#8DD3BB]">
-          Pilov{" "}
+          Pilav{" "}
           <span className="text-black">
             Tour <u>Agency</u>
           </span>

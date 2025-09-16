@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
             /> */}
 
             <p className="text-2xl flex font-bold text-black mb-10 ">
-              Pilov{" "}
+              Pilav{" "}
               <span className="text-white">
                 Tour <u>Agency</u>
               </span>
@@ -115,7 +115,7 @@ const Footer: React.FC = () => {
 
         {/* Bottom */}
         <div className="text-center text-sm text-gray-800">
-          <p>© 2025 PilovTour. All rights reserved.</p>
+          <p>© 2025 PilavTour. All rights reserved.</p>
         </div>
       </div>
     </footer>

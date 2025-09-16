@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pilov Tour",
+  title: "Pilav Tour",
   description: "The best Tour Agency in Central Asia",
 };
 
