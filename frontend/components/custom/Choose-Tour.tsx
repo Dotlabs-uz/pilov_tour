@@ -18,6 +18,7 @@ const ChooseTour = () => {
     });
   };
 
+  
   return (
     <>
       <div className="flex flex-col bg-white shadow-lg rounded-2xl w-[1232px] p-6">
