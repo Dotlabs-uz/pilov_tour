@@ -12,7 +12,7 @@ export default async function LifeTravel({ component }: { component: any }) {
       <section
         className="relative h-[581px] w-full rounded-2xl bg-cover"
         style={{
-          backgroundImage: `url('/bg.png')`,
+          backgroundImage: `url('/i.webp')`,
         }}
       >
         <div className="lg:block hidden">
