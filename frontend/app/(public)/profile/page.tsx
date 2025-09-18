@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import { ID, Query } from "appwrite";
 import { CustomUser, DatabaseUser } from "@/components/custom/Header";
 import { useRouter } from "next/navigation";
+import Subscribe from "@/components/custom/Subcribe";
 
 const Profile = () => {
   const router = useRouter();
@@ -90,7 +91,7 @@ const Profile = () => {
   ];
 
   return (
-    <div className="flex flex-col mb-20 gap-10">
+    <div className="flex flex-col gap-10">
       <HeaderforOther />
 
       <div className="max-w-[1200px] mx-auto">
@@ -165,6 +166,7 @@ const Profile = () => {
           </Tabs>
         </div>
       </div>
+      <Subscribe/>
     </div>
   );
 };
