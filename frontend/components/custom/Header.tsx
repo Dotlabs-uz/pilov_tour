@@ -20,11 +20,11 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { langs } from "@/lib/langs";
 
-interface CustomUser extends Models.User<Models.Preferences> {
+export interface CustomUser extends Models.User<Models.Preferences> {
   avatar?: string;
 }
 
-interface DatabaseUser {
+export interface DatabaseUser {
   $id: string;
   name: string;
   email: string;

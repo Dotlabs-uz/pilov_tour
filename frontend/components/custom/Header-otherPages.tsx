@@ -25,8 +25,8 @@ const HeaderforOther = () => {
     router.refresh();
   }
   return (
-    <>
-      <header className="flex pt-4 justify-between items-center px-4 lg:px-8 text-black">
+    <div className="shadow-lg pb-5">
+      <header className="flex pt-4 max-w-[1650px] mx-auto justify-between items-center px-4 lg:px-8 text-black">
         <div className="hidden lg:flex items-center gap-4">
           <p className="flex items-center cursor-pointer gap-2">
             <CiPlane size={24} /> {t("btn1")}
@@ -40,13 +40,13 @@ const HeaderforOther = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent className="pt-2">
               {langs.map(({ lang }, i) => (
-                  <DropdownMenuItem
-                    key={i}
-                    className="cursor-pointer"
-                    onClick={() => handleChange(lang.toLowerCase())}
-                  >
-                    {lang}
-                  </DropdownMenuItem>
+                <DropdownMenuItem
+                  key={i}
+                  className="cursor-pointer"
+                  onClick={() => handleChange(lang.toLowerCase())}
+                >
+                  {lang}
+                </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
@@ -73,7 +73,7 @@ const HeaderforOther = () => {
           </div>
         </div>
       </header>
-    </>
+    </div>
   );
 };
 
