@@ -30,9 +30,9 @@ const FilterBlock = () => {
   };
 
   return (
-    <div className="flex flex-col bg-white shadow-lg rounded-2xl w-[1232px] p-6">
+    <div className="flex flex-col h-40 bg-white shadow-lg rounded-2xl w-[1232px] p-6">
       {/* Tabs */}
-      <div className="flex gap-6 border-b pb-3 mb-5">
+      {/* <div className="flex gap-6 border-b pb-3 mb-5">
         <button
           onClick={() => setTab("flights")}
           className={`flex items-center gap-2 pb-2 ${
@@ -53,12 +53,11 @@ const FilterBlock = () => {
         >
           <IoBed size={20} /> Stays
         </button>
-      </div>
+      </div> */}
 
-      {tab === "flights" && (
+      {/* {tab === "flights" && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            {/* From - To */}
             <FieldShell
               label="From - To"
               rightIcon={<IoSwapHorizontalSharp className="text-gray-400" />}
@@ -89,7 +88,6 @@ const FilterBlock = () => {
               </button>
             </FieldShell>
 
-            {/* Trip */}
             <FieldShell label="Trip">
               <Select>
                 <SelectTrigger className="w-[180px] cursor-pointer">
@@ -103,7 +101,6 @@ const FilterBlock = () => {
               </Select>
             </FieldShell>
 
-            {/* Depart - Return */}
             <FieldShell label="Depart - Return">
               <DateRange />
             </FieldShell>
@@ -142,11 +139,20 @@ const FilterBlock = () => {
             </Button>
           </div>
         </>
-      )}
+      )} */}
 
-      {tab === "stays" && (
+      {/* {tab === "stays" && (
         <div className="text-gray-500">Stays coming soon…</div>
-      )}
+      )} */}
+      <div className="flex flex-col gap-5">
+        <p className="text-xl font-bold">Search for Trips</p>
+        <div className="flex items-center gap-3 ">
+          <Input placeholder="Search for trips" />
+          <Button className="bg-white cursor-pointer hover:bg-[#8DD3BB] text-[#112211] border border-[#8DD3BB]">
+            Search
+          </Button>
+        </div>
+      </div>
     </div>
   );
 };

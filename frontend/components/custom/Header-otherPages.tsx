@@ -7,7 +7,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { AiOutlineGlobal } from "react-icons/ai";
@@ -31,7 +30,10 @@ const HeaderforOther = () => {
           <p className="flex items-center cursor-pointer gap-2">
             <CiPlane size={24} /> {t("btn1")}
           </p>
-          <p className="flex cursor-pointer items-center gap-2">
+          <p
+            onClick={() => router.push("/trips")}
+            className="flex cursor-pointer items-center gap-2"
+          >
             <IoBed size={24} /> {t("btn2")}
           </p>
           <DropdownMenu>
@@ -52,7 +54,10 @@ const HeaderforOther = () => {
           </DropdownMenu>
         </div>
 
-        <p className="text-2xl flex font-bold text-[#8DD3BB]">
+        <p
+          onClick={() => router.push("/")}
+          className="text-2xl cursor-pointer flex font-bold text-[#8DD3BB]"
+        >
           Pilav{" "}
           <span className="text-black">
             Tour <u>Agency</u>
@@ -65,7 +70,10 @@ const HeaderforOther = () => {
             <p>Favorites</p>
           </div>
           <p>|</p>
-          <div className="flex items-center">
+          <div
+            onClick={() => router.push("/profile")}
+            className="flex cursor-pointer items-center"
+          >
             <Avatar className="bg-white p-1">
               <AvatarImage src={"/avatar-default.svg"} />
             </Avatar>

@@ -114,7 +114,7 @@ const Header = () => {
           <p className="flex items-center cursor-pointer gap-2">
             <CiPlane size={24} /> {t("btn1")}
           </p>
-          <p className="flex cursor-pointer items-center gap-2">
+          <p onClick={() => router.push("/trips")} className="flex cursor-pointer items-center gap-2">
             <IoBed size={24} /> {t("btn2")}
           </p>
 
@@ -136,7 +136,10 @@ const Header = () => {
           </DropdownMenu>
         </div>
 
-        <p className="text-2xl flex font-bold text-[#8DD3BB]">
+        <p
+          onClick={() => router.push("/")}
+          className="text-2xl cursor-pointer flex font-bold text-[#8DD3BB]"
+        >
           Pilav{" "}
           <span className="text-white">
             Tour <u>Agency</u>
@@ -145,7 +148,10 @@ const Header = () => {
 
         <div className="hidden lg:flex items-center gap-4">
           {user ? (
-            <>
+            <div
+              onClick={() => router.push("/profile")}
+              className="cursor-pointer flex items-center gap-2"
+            >
               <Avatar className="bg-white p-1">
                 <AvatarImage src={user.avatar || "/avatar-default.svg"} />
                 <AvatarFallback>
@@ -155,7 +161,7 @@ const Header = () => {
                 </AvatarFallback>
               </Avatar>
               <p className="text-lg">{user.name || user.email}</p>
-            </>
+            </div>
           ) : (
             <>
               <Link href="/login">{t("login")}</Link>
