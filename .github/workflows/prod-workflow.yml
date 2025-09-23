@@ -30,11 +30,7 @@ jobs:
           password: ${{ secrets.SSH_PRIVATE_PASS_PROD }}
           host: ${{ secrets.SSH_HOST_PROD }}
           username: ${{ secrets.SSH_USER_PROD }}
-          source: |
-            ./
-            !node_modules/
-            !.git/
-            !.github/
+          source: ./
           target: ~/www/app
 
       # Пересобираем контейнеры на сервере
