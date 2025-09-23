@@ -1,34 +1,57 @@
 name: deployment-production
 
 on:
-    push:
-        branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-    deployment-production:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Check Out Repo
-              uses: actions/checkout@v2
+  deployment-production:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v3
 
-            - name: Copy updated files
-              uses: appleboy/scp-action@v0.1.3
-              with:
-                  password: ${{ secrets.SSH_PRIVATE_PASS_PROD }}
-                  host: ${{ secrets.SSH_HOST_PROD }}
-                  username: ${{ secrets.SSH_USER_PROD }}
-                  source: ./
-                  target: ~/www/app
+      # Очистка старых файлов на сервере
+      - name: Clean old files on server
+        uses: appleboy/ssh-action@master
+        with:
+          password: ${{ secrets.SSH_PRIVATE_PASS_PROD }}
+          host: ${{ secrets.SSH_HOST_PROD }}
+          username: ${{ secrets.SSH_USER_PROD }}
+          port: 22
+          script: |
+            echo "Удаляю старые файлы..."
+            rm -rf ~/www/app/*
 
-            - name: Rebuild project
-              uses: appleboy/ssh-action@master
-              with:
-                  password: ${{ secrets.SSH_PRIVATE_PASS_PROD }}
-                  host: ${{ secrets.SSH_HOST_PROD }}
-                  username: ${{ secrets.SSH_USER_PROD }}
-                  port: 22
-                  command_timeout: 10m
-                  script: |
-                      docker compose --env-file ~/www/.env -f  ~/www/app/docker-compose.yml down
-                      docker container prune -f
-                      docker compose --env-file ~/www/.env -f  ~/www/app/docker-compose.yml up -d --build
+      # Копируем только нужные файлы (исключая node_modules, .git и прочее)
+      - name: Copy updated files
+        uses: appleboy/scp-action@v0.1.3
+        with:
+          password: ${{ secrets.SSH_PRIVATE_PASS_PROD }}
+          host: ${{ secrets.SSH_HOST_PROD }}
+          username: ${{ secrets.SSH_USER_PROD }}
+          source: |
+            ./
+            !node_modules/
+            !.git/
+            !.github/
+          target: ~/www/app
+
+      # Пересобираем контейнеры на сервере
+      - name: Rebuild project
+        uses: appleboy/ssh-action@master
+        with:
+          password: ${{ secrets.SSH_PRIVATE_PASS_PROD }}
+          host: ${{ secrets.SSH_HOST_PROD }}
+          username: ${{ secrets.SSH_USER_PROD }}
+          port: 22
+          command_timeout: 10m
+          script: |
+            cd ~/www/app
+            echo "Останавливаю старые контейнеры..."
+            docker compose --env-file ~/www/.env down
+            docker container prune -f
+            echo "Пересобираю docker-образы..."
+            docker compose --env-file ~/www/.env build --no-cache
+            echo "Запускаю приложение..."
+            docker compose --env-file ~/www/.env up -d
