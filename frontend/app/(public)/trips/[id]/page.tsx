@@ -20,8 +20,19 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import Subscribe from "@/components/custom/Subcribe";
 import { useRouter } from "next/navigation";
+import Review from "@/components/custom/Review";
+import EndComponent from "@/components/custom/EndComponent";
 
 const TourPage = () => {
   const handleBook = () => {};
@@ -250,23 +261,108 @@ const TourPage = () => {
             <p className="text-xl font-bold">Amenities</p>
             <div className="flex gap-[250px]">
               <div className="flex flex-col gap-2">
-                <p className="text-md font-semibold flex items-center">Outdoor pool</p>
-                <p className="text-md font-semibold flex items-center">Indoor pool</p>
-                <p className="text-md font-semibold flex items-center">Spa and wellness center</p>
-                <p className="text-md font-semibold flex items-center">Restaraunt</p>
-                <p className="text-md font-semibold flex items-center">Room service</p>
+                <p className="text-md font-semibold flex items-center">
+                  Outdoor pool
+                </p>
+                <p className="text-md font-semibold flex items-center">
+                  Indoor pool
+                </p>
+                <p className="text-md font-semibold flex items-center">
+                  Spa and wellness center
+                </p>
+                <p className="text-md font-semibold flex items-center">
+                  Restaraunt
+                </p>
+                <p className="text-md font-semibold flex items-center">
+                  Room service
+                </p>
               </div>
               <div className="flex flex-col gap-2">
-                <p className="text-md font-semibold flex items-center">Fitness center</p>
-                <p className="text-md font-semibold flex items-center">Bar/Lounge</p>
-                <p className="text-md font-semibold flex items-center">Free Wi-Fi</p>
-                <p className="text-md font-semibold flex items-center">Tea/coffe machine</p>
-                <p className="text-md font-semibold flex items-center">+24 more</p>
+                <p className="text-md font-semibold flex items-center">
+                  Fitness center
+                </p>
+                <p className="text-md font-semibold flex items-center">
+                  Bar/Lounge
+                </p>
+                <p className="text-md font-semibold flex items-center">
+                  Free Wi-Fi
+                </p>
+                <p className="text-md font-semibold flex items-center">
+                  Tea/coffe machine
+                </p>
+                <p className="text-md font-semibold flex items-center">
+                  +24 more
+                </p>
               </div>
             </div>
           </div>
-          <div className="flex items-center mt-5">
-
+          <div className="flex gap-3 items-center mt-5">
+            <img
+              src="/galery1.jpg"
+              alt="Hotel Pictures"
+              className="w-[302px] h-[271px] rounded-l-xl"
+            />
+            <img
+              src="/galery2.jpg"
+              alt="Hotel Pictures"
+              className="w-[302px] h-[271px] rounded-sm"
+            />
+            <img
+              src="/galery3.jpg"
+              alt="Hotel Pictures"
+              className="w-[302px] h-[271px] rounded-sm"
+            />
+            <img
+              src="/galery4.jpg"
+              alt="Hotel Pictures"
+              className="w-[302px] h-[271px] rounded-r-xl"
+            />
+          </div>
+          <div className="flex flex-col gap-5 mt-10">
+            <div className="flex items-center justify-between">
+              <p className="text-2xl font-bold">Reviews</p>
+              <Button className="w-[152px] h-[48px] rounded-md text-black bg-[#8DD3BB] hover:bg-green-700 hover:text-white cursor-pointer">
+                Give your review
+              </Button>
+            </div>
+            <div className="flex mt-5 items-center border-b-1 border-gray-500 pb-5 gap-5">
+              <p className="text-4xl font-bold">4.2</p>
+              <div className="flex flex-col gap-1">
+                <p className="text-2xl font-bold">Very good</p>
+                <span className="text-md font-light">371 verified reviews</span>
+              </div>
+            </div>
+            <div className="flex border-b-1 border-black pb-17 flex-col gap-2">
+              <Review />
+              <Review />
+              <Review />
+              <Review />
+              <Review />
+              <Pagination className="mt-5">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">1</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">40</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext href="#" />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+            <div className="flex items-center justify-between mt-10">
+              <EndComponent />
+              <EndComponent />
+              <EndComponent />
+            </div>
           </div>
         </div>
         <Subscribe />
