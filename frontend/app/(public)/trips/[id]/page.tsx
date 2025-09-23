@@ -14,9 +14,18 @@ import { FaLocationDot } from "react-icons/fa6";
 import Image from "next/image";
 import { CiStar } from "react-icons/ci";
 import { FaHeart, FaShareAlt } from "react-icons/fa";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import Subscribe from "@/components/custom/Subcribe";
+import { useRouter } from "next/navigation";
 
 const TourPage = () => {
   const handleBook = () => {};
+  const router = useRouter();
 
   return (
     <>
@@ -128,7 +137,7 @@ const TourPage = () => {
               />
             </div>
           </div>
-          <div className="flex mt-4 flex-col gap-5">
+          <div className="flex mt-4 flex-col gap-5 pb-5 border-b-2 border-black">
             <div className="flex flex-col gap-2">
               <p className="text-xl font-semibold">Overview</p>
               <span>
@@ -155,7 +164,112 @@ const TourPage = () => {
               <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>
             </div>
           </div>
+          <div className="mt-5 flex border-b-1 border-black pb-5 flex-col">
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="text-xl font-bold">
+                  Day 1
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col">
+                      <p className="text-lg font-bold">Gur Emir Mausoleum</p>
+                      <span className="font-semibold">
+                        Visit of the mausoleum of Amir Timour
+                      </span>
+                      <span className="flex font-light gap-1">
+                        1 hour · <p>Admission ticket not included</p>
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-lg font-bold">Gur Emir Mausoleum</p>
+                      <span className="font-semibold">
+                        Visit of the mausoleum of Amir Timour
+                      </span>
+                      <span className="flex font-light gap-1">
+                        1 hour · <p>Admission ticket not included</p>
+                      </span>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+            <Accordion type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="text-xl font-bold">
+                  Day 2
+                </AccordionTrigger>
+                <AccordionContent>
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col">
+                      <p className="text-lg font-bold">Gur Emir Mausoleum</p>
+                      <span className="font-semibold">
+                        Visit of the mausoleum of Amir Timour
+                      </span>
+                      <span className="flex font-light gap-1">
+                        1 hour · <p>Admission ticket not included</p>
+                      </span>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-lg font-bold">Gur Emir Mausoleum</p>
+                      <span className="font-semibold">
+                        Visit of the mausoleum of Amir Timour
+                      </span>
+                      <span className="flex font-light gap-1">
+                        1 hour · <p>Admission ticket not included</p>
+                      </span>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+          <div className="mt-5 flex flex-col gap-5 border-b-1 border-black pb-10 ">
+            <div className="flex items-center justify-between">
+              <p className="text-2xl font-semibold">Location/Map</p>
+              <Button
+                onClick={() =>
+                  router.push("https://maps.app.goo.gl/Abvg9BUrEcjpfNHy6")
+                }
+                className="w-[189px] h-[48px] rounded-md text-black bg-[#8DD3BB] hover:bg-green-700 hover:text-white cursor-pointer"
+              >
+                View on google maps
+              </Button>
+            </div>
+            <div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d11503.065132646021!2d66.96417578022246!3d39.645564495810966!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f4d18cc761ff98f%3A0x8a218422bc21edfa!2z0JPRg9GALdC4INCt0LzQuNGA!5e1!3m2!1sru!2sru!4v1758660642575!5m2!1sru!2sru"
+                width="600"
+                height="450"
+                className="border-0 w-[1250px] rounded-lg"
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+          <div className="flex flex-col border-b-1 border-black pb-7 gap-5 mt-5">
+            <p className="text-xl font-bold">Amenities</p>
+            <div className="flex gap-[250px]">
+              <div className="flex flex-col gap-2">
+                <p className="text-md font-semibold flex items-center">Outdoor pool</p>
+                <p className="text-md font-semibold flex items-center">Indoor pool</p>
+                <p className="text-md font-semibold flex items-center">Spa and wellness center</p>
+                <p className="text-md font-semibold flex items-center">Restaraunt</p>
+                <p className="text-md font-semibold flex items-center">Room service</p>
+              </div>
+              <div className="flex flex-col gap-2">
+                <p className="text-md font-semibold flex items-center">Fitness center</p>
+                <p className="text-md font-semibold flex items-center">Bar/Lounge</p>
+                <p className="text-md font-semibold flex items-center">Free Wi-Fi</p>
+                <p className="text-md font-semibold flex items-center">Tea/coffe machine</p>
+                <p className="text-md font-semibold flex items-center">+24 more</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center mt-5">
+
+          </div>
         </div>
+        <Subscribe />
       </div>
     </>
   );
