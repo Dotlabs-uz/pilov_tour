@@ -365,6 +365,7 @@ const TourPage = () => {
             </div>
           </div>
         </div>
+        
         <Subscribe />
       </div>
     </>
