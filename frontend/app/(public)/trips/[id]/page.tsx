@@ -167,9 +167,7 @@ const TourPage = () => {
                 special guests as a wide variety of selection.
               </span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>
-              <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>
+            <div className="flex justify-center items-center gap-15">
               <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>
               <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>
               <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>

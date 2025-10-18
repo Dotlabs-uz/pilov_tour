@@ -7,6 +7,7 @@ export const appwriteConfig = {
   databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || "",
   userCollectionId: process.env.NEXT_PUBLIC_APPWRITE_USERS_COLLECTION_ID || "",
   tourCollectionId: process.env.NEXT_PUBLIC_APPWRITE_TOURS_COLLECTION_ID || "",
+  blogCollectionId: process.env.NEXT_PUBLIC_APPWRITE_BLOG_COLLECTION_ID || "",
   bucketId: process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID || "",
 };
 

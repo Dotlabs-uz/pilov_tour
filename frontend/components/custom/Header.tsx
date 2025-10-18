@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "../ui/button";
 import { CiPlane } from "react-icons/ci";
-import { IoBed } from "react-icons/io5";
+import { IoBed, IoMenu } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ID, Models, Query } from "appwrite";
@@ -13,7 +13,6 @@ import { AiOutlineGlobal } from "react-icons/ai";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuItem,
 } from "../ui/dropdown-menu";
@@ -86,7 +85,7 @@ const Header = () => {
 
           userFromDb = newUser;
         } else {
-          userFromDb = existing.documents[0] as unknown as DatabaseUser;
+          userFromDb = existing.documents[0] as unknown as DatabaseUser;2
         }
 
         setDbUser(userFromDb);
@@ -110,11 +109,29 @@ const Header = () => {
   return (
     <>
       <header className="flex pt-4 justify-between items-center px-4 lg:px-8 text-white">
+        <div className="flex lg:hidden items-center justify-between">
+          <p
+            onClick={() => router.push("/")}
+            className="text-2xl cursor-pointer flex font-bold text-[#8DD3BB]"
+          >
+            Pilav{" "}
+            <span className="text-white">
+              Tour <u>Agency</u>
+            </span>
+          </p>
+
+          <button>
+            <IoMenu />
+          </button>
+        </div>
         <div className="hidden lg:flex items-center gap-4">
           <p className="flex items-center cursor-pointer gap-2">
             <CiPlane size={24} /> {t("btn1")}
           </p>
-          <p onClick={() => router.push("/trips")} className="flex cursor-pointer items-center gap-2">
+          <p
+            onClick={() => router.push("/trips")}
+            className="flex cursor-pointer items-center gap-2"
+          >
             <IoBed size={24} /> {t("btn2")}
           </p>
 
