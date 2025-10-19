@@ -25,6 +25,7 @@ const RecTrips = () => {
 				const response = await database.listDocuments(
 					appwriteConfig.databaseId,
 					appwriteConfig.tourCollectionId
+					
 				);
 				setTrips(response.documents as unknown as TripDocument[]);
 			} catch (e) {
@@ -33,8 +34,6 @@ const RecTrips = () => {
 		};
 		fetchTrips();
 	}, []);
-
-	console.log(trips);
 
 	return (
 		<>

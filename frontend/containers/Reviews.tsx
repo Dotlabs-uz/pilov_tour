@@ -1,7 +1,5 @@
 "use client";
 
-import * as React from "react";
-
 import Image from "next/image";
 import { Star } from "lucide-react";
 import {
@@ -12,39 +10,39 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { appwriteConfig, database } from "@/app/(public)/appwrite";
 
-const reviews = [
-  {
-    id: 1,
-    title: "A real sense of community, nurtured",
-    text: "Really appreciate the help and support from the staff during these tough times. Shoutout to Katie for...",
-    author: "Olga",
-    place: "Weave Studios – Kai Tak",
-    source: "Google",
-    image: "/review-1.png",
-  },
-  {
-    id: 2,
-    title: "The facilities are superb. Clean, slick, bright.",
-    text: "A real sense of community, nurtured. Really appreciate the help and support from the staff...",
-    author: "Thomas",
-    place: "Weave Studios – Olympic",
-    source: "Google",
-    image: "/review-2.png",
-  },
-  {
-    id: 3,
-    title: "A real sense of community, nurtured",
-    text: "Really appreciate the help and support from the staff during these tough times. Shoutout to Katie for...",
-    author: "Eliot",
-    place: "Weave Studios – Kai Tak",
-    source: "Google",
-    image: "/review-3.png",
-  },
-];
-
+interface ReviewDocument {
+  title: string;
+  text: string;
+  author: string;
+  place: string;
+  source: string;
+  image: string;
+}
 
 const Reviews: React.FC = () => {
+  const [reviews, setReviews] = useState<ReviewDocument[]>();
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await database.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.reviewCollectionId
+        );
+        setReviews(response.documents as unknown as ReviewDocument[]);
+      } catch (e) {
+        console.log("Something went wrong", e);
+      }
+    };
+    fetchReviews()
+  }, []);
+
+  console.log(reviews);
+  
+
   return (
     <section className="lg:max-w-[1232px] mx-auto flex flex-col gap-10 px-4 mt-20">
       <div className="flex items-center w-full justify-between">
@@ -61,9 +59,9 @@ const Reviews: React.FC = () => {
 
       <Carousel opts={{ align: "start" }}>
         <CarouselContent>
-          {reviews.map((review) => (
+          {reviews?.map((review, i) => (
             <CarouselItem
-              key={review.id}
+              key={i}
               className="basis-full sm:basis-1/2 lg:basis-1/3"
             >
               <Card className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow">
