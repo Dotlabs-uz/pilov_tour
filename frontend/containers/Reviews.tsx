@@ -43,6 +43,7 @@ const reviews = [
   },
 ];
 
+
 const Reviews: React.FC = () => {
   return (
     <section className="lg:max-w-[1232px] mx-auto flex flex-col gap-10 px-4 mt-20">
