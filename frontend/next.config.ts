@@ -2,9 +2,9 @@ import { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
-    images: {
-        domains: ['appwrite.pilavtour.uz']
-    }
+  images: {
+    domains: ["fra.cloud.appwrite.io"],
+  },
 };
 
 const withNextIntl = createNextIntlPlugin();
