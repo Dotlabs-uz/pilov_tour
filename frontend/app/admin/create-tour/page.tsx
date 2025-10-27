@@ -1,4 +1,3 @@
-// app/admin/create-tour/page.tsx
 import { CreateTourForm } from "@/components/custom/CreateTourForm";
 
 export default function CreateTourPage() {
