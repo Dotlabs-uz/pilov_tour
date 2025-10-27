@@ -30,13 +30,54 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import Subscribe from "@/components/custom/Subcribe";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Review from "@/components/custom/Review";
 import EndComponent from "@/components/custom/EndComponent";
+import { useEffect, useState } from "react";
+import { appwriteConfig, database } from "../../appwrite";
+
+interface TripDocument {
+  $id: string;
+  titles: Array<{
+    title: string;
+    lang: string;
+    $id: string;
+  }>;
+  images: string[];
+  descriptions: Array<{
+    description: string;
+    lang: string;
+    $id: string;
+  }>;
+}
 
 const TourPage = () => {
+  const [trip, setTrip] = useState<TripDocument[]>();
+  const searchParams = useSearchParams();
+
+  const tripId = searchParams.get("id");
+  console.log(tripId);
+
   const handleBook = () => {};
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchTrip = async () => {
+      try {
+        const response = await database.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.tourCollectionId
+        );
+
+        setTrip(response.documents as unknown as TripDocument[]);
+      } catch (e) {
+        console.log(e, "Something went wrong");
+      }
+    };
+    fetchTrip();
+  }, []);
+
+  console.log(trip);
 
   return (
     <>
@@ -167,10 +208,28 @@ const TourPage = () => {
                 special guests as a wide variety of selection.
               </span>
             </div>
-            <div className="flex justify-center items-center gap-15">
-              <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>
-              <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>
-              <div className="w-[166px] h-[145px] rounded-lg bg-[#8DD3BB] "></div>
+            <div className="flex items-center gap-15">
+              <div className="w-[166px] h-[145px] rounded-lg flex flex-col justify-between items-start p-5 text-[#112211] bg-[#8DD3BB] ">
+                <p className="text-2xl font-bold">4.2</p>
+                <div className="flex flex-col gap-2 items-start">
+                  <span className="text-xl font-semibold">Very good</span>
+                  <span>371 reviews</span>
+                </div>
+              </div>
+              <div className="w-[166px] h-[145px] rounded-lg flex flex-col justify-between items-start p-5 text-[#112211] bg-[#8DD3BB] ">
+                <p className="text-2xl font-bold">4.2</p>
+                <div className="flex flex-col gap-2 items-start">
+                  <span className="text-xl font-semibold">Very good</span>
+                  <span>371 reviews</span>
+                </div>
+              </div>
+              <div className="w-[166px] h-[145px] rounded-lg flex flex-col justify-between items-start p-5 text-[#112211] bg-[#8DD3BB] ">
+                <p className="text-2xl font-bold">4.2</p>
+                <div className="flex flex-col gap-2 items-start">
+                  <span className="text-xl font-semibold">Very good</span>
+                  <span>371 reviews</span>
+                </div>
+              </div>
             </div>
           </div>
           <div className="mt-5 flex border-b-1 border-black pb-5 flex-col">
@@ -363,7 +422,7 @@ const TourPage = () => {
             </div>
           </div>
         </div>
-        
+
         <Subscribe />
       </div>
     </>
