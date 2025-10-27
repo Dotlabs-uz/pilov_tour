@@ -1,6 +1,5 @@
 "use client";
 
-import Filter from "@/components/custom/Filter";
 import HeaderforOther from "@/components/custom/Header-otherPages";
 import Subscribe from "@/components/custom/Subcribe";
 import TourFilter from "@/components/custom/TourFilter";
