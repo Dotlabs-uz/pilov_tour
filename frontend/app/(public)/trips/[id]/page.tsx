@@ -78,7 +78,6 @@ const TourPage = () => {
         setTrip(response.documents as unknown as TripDocument[]);
       } catch (error) {
         console.error("Failed to fetch trip:", error);
-        // Consider adding error state for UI feedback
       }
     };
 
