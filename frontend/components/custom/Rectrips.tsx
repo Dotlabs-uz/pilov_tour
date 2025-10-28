@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 interface TripDocument {
   $id: string;
@@ -27,6 +28,7 @@ interface TripDocument {
 
 const RecTrips = () => {
   const [trips, setTrips] = useState<TripDocument[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -70,6 +72,9 @@ const RecTrips = () => {
             <CarouselContent>
               {trips.map((trip, i) => (
                 <CarouselItem
+                  onClick={() =>
+                    router.push(`/trips/${trip.$id}?id=${trip.$id}`)
+                  }
                   key={trip.$id || i}
                   className="basis-full sm:basis-1/2 lg:basis-1/3"
                 >

@@ -35,6 +35,7 @@ import Review from "@/components/custom/Review";
 import EndComponent from "@/components/custom/EndComponent";
 import { useEffect, useState } from "react";
 import { appwriteConfig, database } from "../../appwrite";
+import { Query } from "appwrite";
 
 interface TripDocument {
   $id: string;
@@ -62,17 +63,17 @@ const TourPage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // if (!tripId) {
-    //   console.error("No trip ID provided");
-    //   return;
-    // }
+    if (!tripId) {
+      console.error("No trip ID provided");
+      return;
+    }
 
     const fetchTrip = async () => {
       try {
         const response = await database.listDocuments(
           appwriteConfig.databaseId,
           appwriteConfig.tourCollectionId,
-          // tripId
+          [Query.equal("$id", tripId)]
         );
         setTrip(response.documents as unknown as TripDocument[]);
       } catch (error) {
@@ -83,6 +84,8 @@ const TourPage = () => {
 
     fetchTrip();
   }, []);
+
+  console.log(trip)
 
   return (
     <>
