@@ -85,7 +85,7 @@ const Header = () => {
 
           userFromDb = newUser;
         } else {
-          userFromDb = existing.documents[0] as unknown as DatabaseUser;2
+          userFromDb = existing.documents[0] as unknown as DatabaseUser;
         }
 
         setDbUser(userFromDb);
@@ -157,7 +157,7 @@ const Header = () => {
           onClick={() => router.push("/")}
           className="text-2xl cursor-pointer flex font-bold text-[#8DD3BB]"
         >
-          Pilav{" "}
+          Pilav
           <span className="text-white">
             Tour <u>Agency</u>
           </span>

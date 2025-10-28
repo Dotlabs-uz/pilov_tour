@@ -62,22 +62,27 @@ const TourPage = () => {
   const router = useRouter();
 
   useEffect(() => {
+    // if (!tripId) {
+    //   console.error("No trip ID provided");
+    //   return;
+    // }
+
     const fetchTrip = async () => {
       try {
         const response = await database.listDocuments(
           appwriteConfig.databaseId,
-          appwriteConfig.tourCollectionId
+          appwriteConfig.tourCollectionId,
+          // tripId
         );
-
         setTrip(response.documents as unknown as TripDocument[]);
-      } catch (e) {
-        console.log(e, "Something went wrong");
+      } catch (error) {
+        console.error("Failed to fetch trip:", error);
+        // Consider adding error state for UI feedback
       }
     };
+
     fetchTrip();
   }, []);
-
-  console.log(trip);
 
   return (
     <>
