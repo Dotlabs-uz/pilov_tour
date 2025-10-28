@@ -125,7 +125,7 @@ const Header = () => {
           </button>
         </div>
         <div className="hidden lg:flex items-center gap-4">
-          <p className="flex items-center cursor-pointer gap-2">
+          <p onClick={() => router.push("/trips")} className="flex items-center cursor-pointer gap-2">
             <CiPlane size={24} /> {t("btn1")}
           </p>
           <p
