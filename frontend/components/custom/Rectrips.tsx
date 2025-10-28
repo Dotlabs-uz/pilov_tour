@@ -10,6 +10,8 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
+import { HotelsFlights } from "@/utils/Flights&Hotels";
+import Card from "@/components/custom/Card";
 
 interface TripDocument {
   $id: string;
@@ -105,6 +107,18 @@ const RecTrips = () => {
             <CarouselPrevious className="hidden md:flex" />
             <CarouselNext className="hidden md:flex" />
           </Carousel>
+        </div>
+
+        <div className="flex flex-col lg:flex-row mt-10 items-center gap-20 justify-between">
+          {HotelsFlights.map((item, i) => (
+            <Card
+              key={i}
+              name={item.name}
+              description={item.description}
+              image={item.imageUrl}
+              button={item.button}
+            />
+          ))}
         </div>
       </section>
     </>
