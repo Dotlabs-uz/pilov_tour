@@ -114,7 +114,7 @@ const HeaderforOther = () => {
           onClick={() => router.push("/")}
           className="text-2xl cursor-pointer flex font-bold text-[#8DD3BB]"
         >
-          Pilav{" "}
+          Pilav
           <span className="text-black">
             Tour <u>Agency</u>
           </span>
