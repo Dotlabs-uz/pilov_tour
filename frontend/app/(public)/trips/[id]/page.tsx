@@ -74,7 +74,7 @@ export default function TourPage() {
   const description =
     trip.descriptions?.find((d) => d.lang === locale)?.description ||
     "Без описания";
-  const image = trip.images?.[0] || "/tourImage1.jpg";
+  const images = trip.images || "/tourImage1.jpg";
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -105,14 +105,14 @@ export default function TourPage() {
               </h1>
               <div className="flex items-center gap-3 mt-2">
                 <p className="flex items-center gap-2 text-gray-700">
-                  <FaLocationDot /> Узбекистан
+                  <FaLocationDot /> Uzbekistan
                 </p>
                 <div className="flex items-center gap-2 text-yellow-500">
                   {[...Array(5)].map((_, i) => (
                     <CiStar key={i} size={16} />
                   ))}
                   <span className="text-gray-600 text-sm ml-1">
-                    4.8 · 230 отзывов
+                    4.8 · 230 reviews
                   </span>
                 </div>
               </div>
@@ -134,10 +134,55 @@ export default function TourPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 flex flex-col gap-6">
+            {/* IMAGE SECTION */}
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
-              <div className="relative w-full h-[440px] md:h-[520px] lg:h-[420px]">
-                <Image src={image} alt={title} fill className="object-cover" />
-              </div>
+              {trip.images && trip.images.filter(Boolean).length > 1 ? (
+                // === Если изображений несколько: галерея ===
+                <div className="w-full">
+                  {/* Большое изображение */}
+                  <div className="relative w-full h-[440px] md:h-[520px] lg:h-[420px]">
+                    <Image
+                      src={trip.images[0]}
+                      alt={title}
+                      fill
+                      style={{ objectFit: "cover" }}
+                      className="block"
+                    />
+                  </div>
+
+                  {/* Ряд миниатюр */}
+                  <div className="px-4 py-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {trip.images.slice(1, 5).map(
+                      (img, index) =>
+                        img && (
+                          <div
+                            key={index}
+                            className="relative h-24 sm:h-28 rounded-lg overflow-hidden"
+                          >
+                            <Image
+                              src={img}
+                              alt={`thumb-${index}`}
+                              fill
+                              style={{ objectFit: "cover" }}
+                              className="hover:scale-105 transition-transform duration-200"
+                            />
+                          </div>
+                        )
+                    )}
+                  </div>
+                </div>
+              ) : (
+                // === Если только одно изображение ===
+                <div className="relative w-full h-[440px] md:h-[520px] lg:h-[420px]">
+                  <Image
+                    src={trip.images?.[0] || "/tourImage1.jpg"}
+                    alt={title}
+                    fill
+                    style={{ objectFit: "cover" }}
+                    className="block"
+                  />
+                </div>
+              )}
             </div>
 
             <section className="bg-white rounded-2xl p-6 shadow-sm">
