@@ -2,7 +2,6 @@ services:
   traefik:
     image: traefik:2.11
     container_name: appwrite-traefik
-    <<: *x-logging
     command:
       - --providers.docker=true
       - --entrypoints.web.address=:80
