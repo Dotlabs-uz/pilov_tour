@@ -9,8 +9,6 @@ import {
   FaUser,
   FaEnvelope,
   FaPhone,
-  FaMapMarkerAlt,
-  FaBirthdayCake,
 } from "react-icons/fa";
 import { account, appwriteConfig, database } from "../appwrite";
 import { useEffect, useState } from "react";4

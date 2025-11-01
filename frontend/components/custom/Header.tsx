@@ -85,7 +85,7 @@ const Header = () => {
 
           userFromDb = newUser;
         } else {
-          userFromDb = existing.documents[0] as unknown as DatabaseUser;2
+          userFromDb = existing.documents[0] as unknown as DatabaseUser;
         }
 
         setDbUser(userFromDb);
@@ -114,7 +114,7 @@ const Header = () => {
             onClick={() => router.push("/")}
             className="text-2xl cursor-pointer flex font-bold text-[#8DD3BB]"
           >
-            Pilav{" "}
+            Pilav
             <span className="text-white">
               Tour <u>Agency</u>
             </span>
@@ -125,7 +125,10 @@ const Header = () => {
           </button>
         </div>
         <div className="hidden lg:flex items-center gap-4">
-          <p className="flex items-center cursor-pointer gap-2">
+          <p
+            onClick={() => router.push("/trips")}
+            className="flex items-center cursor-pointer gap-2"
+          >
             <CiPlane size={24} /> {t("btn1")}
           </p>
           <p
@@ -157,7 +160,7 @@ const Header = () => {
           onClick={() => router.push("/")}
           className="text-2xl cursor-pointer flex font-bold text-[#8DD3BB]"
         >
-          Pilav{" "}
+          Pilav
           <span className="text-white">
             Tour <u>Agency</u>
           </span>

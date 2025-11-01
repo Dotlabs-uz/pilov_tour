@@ -40,7 +40,6 @@ const Reviews: React.FC = () => {
     fetchReviews()
   }, []);
 
-  console.log(reviews);
   
 
   return (

@@ -9,7 +9,7 @@ export default function Home() {
     <div className="mx-auto flex lg:max-w-[1450px] mt-2 flex-col pr-2 pl-2">
       <LifeTravel component={<FilterBlock />} />
       <RecTrips />  
-      <Reviews />,
+      <Reviews />
       <Subscribe />
     </div>
   );
