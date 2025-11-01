@@ -6,6 +6,8 @@ import TourFilter from "@/components/custom/TourFilter";
 import { useEffect, useState } from "react";
 import { appwriteConfig, database } from "../appwrite";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "next-intl";
+import { useRouter } from "next/navigation";
 
 interface TripDocument {
   $id: string;
@@ -24,6 +26,8 @@ interface TripDocument {
 
 const Tours = () => {
   const [trips, setTrips] = useState<TripDocument[]>([]);
+  const locale = useLocale();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -42,12 +46,18 @@ const Tours = () => {
 
   console.log(trips);
 
-  const getFirstTitle = (trip: TripDocument) => {
-    return trip.titles?.[0]?.title ?? "Untitled Trip";
+  const getTitleByLocale = (trip: TripDocument) => {
+    const localized = trip.titles.find((t) => t.lang === locale);
+    return localized?.title ?? trip.titles?.[0]?.title ?? "Untitled Trip";
   };
 
-  const getFirstDescription = (trip: TripDocument) => {
-    return trip.descriptions?.[0]?.description ?? "No description available.";
+  const getDescriptionByLocale = (trip: TripDocument) => {
+    const localized = trip.descriptions.find((d) => d.lang === locale);
+    return (
+      localized?.description ??
+      trip.descriptions?.[0]?.description ??
+      "No description available."
+    );
   };
 
   return (
@@ -69,18 +79,23 @@ const Tours = () => {
                 {trip.images?.[0] && (
                   <img
                     src={trip.images[0]}
-                    alt={getFirstTitle(trip)}
+                    alt={getTitleByLocale(trip)}
                     className="h-48 w-full object-cover"
                   />
                 )}
                 <div className="p-4 flex flex-col gap-2">
                   <h3 className="text-lg font-semibold text-[#112211]">
-                    {getFirstTitle(trip)}
+                    {getTitleByLocale(trip)}
                   </h3>
                   <p className="text-sm text-gray-600 line-clamp-3">
-                    {getFirstDescription(trip)}
+                    {getDescriptionByLocale(trip)}
                   </p>
-                  <Button className="mt-2 bg-[#8DD3BB] text-[#112211] hover:bg-[#7bc9aa]">
+                  <Button
+                    onClick={() =>
+                      router.push(`/trips/${trip.$id}?id=${trip.$id}`)
+                    }
+                    className="mt-2 cursor-pointer bg-[#8DD3BB] text-[#112211] hover:bg-[#7bc9aa]"
+                  >
                     Explore
                   </Button>
                 </div>

@@ -12,6 +12,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { HotelsFlights } from "@/utils/Flights&Hotels";
 import Card from "@/components/custom/Card";
+import { useLocale } from "next-intl";
 
 interface TripDocument {
   $id: string;
@@ -31,6 +32,7 @@ interface TripDocument {
 const RecTrips = () => {
   const [trips, setTrips] = useState<TripDocument[]>([]);
   const router = useRouter();
+  const locale = useLocale();
 
   useEffect(() => {
     const fetchTrips = async () => {
@@ -47,12 +49,18 @@ const RecTrips = () => {
     fetchTrips();
   }, []);
 
-  const getFirstTitle = (trip: TripDocument) => {
-    return trip.titles?.[0]?.title ?? "Untitled Trip";
+  const getTitleByLocale = (trip: TripDocument) => {
+    const localized = trip.titles.find((t) => t.lang === locale);
+    return localized?.title ?? trip.titles?.[0]?.title ?? "Untitled Trip";
   };
 
-  const getFirstDescription = (trip: TripDocument) => {
-    return trip.descriptions?.[0]?.description ?? "No description available.";
+  const getDescriptionByLocale = (trip: TripDocument) => {
+    const localized = trip.descriptions.find((d) => d.lang === locale);
+    return (
+      localized?.description ??
+      trip.descriptions?.[0]?.description ??
+      "No description available."
+    );
   };
 
   return (
@@ -65,7 +73,7 @@ const RecTrips = () => {
               Search Flights & Places Hire to our most popular destinations
             </span>
           </div>
-          <Button className="bg-white cursor-pointer hover:bg-[#8DD3BB] text-[#112211] border border-[#8DD3BB]">
+          <Button onClick={() => router.push("/trips")} className="bg-white cursor-pointer hover:bg-[#8DD3BB] text-[#112211] border border-[#8DD3BB]">
             See more places
           </Button>
         </div>
@@ -74,9 +82,6 @@ const RecTrips = () => {
             <CarouselContent>
               {trips.map((trip, i) => (
                 <CarouselItem
-                  onClick={() =>
-                    router.push(`/trips/${trip.$id}?id=${trip.$id}`)
-                  }
                   key={trip.$id || i}
                   className="basis-full sm:basis-1/2 lg:basis-1/3"
                 >
@@ -84,18 +89,23 @@ const RecTrips = () => {
                     {trip.images?.[0] && (
                       <img
                         src={trip.images[0]}
-                        alt={getFirstTitle(trip)}
+                        alt={getTitleByLocale(trip)}
                         className="h-48 w-full object-cover"
                       />
                     )}
                     <div className="p-4 flex flex-col gap-2">
                       <h3 className="text-lg font-semibold text-[#112211]">
-                        {getFirstTitle(trip)}
+                        {getTitleByLocale(trip)}
                       </h3>
                       <p className="text-sm text-gray-600 line-clamp-3">
-                        {getFirstDescription(trip)}
+                        {getDescriptionByLocale(trip)}
                       </p>
-                      <Button className="mt-2 bg-[#8DD3BB] text-[#112211] hover:bg-[#7bc9aa]">
+                      <Button
+                        onClick={() =>
+                          router.push(`/trips/${trip.$id}?id=${trip.$id}`)
+                        }
+                        className="mt-2 cursor-pointer bg-[#8DD3BB] text-[#112211] hover:bg-[#7bc9aa]"
+                      >
                         Explore
                       </Button>
                     </div>
