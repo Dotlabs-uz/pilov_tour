@@ -15,6 +15,7 @@ export const appwriteConfig = {
 
 const client = new Client();
 
+
 client
   .setEndpoint(appwriteConfig.endpointUrl)
   .setProject(appwriteConfig.projectId); // Replace with your project ID
