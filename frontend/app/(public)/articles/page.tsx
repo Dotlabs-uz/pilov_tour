@@ -4,26 +4,26 @@ import { useEffect, useState } from "react";
 import { appwriteConfig, database } from "../appwrite";
 
 const Blogs = () => {
-	const [blogs, setBlogs] = useState<any>("");
+  const [articles, setArticles] = useState<any>("");
 
-	useEffect(() => {
-		const fetchBlogs = async () => {
-			try {
-				const response = await database.listDocuments(
-					appwriteConfig.databaseId,
-					appwriteConfig.blogCollectionId
-				);
-				console.log({ response });
+  useEffect(() => {
+    const fetchArticles = async () => {
+      try {
+        const response = await database.listDocuments(
+          appwriteConfig.databaseId,
+          appwriteConfig.articleCollectionId
+        );
+        console.log({ response });
 
-				setBlogs(response as unknown);
-			} catch (e) {
-				console.log(e, "Something went wrong");
-			}
-		};
-		fetchBlogs();
-	}, []);
+        setArticles(response as unknown);
+      } catch (e) {
+        console.log(e, "Something went wrong");
+      }
+    };
+    fetchArticles();
+  }, []);
 
-	console.log(blogs);
+  console.log(articles);
 
   return (
     <>
