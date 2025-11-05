@@ -18,7 +18,7 @@ const client = new Client();
 
 client
   .setEndpoint(appwriteConfig.endpointUrl)
-  .setProject(appwriteConfig.projectId); // Replace with your project ID
+  .setProject(appwriteConfig.projectId); 
 
 const account = new Account(client);
 const database = new Databases(client);

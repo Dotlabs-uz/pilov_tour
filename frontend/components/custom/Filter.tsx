@@ -13,7 +13,7 @@ const Filter = () => {
       <p className="font-semibold">Filters</p>
 
       <Accordion type="multiple" className="w-full">
-        {/* Price */}
+
         <AccordionItem value="price">
           <AccordionTrigger>Price</AccordionTrigger>
           <AccordionContent>
@@ -31,7 +31,6 @@ const Filter = () => {
           </AccordionContent>
         </AccordionItem>
 
-        {/* Rating */}
         <AccordionItem value="rating">
           <AccordionTrigger>Rating</AccordionTrigger>
           <AccordionContent className="flex gap-2 flex-wrap">
@@ -46,7 +45,6 @@ const Filter = () => {
           </AccordionContent>
         </AccordionItem>
 
-        {/* Freebies */}
         <AccordionItem value="freebies">
           <AccordionTrigger>Freebies</AccordionTrigger>
           <AccordionContent>
