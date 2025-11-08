@@ -11,7 +11,7 @@ import {
   FaPhone,
 } from "react-icons/fa";
 import { account, appwriteConfig, database } from "../appwrite";
-import { useEffect, useState } from "react";4
+import { useEffect, useState } from "react";
 import { ID, Query } from "appwrite";
 import { CustomUser, DatabaseUser } from "@/components/custom/Header";
 import { useRouter } from "next/navigation";
