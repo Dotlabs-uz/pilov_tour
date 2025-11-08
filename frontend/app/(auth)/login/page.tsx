@@ -92,7 +92,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex p-10 pl-20 gap-50 justify-center">
+    <div className="flex items-center mt-10 gap-50 justify-between max-w-[1400px] mx-auto">
       <div className="flex flex-col gap-10">
         <Image src={"/logo.png"} width={200} height={50} alt="Logo" />
         <div className="flex flex-col mt-10 gap-5">

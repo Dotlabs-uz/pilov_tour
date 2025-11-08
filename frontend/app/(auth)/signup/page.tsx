@@ -36,7 +36,6 @@ export default function SignUp() {
     formState: { errors, isSubmitting },
     setError,
     watch,
-    trigger,
   } = useForm<FormData>({
     defaultValues: {
       email: "",
@@ -51,8 +50,6 @@ export default function SignUp() {
 
   const password = watch("password");
   const agreeToTerms = watch("agreeToTerms");
-  // fix: Slider containered
-  // feat: Reviews are ready
   const onSubmit = async (data: FormData) => {
     try {
       if (!data.agreeToTerms) {
@@ -69,7 +66,6 @@ export default function SignUp() {
         surname: data.surname,
       });
 
-      // Create user document in database
       await database.createDocument(
         appwriteConfig.databaseId,
         appwriteConfig.userCollectionId,
@@ -108,7 +104,7 @@ export default function SignUp() {
 
   return (
     <>
-      <div className="flex p-10 pl-20 gap-50 justify-center">
+      <div className="flex items-center mt-10 gap-50 justify-between max-w-[1400px] mx-auto">
         <AuthSlider
           images={["/preview-login1.png", "/preview-login2.png"]}
           delay={2000}
