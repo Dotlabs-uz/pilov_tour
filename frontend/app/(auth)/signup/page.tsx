@@ -8,13 +8,10 @@ import { Button } from "@/components/ui/button";
 import { FaApple, FaEye, FaEyeSlash, FaFacebook } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import AuthSlider from "@/containers/auth-slider";
-import {
-  createUserWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "@/app/(public)/firebase";
 import { doc, setDoc } from "firebase/firestore";
-import { loginWithGoogle } from "@/lib/loginWithGoogle"; 
+import { loginWithGoogle } from "@/lib/loginWithGoogle";
 
 interface FormData {
   email: string;
@@ -43,7 +40,7 @@ export default function SignUp() {
       email: "",
       password: "",
       name: "",
-      surname: "",  
+      surname: "",
       phone: "",
       confirmPassword: "",
       agreeToTerms: false,
@@ -311,11 +308,15 @@ export default function SignUp() {
           </div>
           <div className="flex max-w-[640px] gap-5 items-center">
             <Button
-              onClick={loginWithGoogle}
+              onClick={async () => {
+                await loginWithGoogle();
+                router.push("/");
+              }}
               className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer"
             >
               <FcGoogle className="w-[24px] h-[24px]" />
             </Button>
+
             <Button className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
               <FaApple className="w-[24px] h-[24px]" color="black" />
             </Button>
