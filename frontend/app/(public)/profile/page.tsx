@@ -5,88 +5,101 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { IoMdCloudUpload } from "react-icons/io";
-import {
-  FaUser,
-  FaEnvelope,
-  FaPhone,
-} from "react-icons/fa";
-import { account, appwriteConfig, database } from "../appwrite";
+import { FaUser, FaEnvelope, FaPhone } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { ID, Query } from "appwrite";
-import { CustomUser, DatabaseUser } from "@/components/custom/Header";
 import { useRouter } from "next/navigation";
 import Subscribe from "@/components/custom/Subcribe";
+import { auth, db } from "../firebase";
+import {
+  onAuthStateChanged,
+  signOut,
+  User as FirebaseUser,
+} from "firebase/auth";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+
+interface DatabaseUser {
+  uid: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  avatar?: string;
+  createdAt?: any;
+}
 
 const Profile = () => {
   const router = useRouter();
-  const [user, setUser] = useState<CustomUser | null>(null);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const [dbUser, setDbUser] = useState<DatabaseUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchuser = async () => {
-      try {
-        const currentUser = await account.get();
-
-        const existing = await database.listDocuments(
-          appwriteConfig.databaseId,
-          appwriteConfig.userCollectionId,
-          [Query.equal("email", currentUser.email)]
-        );
-
-        let userFromDb: DatabaseUser;
-
-        if (existing.documents.length === 0) {
-          const newUser = (await database.createDocument(
-            appwriteConfig.databaseId,
-            appwriteConfig.userCollectionId,
-            ID.unique(),
-            {
-              email: currentUser.email || "",
-              name: currentUser.name || "",
-              avatar: currentUser.prefs?.oauth2?.avatar || "",
-            }
-          )) as unknown as DatabaseUser;
-
-          userFromDb = newUser;
-        } else {
-          userFromDb = existing.documents[0] as unknown as DatabaseUser;
-        }
-
-        setDbUser(userFromDb);
-
-        const combinedUser: CustomUser = {
-          ...currentUser,
-          avatar: userFromDb.avatar,
-        };
-
-        setUser(combinedUser);
-      } catch (e) {
-        console.log(e, "something went wrong");
-        setUser(null);
-        setDbUser(null);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser);
+        await fetchOrCreateUser(firebaseUser);
+      } else {
+        router.push("/login");
       }
-    };
+      setLoading(false);
+    });
 
-    fetchuser();
+    return () => unsubscribe();
   }, [router]);
+
+  const fetchOrCreateUser = async (firebaseUser: FirebaseUser) => {
+    try {
+      const userRef = doc(db, "users", firebaseUser.uid);
+      const docSnap = await getDoc(userRef);
+
+      if (!docSnap.exists()) {
+        const newUser: DatabaseUser = {
+          uid: firebaseUser.uid,
+          name: firebaseUser.displayName || "",
+          email: firebaseUser.email || "",
+          phone: firebaseUser.phoneNumber || "",
+          avatar: firebaseUser.photoURL || "/avatar-default.svg",
+          createdAt: serverTimestamp(),
+        };
+        await setDoc(userRef, newUser);
+        setDbUser(newUser);
+      } else {
+        setDbUser(docSnap.data() as DatabaseUser);
+      }
+    } catch (e) {
+      console.error("Error fetching user:", e);
+    }
+  };
+
+  const logout = async () => {
+    await signOut(auth);
+    router.push("/login");
+  };
 
   const fields = [
     {
       label: "Name",
-      value: user?.name || user?.email,
+      value: dbUser?.name || user?.displayName || "—",
       icon: <FaUser className="text-gray-600" />,
     },
     {
       label: "Email",
-      value: user?.email,
+      value: dbUser?.email || user?.email || "—",
       icon: <FaEnvelope className="text-gray-600" />,
     },
     {
       label: "Phone number",
-      value: user?.phone,
+      value: dbUser?.phone || user?.phoneNumber || "—",
       icon: <FaPhone className="text-gray-600" />,
     },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p>Loading profile...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-10">
@@ -104,14 +117,16 @@ const Profile = () => {
 
           <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
             <img
-              src={user?.avatar || "/avatar-default.svg"}
+              src={dbUser?.avatar || user?.photoURL || "/avatar-default.svg"}
               alt="avatar"
-              className="rounded-full border-4 border-white w-28 h-28 shadow-md"
+              className="rounded-full border-4 border-white w-28 h-28 shadow-md object-cover"
             />
             <h2 className="text-xl font-semibold mt-2">
-              {user?.name || user?.email}
+              {dbUser?.name || user?.displayName || "Anonymous User"}
             </h2>
-            <p className="text-gray-500 text-sm">{user?.email}</p>
+            <p className="text-gray-500 text-sm">
+              {dbUser?.email || user?.email}
+            </p>
           </div>
         </div>
 
@@ -156,15 +171,26 @@ const Profile = () => {
                 <p className="text-gray-500">No history available yet.</p>
               </Card>
             </TabsContent>
+
             <TabsContent value="payment">
               <Card className="p-6 rounded-2xl shadow-md text-center">
                 <p className="text-gray-500">No payment methods added.</p>
               </Card>
+
+              <div className="flex justify-center mt-5">
+                <Button
+                  onClick={logout}
+                  className="w-[200px] h-[45px] bg-red-500 text-white hover:bg-red-600"
+                >
+                  Sign out
+                </Button>
+              </div>
             </TabsContent>
           </Tabs>
         </div>
       </div>
-      <Subscribe/>
+
+      <Subscribe />
     </div>
   );
 };

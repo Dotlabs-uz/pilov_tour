@@ -1,15 +1,20 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { account } from "@/app/(public)/appwrite";
-import { type Models } from "appwrite";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import { FaApple, FaFacebook } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import AuthSlider from "@/containers/auth-slider";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "firebase/auth";
+import { auth } from "@/app/(public)/firebase";
 import { loginWithGoogle } from "@/lib/loginWithGoogle";
 
 interface FormData {
@@ -20,9 +25,7 @@ interface FormData {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(
-    null
-  );
+  const [user, setUser] = useState<any>(null);
   const [socialLoading, setSocialLoading] = useState(false);
 
   const {
@@ -33,13 +36,18 @@ export default function LoginPage() {
     setValue,
   } = useForm<FormData>();
 
-  // Check for saved email on component mount
   useEffect(() => {
     const savedEmail = localStorage.getItem("rememberedEmail");
     if (savedEmail) {
       setValue("email", savedEmail);
       setValue("rememberMe", true);
     }
+
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+
+    return () => unsubscribe();
   }, [setValue]);
 
   const onSubmit = async (data: FormData) => {
@@ -50,10 +58,7 @@ export default function LoginPage() {
         localStorage.removeItem("rememberedEmail");
       }
 
-      await account.createEmailPasswordSession(data.email, data.password);
-      const currentUser = await account.get();
-      setUser(currentUser);
-
+      await signInWithEmailAndPassword(auth, data.email, data.password);
       router.push("/");
     } catch (err: any) {
       console.error("Login error:", err);
@@ -67,26 +72,27 @@ export default function LoginPage() {
     try {
       setSocialLoading(true);
       await loginFunction();
+      router.push("/");
     } catch (err: any) {
       console.error("Social login error:", err);
-      setError("root", {
-        message: "Social login failed. Please try again.",
-      });
+      setError("root", { message: "Social login failed. Please try again." });
     } finally {
       setSocialLoading(false);
     }
   };
 
   const logout = async () => {
-    await account.deleteSession("current");
+    await signOut(auth);
     setUser(null);
   };
 
   if (user) {
     return (
-      <div>
-        <p>Logged in as {user.name}</p>
-        <button onClick={logout}>Logout</button>
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <p>Logged in as {user.displayName || user.email}</p>
+        <Button onClick={logout} className="mt-4">
+          Logout
+        </Button>
       </div>
     );
   }
@@ -188,14 +194,14 @@ export default function LoginPage() {
               <FcGoogle className="w-[24px] h-[24px]" />
             </Button>
             <Button
-              disabled={socialLoading}
-              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer disabled:opacity-50"
+              disabled
+              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer"
             >
               <FaApple className="w-[24px] h-[24px]" color="black" />
             </Button>
             <Button
-              disabled={socialLoading}
-              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer disabled:opacity-50"
+              disabled
+              className="w-[160px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer"
             >
               <FaFacebook className="fill-[#1877F2] w-[24px] h-[24px]" />
             </Button>

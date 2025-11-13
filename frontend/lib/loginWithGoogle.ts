@@ -1,35 +1,33 @@
-import { account, appwriteConfig, database } from "@/app/(public)/appwrite";
-import { ID, OAuthProvider, Query, } from "appwrite";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth, db } from "@/app/(public)/firebase";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+
 
 export const loginWithGoogle = async () => {
   try {
-    await account.createOAuth2Session(
-      OAuthProvider.Google,
-      `${window.location.origin}/`,
-      `${window.location.origin}/404`
-    );
+    const provider = new GoogleAuthProvider();
 
-    const currentUser = await account.get();
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
 
-    const existing = await database.listDocuments(
-      appwriteConfig.databaseId,
-      appwriteConfig.userCollectionId,
-      [Query.equal("email", currentUser.email)]
-    );
+    if (!user) throw new Error("User not found after Google sign-in.");
 
-    if (existing.documents.length === 0) {
-      await database.createDocument(
-        appwriteConfig.databaseId,
-        appwriteConfig.userCollectionId,
-        ID.unique(),
-        {
-          userId: currentUser.$id,
-          email: currentUser.email,
-          name: currentUser.name || "",
-        }
-      );
+    const userRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(userRef);
+
+    if (!docSnap.exists()) {
+      await setDoc(userRef, {
+        uid: user.uid,
+        name: user.displayName || "",
+        email: user.email || "",
+        avatar: user.photoURL || "/avatar-default.svg",
+        createdAt: serverTimestamp(),
+      });
     }
-  } catch (e) {
-    console.error("OAuth login error:", e);
+
+    return user;
+  } catch (error) {
+    console.error("Google login error:", error);
+    throw error;
   }
 };
