@@ -31,7 +31,7 @@ export default async function LifeTravel({ component }: { component: any }) {
           </span>
         </div>
 
-        <div className="lg:block absolute hidden left-1/2 bottom-[-100px] -translate-x-1/2">
+        {/* <div className="lg:block absolute hidden left-1/2 bottom-[-100px] -translate-x-1/2">
           {component}
         </div>
 
@@ -43,7 +43,7 @@ export default async function LifeTravel({ component }: { component: any }) {
           <Button className="w-[48px] h-[48px] hover:bg-green-800 cursor-pointer bg-[#8DD3BB] rounded-sm ">
             <FaSearch />
           </Button>
-        </div>
+        </div> */}
       </section>
     </>
   );
