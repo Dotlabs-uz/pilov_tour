@@ -1,5 +1,17 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useLocale } from "next-intl";
+import { db } from "@/app/(public)/firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  DocumentData,
+} from "firebase/firestore";
+
 import HeaderforOther from "@/components/custom/Header-otherPages";
 import {
   Breadcrumb,
@@ -23,58 +35,93 @@ import {
 import Review from "@/components/custom/Review";
 import EndComponent from "@/components/custom/EndComponent";
 import Subscribe from "@/components/custom/Subcribe";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { appwriteConfig, database } from "../../appwrite";
-import { Query } from "appwrite";
-import { useLocale } from "next-intl";
 
-interface Trip {
-  $id: string;
-  titles: Array<{ title: string; lang: string }>;
-  descriptions: Array<{ description: string; lang: string }>;
+interface Title {
+  id: string;
+  lang: string;
+  title: string;
+}
+
+interface Description {
+  id: string;
+  lang: string;
+  description: string;
+}
+
+interface Tour {
+  id: string;
   images: string[];
+  titles: Title[];
+  descriptions: Description[];
   price: string;
-  style: string;
   duration: string;
+  style: string;
 }
 
 export default function TourPage() {
-  const [trip, setTrip] = useState<Trip | null>(null);
-  const searchParams = useSearchParams();
-  const tripId = searchParams.get("id");
+  const params = useParams();
   const locale = useLocale();
+  const rawId = params.id;
+  const tourId = typeof rawId === "string" ? rawId : undefined;
+
+  const [tour, setTour] = useState<Tour | null>(null);
 
   useEffect(() => {
-    if (!tripId) return;
+    if (!tourId) return;
 
-    const fetchTrip = async () => {
-      try {
-        const res = await database.listDocuments(
-          appwriteConfig.databaseId,
-          appwriteConfig.tourCollectionId,
-          [Query.equal("$id", tripId)]
-        );
-        if (res.documents.length > 0) {
-          setTrip(res.documents[0] as unknown as Trip);
-        }
-      } catch (error) {
-        console.error("Error fetching trip:", error);
-      }
+    const fetchTour = async () => {
+      const tourRef = doc(db, "tours", tourId);
+      const tourSnap = await getDoc(tourRef);
+      if (!tourSnap.exists()) return;
+
+      const data = tourSnap.data() as DocumentData;
+
+      const titlesSnap = await getDocs(
+        collection(db, "tours", tourId, "titles")
+      );
+      const descriptionsSnap = await getDocs(
+        collection(db, "tours", tourId, "descriptions")
+      );
+
+      const titles: Title[] = titlesSnap.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as { lang: string; title: string }),
+      }));
+
+      const descriptions: Description[] = descriptionsSnap.docs.map((d) => ({
+        id: d.id,
+        ...(d.data() as { lang: string; description: string }),
+      }));
+
+      setTour({
+        id: tourSnap.id,
+        images: data.images || [],
+        price: data.price || "",
+        duration: data.duration || "",
+        style: data.style || "",
+        titles,
+        descriptions,
+      });
     };
-    fetchTrip();
-  }, [tripId]);
 
-  console.log(trip);
+    fetchTour();
+  }, [tourId]);
 
-  if (!trip) return <div className="text-center py-20">Trip not found</div>;
+  if (!tour) return <div className="p-10 text-center">Loading...</div>;
 
   const title =
-    trip.titles?.find((t) => t.lang === locale)?.title || "Без названия";
+    tour.titles.find((t) => t.lang === locale)?.title ||
+    tour.titles.find((t) => t.lang === "en")?.title ||
+    tour.titles[0]?.title ||
+    "";
+
   const description =
-    trip.descriptions?.find((d) => d.lang === locale)?.description ||
-    "Без описания";
-  const images = trip.images || "/tourImage1.jpg";
+    tour.descriptions.find((d) => d.lang === locale)?.description ||
+    tour.descriptions.find((d) => d.lang === "en")?.description ||
+    tour.descriptions[0]?.description ||
+    "";
+
+  const images = tour.images || [];
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -119,13 +166,13 @@ export default function TourPage() {
             </div>
 
             <div className="flex items-center gap-3">
-              <Button className="bg-white text-[#8DD3BB] hover:bg-gray-100 border border-[#8DD3BB] w-11 h-11 flex items-center justify-center rounded-md">
+              <Button className="bg-white text-[#8DD3BB] border border-[#8DD3BB] w-11 h-11 rounded-md">
                 <FaHeart />
               </Button>
-              <Button className="bg-white text-[#8DD3BB] hover:bg-gray-100 border border-[#8DD3BB] w-11 h-11 flex items-center justify-center rounded-md">
+              <Button className="bg-white text-[#8DD3BB] border border-[#8DD3BB] w-11 h-11 rounded-md">
                 <FaShareAlt />
               </Button>
-              <Button className="bg-[#8DD3BB] text-[#112211] hover:bg-[#7bc9aa] w-[150px] h-11 rounded-md font-semibold">
+              <Button className="bg-[#8DD3BB] text-[#112211] w-[150px] h-11 rounded-md font-semibold">
                 Забронировать
               </Button>
             </div>
@@ -134,52 +181,41 @@ export default function TourPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 flex flex-col gap-6">
-            {/* IMAGE SECTION */}
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
-              {trip.images && trip.images.filter(Boolean).length > 1 ? (
-                // === Если изображений несколько: галерея ===
+              {images.length > 1 ? (
                 <div className="w-full">
-                  {/* Большое изображение */}
                   <div className="relative w-full h-[440px] md:h-[520px] lg:h-[420px]">
                     <Image
-                      src={trip.images[0]}
+                      src={images[0]}
                       alt={title}
                       fill
-                      style={{ objectFit: "cover" }}
-                      className="block"
+                      className="object-cover"
                     />
                   </div>
 
-                  {/* Ряд миниатюр */}
                   <div className="px-4 py-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-                    {trip.images.slice(1, 5).map(
-                      (img, index) =>
-                        img && (
-                          <div
-                            key={index}
-                            className="relative h-24 sm:h-28 rounded-lg overflow-hidden"
-                          >
-                            <Image
-                              src={img}
-                              alt={`thumb-${index}`}
-                              fill
-                              style={{ objectFit: "cover" }}
-                              className="hover:scale-105 transition-transform duration-200"
-                            />
-                          </div>
-                        )
-                    )}
+                    {images.slice(1, 5).map((img, i) => (
+                      <div
+                        key={i}
+                        className="relative h-24 sm:h-28 rounded-lg overflow-hidden"
+                      >
+                        <Image
+                          src={img}
+                          alt="thumb"
+                          fill
+                          className="object-cover hover:scale-105 transition"
+                        />
+                      </div>
+                    ))}
                   </div>
                 </div>
               ) : (
-                // === Если только одно изображение ===
                 <div className="relative w-full h-[440px] md:h-[520px] lg:h-[420px]">
                   <Image
-                    src={trip.images?.[0] || "/tourImage1.jpg"}
+                    src={images[0] || "/tourImage1.jpg"}
                     alt={title}
                     fill
-                    style={{ objectFit: "cover" }}
-                    className="block"
+                    className="object-cover"
                   />
                 </div>
               )}
@@ -216,7 +252,6 @@ export default function TourPage() {
               </div>
             </section>
 
-            {/* Itinerary */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="text-2xl font-semibold mb-4">Itinerary</h3>
               <Accordion type="single" collapsible>
@@ -246,7 +281,6 @@ export default function TourPage() {
               </Accordion>
             </section>
 
-            {/* Inclusions */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="text-2xl font-semibold mb-4">
                 Inclusions and activities
@@ -273,7 +307,6 @@ export default function TourPage() {
               </div>
             </section>
 
-            {/* Dates & Prices */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="text-2xl font-semibold mb-4">Dates & Prices</h3>
               <div className="overflow-x-auto">
@@ -307,10 +340,11 @@ export default function TourPage() {
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-2xl font-semibold">Отзывы</h3>
-                <Button className="bg-[#8DD3BB] text-[#112211] hover:bg-[#7bc9aa] rounded-md px-4 py-2">
+                <Button className="bg-[#8DD3BB] text-[#112211] rounded-md px-4 py-2">
                   Оставить отзыв
                 </Button>
               </div>
+
               <div className="flex flex-col gap-4">
                 <Review />
                 <Review />
@@ -320,41 +354,39 @@ export default function TourPage() {
 
           <aside className="lg:col-span-4">
             <div className="lg:sticky lg:top-24">
-              <div className="bg-white rounded-2xl border border-gray-200 shadow-md p-6 flex flex-col gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Цена за человека</p>
-                  <h4 className="text-2xl font-bold text-[#112211]">
-                    ${trip.price || "N/A"}
-                  </h4>
-                </div>
+              <div className="bg-white border rounded-2xl shadow-md p-6">
+                <p className="text-sm text-gray-500">Цена за человека</p>
+                <h4 className="text-2xl font-bold text-[#112211]">
+                  ${tour.price}
+                </h4>
 
-                <div className="flex flex-col gap-3 text-gray-700 text-sm">
+                <div className="flex flex-col gap-3 text-gray-700 text-sm mt-4">
                   <div className="flex items-center gap-3">
                     <FaClock className="text-[#8DD3BB]" />
                     <div>
-                      <p className="text-sm font-medium">Длительность</p>
-                      <p className="text-sm">{trip.duration || "—"}</p>
+                      <p className="font-medium">Длительность</p>
+                      <p>{tour.duration}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <FaTag className="text-[#8DD3BB]" />
                     <div>
-                      <p className="text-sm font-medium">Класс тура</p>
-                      <p className="text-sm">{trip.style || "—"}</p>
+                      <p className="font-medium">Класс тура</p>
+                      <p>{tour.style}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-3">
                     <FaUserFriends className="text-[#8DD3BB]" />
                     <div>
-                      <p className="text-sm font-medium">Группа</p>
-                      <p className="text-sm">до 12 человек</p>
+                      <p className="font-medium">Группа</p>
+                      <p>до 12 человек</p>
                     </div>
                   </div>
                 </div>
 
-                <Button className="w-full h-12 bg-[#8DD3BB] text-[#112211] hover:bg-[#7bc9aa] rounded-lg font-semibold mt-2">
+                <Button className="w-full h-12 mt-4 bg-[#8DD3BB] text-[#112211] font-semibold rounded-lg">
                   Забронировать
                 </Button>
                 <div className="pt-3 border-t">
