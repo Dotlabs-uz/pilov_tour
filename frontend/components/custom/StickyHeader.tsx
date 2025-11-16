@@ -165,8 +165,6 @@ export function StickyHeader() {
                     )}
                 </div>
             </header>
-
-            <div className="h-16" />
         </>
     );
 }
