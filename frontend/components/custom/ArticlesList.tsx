@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -12,7 +12,7 @@ interface ArticlePreview {
     descriptions: { lang: string; description: string }[];
 }
 
-const ArticlesPage = () => {
+export function ArticlesList() {
     const [articles, setArticles] = useState<ArticlePreview[]>([]);
 
     useEffect(() => {
@@ -61,14 +61,28 @@ const ArticlesPage = () => {
         fetchArticles();
     }, []);
 
+    const carouselArticles = articles.slice(0, 5);
+
     return (
-        <div className="max-w-6xl mx-auto p-4">
-            <div className="flex flex-wrap gap-6">
-                {articles.map((a) => (
+        <div className="container mx-auto px-4 py-12">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-bold text-slate-900">
+                    Get inspired in the good times
+                </h2>
+                <Link
+                    href="/articles"
+                    className="border border-[#8DD3BB] cursor-pointer text-[#112211] hover:bg-[#8DD3BB] px-5 py-2 rounded-lg font-semibold transition-colors"
+                >
+                    Read all articles
+                </Link>
+            </div>
+
+            <div className="flex gap-6 overflow-x-auto scrollbar-hide py-2">
+                {carouselArticles.map((a) => (
                     <Link
                         key={a.id}
                         href={`/articles/${a.id}`}
-                        className="block w-64 border rounded-xl shadow hover:shadow-lg overflow-hidden"
+                        className="flex-shrink-0 w-80 border rounded-xl shadow hover:shadow-lg overflow-hidden bg-white"
                     >
                         {a.images[0] && (
                             <img
@@ -78,8 +92,8 @@ const ArticlesPage = () => {
                             />
                         )}
                         <div className="p-4 flex flex-col">
-                            <h2 className="text-lg font-bold">{a.titles[0]?.title}</h2>
-                            <p className="mt-2 text-gray-600 text-sm">
+                            <h3 className="text-lg font-bold text-slate-900">{a.titles[0]?.title}</h3>
+                            <p className="mt-2 text-gray-600 text-sm line-clamp-3">
                                 {a.descriptions[0]?.description}
                             </p>
                         </div>
@@ -88,6 +102,4 @@ const ArticlesPage = () => {
             </div>
         </div>
     );
-};
-
-export default ArticlesPage;
+}
