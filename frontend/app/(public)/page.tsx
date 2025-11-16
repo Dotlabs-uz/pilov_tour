@@ -6,6 +6,7 @@ import { StickyHeader } from "@/components/custom/StickyHeader";
 import Subscribe from "@/components/custom/Subcribe";
 import LifeTravel from "@/containers/life-travel";
 import Reviews from "@/containers/Reviews";
+import { ContactSection } from "@/components/custom/ContactSection";
 
 export default function Home() {
     return (
@@ -13,7 +14,8 @@ export default function Home() {
             <StickyHeader />
             <HeaderTop />
             <HeaderMain />
-            <LifeTravel component={<FilterBlock />} />
+            <LifeTravel />
+            <ContactSection />
             <RecTrips />
             <Reviews />
             <Subscribe />
