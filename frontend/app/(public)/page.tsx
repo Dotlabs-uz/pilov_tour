@@ -5,7 +5,7 @@ import RecTrips from "@/components/custom/Rectrips";
 import { StickyHeader } from "@/components/custom/StickyHeader";
 import Subscribe from "@/components/custom/Subcribe";
 import LifeTravel from "@/containers/life-travel";
-import Reviews from "@/containers/Reviews";
+// import Reviews from "@/containers/Reviews";
 import { ContactSection } from "@/components/custom/ContactSection";
 import UpcomingTours from "@/components/custom/UpcomingTours";
 import { ArticlesList } from "@/components/custom/ArticlesList";
@@ -20,7 +20,7 @@ export default function Home() {
             <RecTrips />
             <ContactSection />
             <UpcomingTours />
-            <Reviews />
+            {/* <Reviews /> */}
             <ArticlesList />
             <Subscribe />
         </div>
