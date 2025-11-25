@@ -18,7 +18,7 @@ export default function HeaderTop() {
     }
 
     return (
-        <header className="w-full mx-auto bg-[#009ee2] text-white text-sm mt-14">
+        <header className="w-full mx-auto bg-[#009ee2] text-white text-sm mt-14 px-4 lg:px-0">
             <div className="container mx-auto h-10 flex items-center justify-between">
                 <div className="flex items-center text-lg gap-6">
                     <button className="hover:text-gray-200 transition-colors cursor-pointer">

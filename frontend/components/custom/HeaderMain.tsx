@@ -64,7 +64,7 @@ export default function HeaderMain() {
     };
 
     return (
-        <header className="w-full mx-auto bg-white shadow-sm">
+        <header className="w-full mx-auto bg-white shadow-sm px-4 lg:px-0">
             <div className="container mx-auto h-12 flex items-center justify-between">
                 <p
                     onClick={() => router.push("/")}
