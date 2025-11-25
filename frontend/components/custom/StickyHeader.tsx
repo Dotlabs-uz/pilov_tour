@@ -60,9 +60,8 @@ export function StickyHeader() {
                     {item.submenu && (
                       <RiArrowDownSLine
                         size={16}
-                        className={`transition-transform ${
-                          openDropdown === item.label ? "rotate-180" : ""
-                        }`}
+                        className={`transition-transform ${openDropdown === item.label ? "rotate-180" : ""
+                          }`}
                       />
                     )}
                   </button>
@@ -129,9 +128,8 @@ export function StickyHeader() {
                       {item.submenu && (
                         <RiArrowDownSLine
                           size={16}
-                          className={`transition-transform ${
-                            openDropdown === item.label ? "rotate-180" : ""
-                          }`}
+                          className={`transition-transform ${openDropdown === item.label ? "rotate-180" : ""
+                            }`}
                         />
                       )}
                     </button>

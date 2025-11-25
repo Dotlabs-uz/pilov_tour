@@ -29,7 +29,7 @@ export default function HeaderTop() {
                     </button>
                 </div>
 
-                <div className="hidden lg:flex items-center gap-4">
+                <div className="flex items-center gap-4">
                     <DropdownMenu>
                         <DropdownMenuTrigger className="cursor-pointer">
                             <AiOutlineGlobal size={24} />
