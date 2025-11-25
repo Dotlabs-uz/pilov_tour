@@ -88,5 +88,24 @@
         "payment_methods": "To'lov usullari",
         "copyright": "© 2025 Barcha huquqlar himoyalangan.",
         "company_full_name": "Pilav Destination Management Co."
+    },
+    "header": {
+        "destinations": "YO'NALISHLAR",
+        "destinations_silkroad": "Ipak yo'li",
+        "destinations_uzbekistan": "O'zbekiston",
+        "destinations_kazakhstan": "Qozog'iston",
+        "destinations_tajikistan": "Tojikiston",
+        "private_tours": "SHAXSIY TURLAR",
+        "private_tours_classic": "Klassik turlar",
+        "private_tours_cultural": "Madaniy turlar",
+        "private_tours_luxury": "Lux turlar",
+        "private_tours_eco": "Eko turlar",
+        "group_packages": "GURUHLI PAKETLAR",
+        "group_packages_equal": "Guruhi = Shaxsiy",
+        "group_packages_2": "Paket 2",
+        "group_packages_3": "Paket 3",
+        "testimonials": "FIKRLAR",
+        "publications": "NASHRIYOTLAR",
+        "search_placeholder": "Guruhli va shaxsiy turlarni qidiring"
     }
 }

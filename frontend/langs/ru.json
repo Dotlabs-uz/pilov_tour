@@ -87,5 +87,24 @@
         "payment_methods": "Способы оплаты",
         "copyright": "© 2025 Все права защищены.",
         "company_full_name": "Pilav Destination Management Co."
+    },
+    "header": {
+        "destinations": "НАПРАВЛЕНИЯ",
+        "destinations_silkroad": "Шелковый путь",
+        "destinations_uzbekistan": "Узбекистан",
+        "destinations_kazakhstan": "Казахстан",
+        "destinations_tajikistan": "Таджикистан",
+        "private_tours": "ЧАСТНЫЕ ТУРЫ",
+        "private_tours_classic": "Классические туры",
+        "private_tours_cultural": "Культурные туры",
+        "private_tours_luxury": "Люкс-туры",
+        "private_tours_eco": "Эко-туры",
+        "group_packages": "ГРУППОВЫЕ ПАКЕТЫ",
+        "group_packages_equal": "Группа = Частный",
+        "group_packages_2": "Пакет 2",
+        "group_packages_3": "Пакет 3",
+        "testimonials": "ОТЗЫВЫ",
+        "publications": "ПУБЛИКАЦИИ",
+        "search_placeholder": "Поиск групповых и приватных туров"
     }
 }

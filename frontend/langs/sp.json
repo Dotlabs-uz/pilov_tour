@@ -87,5 +87,24 @@
         "payment_methods": "Métodos de pago",
         "copyright": "© 2025 Todos los derechos reservados.",
         "company_full_name": "Pilav Destination Management Co."
+    },
+    "header": {
+        "destinations": "DESTINOS",
+        "destinations_silkroad": "Ruta de la Seda",
+        "destinations_uzbekistan": "Uzbekistán",
+        "destinations_kazakhstan": "Kazajistán",
+        "destinations_tajikistan": "Tayikistán",
+        "private_tours": "TOURS PRIVADOS",
+        "private_tours_classic": "Tours Clásicos",
+        "private_tours_cultural": "Tours Culturales",
+        "private_tours_luxury": "Tours de Lujo",
+        "private_tours_eco": "Tours Eco",
+        "group_packages": "PAQUETES DE GRUPO",
+        "group_packages_equal": "Grupo = Privado",
+        "group_packages_2": "Paquete 2",
+        "group_packages_3": "Paquete 3",
+        "testimonials": "TESTIMONIOS",
+        "publications": "PUBLICACIONES",
+        "search_placeholder": "Buscar tours de grupo y privados"
     }
 }
