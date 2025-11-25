@@ -30,5 +30,28 @@
         "form_message_placeholder": "Describe your ideal adventure...",
         "form_submit": "Send My Request",
         "form_submitting": "Sending..."
+    },
+    "footer": {
+        "destinations": "Travel Destinations",
+        "destination_uzbekistan": "Uzbekistan",
+        "destination_kazakhstan": "Kazakhstan",
+        "destination_tajikistan": "Tajikistan",
+        "services": "Services",
+        "service_small_groups": "Small Groups Tours",
+        "service_private": "Private Tours",
+        "service_custom": "Custom Tours",
+        "company": "Company",
+        "about_us": "About Us",
+        "testimonials": "Testimonials",
+        "our_team": "Our Team",
+        "booking_terms": "Booking Terms",
+        "cancellations": "Cancellations",
+        "privacy_policy": "Privacy Policy",
+        "sustainability_policy": "Sustainability Policy",
+        "partnership": "Partnership",
+        "contacts": "Contacts",
+        "payment_methods": "Payment Methods",
+        "copyright": "© 2025 All rights reserved.",
+        "company_full_name": "Pilav Destination Management Co."
     }
 }

@@ -30,5 +30,28 @@
         "form_message_placeholder": "Опишите ваше идеальное приключение...",
         "form_submit": "Отправить мой запрос",
         "form_submitting": "Отправка..."
+    },
+    "footer": {
+        "destinations": "Направления путешествий",
+        "destination_uzbekistan": "Узбекистан",
+        "destination_kazakhstan": "Казахстан",
+        "destination_tajikistan": "Таджикистан",
+        "services": "Услуги",
+        "service_small_groups": "Групповые туры",
+        "service_private": "Частные туры",
+        "service_custom": "Индивидуальные туры",
+        "company": "Компания",
+        "about_us": "О нас",
+        "testimonials": "Отзывы",
+        "our_team": "Наша команда",
+        "booking_terms": "Условия бронирования",
+        "cancellations": "Отмена",
+        "privacy_policy": "Политика конфиденциальности",
+        "sustainability_policy": "Политика устойчивости",
+        "partnership": "Партнерство",
+        "contacts": "Контакты",
+        "payment_methods": "Способы оплаты",
+        "copyright": "© 2025 Все права защищены.",
+        "company_full_name": "Pilav Destination Management Co."
     }
 }

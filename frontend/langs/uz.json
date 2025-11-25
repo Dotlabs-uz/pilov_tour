@@ -31,5 +31,28 @@
         "form_message_placeholder": "Sizning ideal sarguzashtingizni tavsiflang...",
         "form_submit": "Mening so'rovimni jo'natish",
         "form_submitting": "Jo'natilmoqda..."
+    },
+    "footer": {
+        "destinations": "Sayohat yo'nalishlari",
+        "destination_uzbekistan": "O'zbekiston",
+        "destination_kazakhstan": "Qozog'iston",
+        "destination_tajikistan": "Tojikiston",
+        "services": "Xizmatlar",
+        "service_small_groups": "Guruhli turlar",
+        "service_private": "Shaxsiy turlar",
+        "service_custom": "Maxsus turlar",
+        "company": "Kompaniya",
+        "about_us": "Biz haqida",
+        "testimonials": "Fikrlar",
+        "our_team": "Bizning jamoamiz",
+        "booking_terms": "Bron qilish shartlari",
+        "cancellations": "Bekor qilishlar",
+        "privacy_policy": "Maxfiylik siyosati",
+        "sustainability_policy": "Barqarorlik siyosati",
+        "partnership": "Hamkorlik",
+        "contacts": "Aloqalar",
+        "payment_methods": "To'lov usullari",
+        "copyright": "© 2025 Barcha huquqlar himoyalangan.",
+        "company_full_name": "Pilav Destination Management Co."
     }
 }
