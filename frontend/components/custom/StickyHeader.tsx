@@ -45,7 +45,7 @@ export function StickyHeader() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#8DD3BB] shadow-md">
-        <div className="container mx-auto px-4">
+        <div className="container max-w-[1200px] mx-auto px-4">
           <div className="flex items-center h-16 justify-between md:justify-center">
             <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
               {menuItems.map((item) => (

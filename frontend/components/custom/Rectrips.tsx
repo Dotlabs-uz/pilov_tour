@@ -83,7 +83,7 @@ const RecTrips = () => {
 
   return (
     <div>
-      <section className="flex container mx-auto flex-col my-10 gap-6 px-4 lg:px-0">
+      <section className="flex container max-w-[1200px] mx-auto flex-col my-10 gap-6 px-4 lg:px-0">
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-1">
             <p className="text-xl font-semibold">Plan your perfect trip</p>
