@@ -46,8 +46,6 @@ const Header = () => {
       if (firebaseUser) {
         setUser(firebaseUser);
         await fetchOrCreateUser(firebaseUser);
-      } else {
-        router.push("/login");
       }
       setLoading(false);
     });

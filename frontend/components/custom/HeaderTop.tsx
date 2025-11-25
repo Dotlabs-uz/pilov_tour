@@ -18,6 +18,7 @@ export default function HeaderTop() {
     }
 
     return (
+<<<<<<< HEAD
       <header className="w-full mx-auto bg-[#8DD3BB] text-white text-sm mt-14">
         <div className="max-w-[1200px] mx-auto h-10 flex items-center justify-between">
           <div className="flex items-center text-lg gap-6">
@@ -49,5 +50,38 @@ export default function HeaderTop() {
           </div>
         </div>
       </header>
+=======
+        <header className="w-full mx-auto bg-[#009ee2] text-white text-sm mt-14 px-4 lg:px-0">
+            <div className="container mx-auto h-10 flex items-center justify-between">
+                <div className="flex items-center text-lg gap-6">
+                    <button className="hover:text-gray-200 transition-colors cursor-pointer">
+                        About us
+                    </button>
+                    <button className="hover:text-gray-200 transition-colors cursor-pointer">
+                        Contact us
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-4">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="cursor-pointer">
+                            <AiOutlineGlobal size={24} />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="pt-2">
+                            {langs.map(({ lang }, i) => (
+                                <DropdownMenuItem
+                                    key={i}
+                                    className="cursor-pointer"
+                                    onClick={() => handleChange(lang.toLowerCase())}
+                                >
+                                    {lang}
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+            </div>
+        </header>
+>>>>>>> f626d045a02a07528dc206c161673e6204d1faa4
     );
 }
