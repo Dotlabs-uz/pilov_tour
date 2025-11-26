@@ -15,7 +15,7 @@ export default function Home() {
         <div className="mx-auto flex mt-2 flex-col">
             <StickyHeader />
             <HeaderTop />
-            <HeaderMain />
+            {/* <HeaderMain /> */}
             <LifeTravel />
             <RecTrips />
             <ContactSection />
