@@ -19,43 +19,7 @@ interface TourPreview {
 export default function UpcomingTours() {
   const [tours, setTours] = useState<TourPreview[]>([]);
   const t = useTranslations("tours");
-  const locale = useLocale()
-
-  // const tours = [
-  //     {
-  //         id: 1,
-  //         date: t("tour_1_date"),
-  //         name: t("tour_1_name"),
-  //         destinations: t("tour_1_destinations"),
-  //         departures: t("tour_1_departures"),
-  //         days: t("tour_1_days"),
-  //         price: t("tour_1_price"),
-  //         description: t("tour_1_description"),
-  //         image: "/i.webp",
-  //     },
-  //     {
-  //         id: 2,
-  //         date: t("tour_2_date"),
-  //         name: t("tour_2_name"),
-  //         destinations: t("tour_2_destinations"),
-  //         departures: t("tour_2_departures"),
-  //         days: t("tour_2_days"),
-  //         price: t("tour_2_price"),
-  //         description: t("tour_2_description"),
-  //         image: "/i.webp",
-  //     },
-  //     {
-  //         id: 3,
-  //         date: t("tour_3_date"),
-  //         name: t("tour_3_name"),
-  //         destinations: t("tour_3_destinations"),
-  //         departures: t("tour_3_departures"),
-  //         days: t("tour_3_days"),
-  //         price: t("tour_3_price"),
-  //         description: t("tour_3_description"),
-  //         image: "/i.webp",
-  //     },
-  // ]
+  const locale = useLocale();
 
   useEffect(() => {
     const fetchTours = async () => {
@@ -133,7 +97,7 @@ export default function UpcomingTours() {
             >
               <div className="h-40 overflow-hidden bg-gray-100">
                 <img
-                  src={tour.images[0]|| "/placeholder.svg"}
+                  src={tour.images[0] || "/placeholder.svg"}
                   alt={tour.titles[0].title}
                   className="w-full h-full object-cover"
                 />
@@ -148,7 +112,9 @@ export default function UpcomingTours() {
                   {tour.titles[0].title}
                 </h3>
 
-                <p className="text-gray-600 text-sm mb-3">{tour.descriptions[0].description}</p>
+                <p className="text-gray-600 text-sm mb-3">
+                  {tour.descriptions[0].description}
+                </p>
 
                 <div className="mb-4">
                   <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
