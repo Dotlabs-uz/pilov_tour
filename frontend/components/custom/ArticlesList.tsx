@@ -64,7 +64,7 @@ export function ArticlesList() {
   const carouselArticles = articles.slice(0, 5);
 
   return (
-    <div className="container max-w-[1200px] mx-auto px-4 py-12">
+    <div className="container max-w-[1200px] mx-auto px-4 py-12" id="articles">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-3xl font-bold text-slate-900">
           Get inspired in the good times
