@@ -10,6 +10,7 @@ import {
   getDocs,
   DocumentData,
 } from "firebase/firestore";
+import { StickyHeader } from "@/components/custom/StickyHeader";
 
 interface Title {
   id: string;
@@ -81,8 +82,9 @@ const Article = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
+      <StickyHeader/>
       {headerImage && (
-        <div className="relative h-96 w-full rounded-xl overflow-hidden">
+        <div className="relative mt-15 h-96 w-full rounded-xl overflow-hidden">
           <img
             src={headerImage}
             alt={
