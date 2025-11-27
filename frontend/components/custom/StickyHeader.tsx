@@ -106,7 +106,7 @@ export function StickyHeader() {
                 placeholder={t("search_placeholder")}
                 className="bg-transparent text-gray-800 text-sm outline-none w-full"
               />
-              <button className="text-[#009ee2] hover:text-[#007bb4]">
+              <button className="text-[#8DD3BB] hover:text-[#8DD3BB]">
                 <CiSearch size={20} />
               </button>
             </div>
@@ -158,7 +158,7 @@ export function StickyHeader() {
                           openDropdown === item.label ? null : item.label
                         )
                       }
-                      className="w-full text-left text-white text-sm font-semibold px-4 py-2 hover:bg-[#007bb4] flex items-center justify-between transition-colors"
+                      className="w-full text-left text-white text-sm font-semibold px-4 py-2 hover:bg-[#8DD3BB] flex items-center justify-between transition-colors"
                     >
                       {item.label}
                       {item.submenu && (
@@ -194,7 +194,7 @@ export function StickyHeader() {
                   placeholder={t("search_placeholder")}
                   className="bg-transparent text-gray-800 text-sm outline-none w-full"
                 />
-                <button className="text-[#009ee2] hover:text-[#007bb4]">
+                <button className="text-[#8DD3BB] hover:text-[#8DD3BB]">
                   <CiSearch size={20} />
                 </button>
               </div>
