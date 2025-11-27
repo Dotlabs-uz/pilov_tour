@@ -5,11 +5,26 @@ import { RiArrowDownSLine } from "react-icons/ri";
 import { CiSearch } from "react-icons/ci";
 import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import { useTranslations } from "next-intl";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import { AiOutlineGlobal } from "react-icons/ai";
+import { useRouter } from "next/navigation";
+import { langs } from "@/lib/langs";
 
 export function StickyHeader() {
   const t = useTranslations("header");
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const router = useRouter();
+  function handleChange(lang: string): void {
+    document.cookie = `locale=${lang}; path=/`;
+    router.refresh();
+  }
 
   const menuItems = [
     {
@@ -45,8 +60,8 @@ export function StickyHeader() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#8DD3BB] shadow-md">
-        <div className="container max-w-[1200px] mx-auto px-4">
-          <div className="flex items-center h-16 justify-between md:justify-center">
+        <div className="container max-w-[1200px] mx-auto">
+          <div className="flex items-center h-16 justify-between gap-5 md:justify-center">
             <nav className="hidden md:flex items-center gap-1 flex-1 justify-center">
               {menuItems.map((item) => (
                 <div
@@ -57,7 +72,7 @@ export function StickyHeader() {
                   }
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
-                  <button className="text-white text-sm font-semibold px-3 py-2 flex items-center gap-1 hover:bg-[#0088c4] rounded transition-colors">
+                  <button className="text-white text-sm font-semibold px-3 py-2 flex items-center gap-1 hover:bg-[#137d58] rounded transition-colors">
                     {item.label}
                     {item.submenu && (
                       <RiArrowDownSLine
@@ -110,6 +125,25 @@ export function StickyHeader() {
                   <RiMenu3Line size={24} />
                 )}
               </button>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger className="cursor-pointer">
+                  <AiOutlineGlobal size={24} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="pt-2">
+                  {langs.map(({ lang }, i) => (
+                    <DropdownMenuItem
+                      key={i}
+                      className="cursor-pointer"
+                      onClick={() => handleChange(lang.toLowerCase())}
+                    >
+                      {lang}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 

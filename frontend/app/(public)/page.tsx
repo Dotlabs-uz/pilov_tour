@@ -14,11 +14,11 @@ export default function Home() {
     return (
         <div className="mx-auto flex mt-2 flex-col">
             <StickyHeader />
-            <HeaderTop />
+            {/* <HeaderTop /> */}
             {/* <HeaderMain /> */}
             <LifeTravel />
             <RecTrips />
-            <ContactSection />
+            {/* <ContactSection /> */}
             <UpcomingTours />
             {/* <Reviews /> */}
             <ArticlesList />
