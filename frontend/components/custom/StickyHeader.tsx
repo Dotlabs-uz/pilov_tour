@@ -172,7 +172,7 @@ export function StickyHeader() {
                     </button>
 
                     {item.submenu && openDropdown === item.label && (
-                      <div className="bg-[#007bb4] pl-4">
+                      <div className="bg-[#8DD3BB] pl-4">
                         {item.submenu.map((subitem) => (
                           <a
                             key={item.label + "-" + subitem.label}
