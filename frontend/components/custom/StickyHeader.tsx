@@ -60,7 +60,7 @@ export function StickyHeader() {
   return (
     <>
       <header className="fixed top-0 left-0 right-0 z-50 bg-[#8DD3BB] shadow-md px-4 lg:px-0">
-        <div className="container max-w-[1200px] mx-auto">
+        <div className="container max-w-[1240px] mx-auto">
           <div className="flex items-center h-16 justify-between gap-5 md:justify-center">
             <p
               onClick={() => router.push("/")}
