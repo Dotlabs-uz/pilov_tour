@@ -12,7 +12,6 @@ import {
   DocumentData,
 } from "firebase/firestore";
 
-import HeaderforOther from "@/components/custom/Header-otherPages";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -35,6 +34,7 @@ import {
 import Review from "@/components/custom/Review";
 import EndComponent from "@/components/custom/EndComponent";
 import Subscribe from "@/components/custom/Subcribe";
+import { StickyHeader } from "@/components/custom/StickyHeader";
 
 interface Title {
   id: string;
@@ -125,9 +125,9 @@ export default function TourPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <HeaderforOther />
+      <StickyHeader/>
 
-      <div className="max-w-[1250px] w-full mx-auto px-4 md:px-6 lg:px-0 mt-6">
+      <div className="max-w-[1250px] mt-10 w-full mx-auto px-4 md:px-6 lg:px-0">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>

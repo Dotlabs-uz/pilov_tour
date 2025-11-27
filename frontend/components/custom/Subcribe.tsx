@@ -4,7 +4,7 @@ import { Input } from "../ui/input";
 
 const Subscribe: React.FC = () => {
   return (
-    <section className="bg-[#CDEAE1] w-[500px] lg:max-w-[1232px] lg:w-full mt-20 mx-auto py-12 px-6 rounded-xl relative -mb-20 z-10">
+    <section className="bg-[#CDEAE1] w-[300px] lg:max-w-[1232px] lg:w-full mt-20 mx-auto py-12 px-6 rounded-xl relative -mb-20 z-10">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
         <div className="flex-1 text-left">
           <div className="flex flex-col max-w-[250px]">
@@ -20,11 +20,11 @@ const Subscribe: React.FC = () => {
             stories.
           </p>
 
-          <div className="flex items-center gap-3 max-w-md">
+          <div className="flex flex-col gap-6 lg:flex-row items-center lg:gap-3 max-w-md">
             <Input
               type="email"
               placeholder="Your email address"
-              className="w-[473px] h-[56px] bg-white "
+              className="lg:w-[473px] w-[200px] lg:h-[56px] h-[35px] bg-white "
             />
             <Button
               type="button"

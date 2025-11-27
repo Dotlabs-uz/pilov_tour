@@ -9,6 +9,7 @@ import { useLocale } from "next-intl";
 import { useRouter } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
+import { StickyHeader } from "@/components/custom/StickyHeader";
 
 interface TourPreview {
   id: string;
@@ -78,9 +79,9 @@ const Tours = () => {
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto min-h-screen">
-      <HeaderforOther />
+      <StickyHeader/>
 
-      <section className="flex justify-center mt-8">
+      <section className="flex mt-20 justify-center">
         <TourFilter />
       </section>
 
