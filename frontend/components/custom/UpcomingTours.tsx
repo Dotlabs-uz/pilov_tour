@@ -5,6 +5,7 @@ import { ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
+import { useRouter } from "next/navigation";
 
 interface TourPreview {
   id: string;
@@ -20,6 +21,7 @@ export default function UpcomingTours() {
   const [tours, setTours] = useState<TourPreview[]>([]);
   const t = useTranslations("tours");
   const locale = useLocale();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTours = async () => {
@@ -72,7 +74,6 @@ export default function UpcomingTours() {
     fetchTours();
   }, [locale]);
 
-  
   return (
     <div className="bg-white py-16 md:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -151,7 +152,10 @@ export default function UpcomingTours() {
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                  <button className="bg-[#8DD3BB] text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 hover:bg-opacity-90 transition-colors">
+                  <button
+                    onClick={() => router.push(`/trips/${tour.id}`)}
+                    className="bg-[#8DD3BB] cursor-pointer text-white font-semibold py-2 px-4 rounded-lg flex items-center gap-2 hover:bg-opacity-90 transition-colors"
+                  >
                     {t("book_now")}
                     <ChevronRight className="w-4 h-4" />
                   </button>

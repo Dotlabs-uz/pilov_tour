@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { db } from "@/app/(public)/firebase";
 import { collection, getDocs, DocumentData } from "firebase/firestore";
+import { StickyHeader } from "@/components/custom/StickyHeader";
 
 interface ArticlePreview {
     id: string;
@@ -63,7 +64,8 @@ const ArticlesPage = () => {
 
     return (
         <div className="max-w-6xl mx-auto p-4">
-            <div className="flex flex-wrap gap-6">
+            <StickyHeader/>
+            <div className="flex mt-15 flex-wrap gap-6">
                 {articles.map((a) => (
                     <Link
                         key={a.id}
