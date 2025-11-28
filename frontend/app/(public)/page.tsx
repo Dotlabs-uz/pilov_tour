@@ -1,6 +1,3 @@
-import FilterBlock from "@/components/custom/FilterBlock";
-import HeaderMain from "@/components/custom/HeaderMain";
-import HeaderTop from "@/components/custom/HeaderTop";
 import RecTrips from "@/components/custom/Rectrips";
 import { StickyHeader } from "@/components/custom/StickyHeader";
 import Subscribe from "@/components/custom/Subcribe";
@@ -18,7 +15,7 @@ export default function Home() {
             {/* <HeaderMain /> */}
             <LifeTravel />
             <RecTrips />
-            {/* <ContactSection /> */}
+            <ContactSection />
             <UpcomingTours />
             {/* <Reviews /> */}
             <ArticlesList />

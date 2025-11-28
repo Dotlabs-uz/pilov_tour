@@ -16,11 +16,6 @@
     "title": "Keyingi qaerga borishni bilmayapsizmi?",
     "subtitle": "Faqat siz uchun yaratilgan sayohatni xohlaysizmi?",
     "description": "\"Biz bilan bog'lanish\" tugmasini bosing, qisqa shaklni to'ldiring – va biz sizning g'oyalaringizni mukammal marshrutga aylantiramiz.",
-    "sidebar_title": "Sayohatga tayyormisiz?",
-    "sidebar_heading": "Sizning yangi sarguzashtingiz bitta klikni bilan boshlanadi!",
-    "sidebar_text1": "Sizning orzularingizga moslashtiruvchi mukammal sayohatni yaratishimizga ruxsat bering. Bizning sayohat mutaxassislari unforgettable xotiralarni yaratishga yordam berishga tayyorlar, yashirin javohirlar va mahalliy tajribalardan tortib ikonik joylar va rol-urgan sarguzashtlargacha.",
-    "sidebar_text2": "O'zingizning ko'rinishingizni biz bilan baham ko'ring, va biz uni bevosita, shaxsiy itinamlangan marshrutga aylantiramiz, bu sizni ilhomlandiradi, dam qilishga tayyorlaydi va olam haqida untilmaydigan qilib tashkil etadi.",
-    "sidebar_text3": "Sarguzasht kutmoqda – buni birgalikda rejalashtiruvchi!",
     "form_name_label": "Sizning ismingiz",
     "form_name_placeholder": "John Doe",
     "form_email_label": "Email",
@@ -31,7 +26,8 @@
     "form_message_label_alt": "Sizning orzulaynigan sayohat haqida gapirib bering",
     "form_message_placeholder": "Sizning ideal sarguzashtingizni tavsiflang...",
     "form_submit": "Mening so'rovimni jo'natish",
-    "form_submitting": "Jo'natilmoqda..."
+    "form_submitting": "Jo'natilmoqda...",
+    "form_cancel": "Bekor qilish"
   },
   "tours": {
     "badge": "KELAYOTGAN TURLAR",

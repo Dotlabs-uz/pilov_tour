@@ -16,11 +16,6 @@
         "title": "¿No sabes a dónde ir después?",
         "subtitle": "¿Sueñas con un viaje creado solo para ti?",
         "description": "Haz clic en \"Contactar\", completa un formulario rápido – y convertiremos tus ideas en la ruta perfecta.",
-        "sidebar_title": "¿Listo para un viaje?",
-        "sidebar_heading": "¡Tu nueva aventura comienza con un clic!",
-        "sidebar_text1": "Permítenos crear el viaje perfecto adaptado a tus sueños. Nuestros expertos en viajes están listos para ayudarte a crear recuerdos inolvidables, desde gemas ocultas y experiencias locales hasta monumentos icónicos y aventuras emocionantes.",
-        "sidebar_text2": "Comparte tu visión con nosotros, y la convertiremos en un itinerario personalizado sin fricciones que te dejará inspirado, relajado y listo para explorar el mundo como nunca antes.",
-        "sidebar_text3": "¡La aventura te espera – planifiquémosla juntos!",
         "form_name_label": "Tu nombre",
         "form_name_placeholder": "John Doe",
         "form_email_label": "Correo electrónico",
@@ -30,7 +25,8 @@
         "form_message_label": "Cuéntanos sobre tu viaje de ensueño",
         "form_message_placeholder": "Describe tu aventura ideal...",
         "form_submit": "Enviar mi solicitud",
-        "form_submitting": "Enviando..."
+        "form_submitting": "Enviando...",
+        "form_cancel": "Cancelar"
     },
     "tours": {
       "badge": "TOURS PRÓXIMOS",

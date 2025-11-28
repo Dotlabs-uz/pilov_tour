@@ -16,11 +16,6 @@
     "title": "Non sai dove andare dopo?",
     "subtitle": "Sogni un viaggio creato apposta per te?",
     "description": "Clicca su \"Entra in contatto\", compila un breve modulo – e trasformeremo le tue idee nel percorso perfetto.",
-    "sidebar_title": "Pronto per un viaggio?",
-    "sidebar_heading": "La tua nuova avventura inizia con un clic!",
-    "sidebar_text1": "Lascia che realizziamo il viaggio perfetto su misura per i tuoi sogni. I nostri esperti di viaggi sono pronti ad aiutarti a creare ricordi indimenticabili, dalle gemme nascoste e dalle esperienze locali ai monumenti iconici e alle avventure emozionanti.",
-    "sidebar_text2": "Condividi la tua visione con noi, e la trasformeremo in un itinerario personalizzato senza soluzione di continuità che ti lascerà ispirato, rilassato e pronto a esplorare il mondo come mai prima d'ora.",
-    "sidebar_text3": "L'avventura ti aspetta – pianifichiamola insieme!",
     "form_name_label": "Il tuo nome",
     "form_name_placeholder": "John Doe",
     "form_email_label": "Email",
@@ -30,7 +25,8 @@
     "form_message_label": "Raccontaci del tuo viaggio da sogno",
     "form_message_placeholder": "Descrivi la tua avventura ideale...",
     "form_submit": "Invia la mia richiesta",
-    "form_submitting": "Invio in corso..."
+    "form_submitting": "Invio in corso...",
+    "form_cancel": "Annulla"
   },
   "tours": {
     "badge": "TOUR IMMINENTI",

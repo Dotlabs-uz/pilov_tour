@@ -16,11 +16,6 @@
         "title": "Wissen Sie nicht, wohin es als nächstes gehen soll?",
         "subtitle": "Träumen Sie von einer Reise, die genau für Sie geschaffen ist?",
         "description": "Klicken Sie auf \"In Kontakt treten\", füllen Sie ein kurzes Formular aus – und wir verwandeln Ihre Ideen in die perfekte Route.",
-        "sidebar_title": "Bereit für eine Reise?",
-        "sidebar_heading": "Ihr neues Abenteuer beginnt mit einem Klick!",
-        "sidebar_text1": "Lassen Sie uns die perfekte Reise für Ihre Träume gestalten. Unsere Reiseexperten sind bereit, Ihnen dabei zu helfen, unvergessliche Erinnerungen zu schaffen, von versteckten Juwelen und lokalen Erfahrungen bis hin zu ikonischen Wahrzeichen und aufregenden Abenteuern.",
-        "sidebar_text2": "Teilen Sie Ihre Vision mit uns, und wir verwandeln sie in einen nahtlosen, personalisierten Reiseplan, der Sie inspiriert, entspannt und bereit macht, die Welt wie nie zuvor zu erkunden.",
-        "sidebar_text3": "Das Abenteuer wartet – lassen Sie uns es zusammen planen!",
         "form_name_label": "Ihr Name",
         "form_name_placeholder": "John Doe",
         "form_email_label": "E-Mail",
@@ -30,7 +25,8 @@
         "form_message_label": "Erzählen Sie uns von Ihrer Traumreise",
         "form_message_placeholder": "Beschreiben Sie Ihr ideales Abenteuer...",
         "form_submit": "Meine Anfrage senden",
-        "form_submitting": "Wird gesendet..."
+        "form_submitting": "Wird gesendet...",
+        "form_cancel": "Abbrechen"
     },
     "tours": {
       "badge": "BEVORSTEHENDE TOUREN",
