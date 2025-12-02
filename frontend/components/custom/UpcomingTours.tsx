@@ -7,18 +7,50 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
 import { useRouter } from "next/navigation";
 
-interface TourPreview {
+type LangCodes = "en" | "ru" | "ge" | "it" | "sp" | "uk" | "uz";
+
+type MultiLangString = {
+  [key in LangCodes]?: string;
+};
+
+// Данные, как лежат в Firestore
+export interface TourPreview {
   id: string;
   images: string[];
-  titles: { lang: string; title: string }[];
-  descriptions: { lang: string; description: string }[];
+  title: MultiLangString;
+  description: MultiLangString;
+  dates?: string[];
+  inclusions?: {
+    included: string[];
+    notincluded: string[];
+  };
+  itinerary?: any;
+  location?: string;
+  maxGroupCount?: number;
   price: string;
-  duration: string;
+  duration: {
+    days: number | string;
+    nights: number | string;
+  };
+  style: string;
+}
+
+// Данные, которые выводятся в UI
+export interface TourCard {
+  id: string;
+  images: string[];
+  title: string;
+  description: string;
+  price: string;
+  duration: {
+    days: number | string;
+    nights: number | string;
+  };
   style: string;
 }
 
 export default function UpcomingTours() {
-  const [tours, setTours] = useState<TourPreview[]>([]);
+  const [tours, setTours] = useState<TourCard[]>([]);
   const t = useTranslations("tours");
   const locale = useLocale();
   const router = useRouter();
@@ -27,46 +59,34 @@ export default function UpcomingTours() {
     const fetchTours = async () => {
       const snapshot = await getDocs(collection(db, "tours"));
 
-      const toursData: TourPreview[] = await Promise.all(
-        snapshot.docs.map(async (tourDoc) => {
-          const data = tourDoc.data();
+      const toursData: TourCard[] = snapshot.docs.map((tourDoc) => {
+        const data = tourDoc.data() as TourPreview;
 
-          const titlesSnap = await getDocs(
-            collection(db, "tours", tourDoc.id, "titles")
-          );
-          const descriptionsSnap = await getDocs(
-            collection(db, "tours", tourDoc.id, "descriptions")
-          );
+        const titleObj = data.title || {};
+        const descObj = data.description || {};
 
-          const titles = titlesSnap.docs.map(
-            (d) => d.data() as { lang: string; title: string }
-          );
+        const title =
+          titleObj[locale as keyof typeof titleObj] ||
+          titleObj["en"] ||
+          Object.values(titleObj)[0] ||
+          "";
 
-          const descriptions = descriptionsSnap.docs.map(
-            (d) => d.data() as { lang: string; description: string }
-          );
+        const description =
+          descObj[locale as keyof typeof descObj] ||
+          descObj["en"] ||
+          Object.values(descObj)[0] ||
+          "";2
 
-          const selectedTitle = titles.find((t) => t.lang === locale) ||
-            titles.find((t) => t.lang === "en") ||
-            titles[0] || { title: "", lang: "en" };
-
-          const selectedDescription = descriptions.find(
-            (d) => d.lang === locale
-          ) ||
-            descriptions.find((d) => d.lang === "en") ||
-            descriptions[0] || { description: "", lang: "en" };
-
-          return {
-            id: tourDoc.id,
-            images: data.images || [],
-            titles: [selectedTitle],
-            descriptions: [selectedDescription],
-            price: data.price || "",
-            duration: data.duration || "",
-            style: data.style || "",
-          };
-        })
-      );
+        return {
+          id: tourDoc.id,
+          images: data.images || [],
+          title,
+          description,
+          price: data.price || "",
+          duration: data.duration || { days: "", nights: "" },
+          style: data.style || "",
+        };
+      });
 
       setTours(toursData);
     };
@@ -100,23 +120,21 @@ export default function UpcomingTours() {
               <div className="h-40 overflow-hidden bg-gray-100">
                 <img
                   src={tour.images[0] || "/placeholder.svg"}
-                  alt={tour.titles[0].title}
+                  alt={tour.title}
                   className="w-full h-full object-cover"
                 />
               </div>
 
               <div className="p-5">
                 <div className="inline-block bg-[#8DD3BB] text-white text-xs font-semibold px-3 py-1 rounded-full mb-3">
-                  {tour.duration}
+                  {tour.duration.days}d / {tour.duration.nights}n
                 </div>
 
                 <h3 className="text-lg font-bold text-black mb-2">
-                  {tour.titles[0].title}
+                  {tour.title}
                 </h3>
 
-                <p className="text-gray-600 text-sm mb-3">
-                  {tour.descriptions[0].description}
-                </p>
+                <p className="text-gray-600 text-sm mb-3">{tour.description}</p>
 
                 <div className="mb-4">
                   <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
@@ -131,10 +149,11 @@ export default function UpcomingTours() {
                       {t("duration")}
                     </p>
                     <p className="text-lg font-bold text-[#8DD3BB]">
-                      {tour.duration}
+                      {tour.duration.days}
                     </p>
                     <p className="text-xs text-gray-500">{t("days")}</p>
                   </div>
+
                   <div className="text-center">
                     <p className="text-xs text-gray-500 font-semibold mb-1">
                       {t("status")}
@@ -143,6 +162,7 @@ export default function UpcomingTours() {
                       {t("available")}
                     </p>
                   </div>
+
                   <div className="text-center">
                     <p className="text-xs text-gray-500 font-semibold mb-1">
                       {t("price")}
