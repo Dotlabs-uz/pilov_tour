@@ -3,7 +3,7 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   images: {
-    domains: ["fra.cloud.appwrite.io"],
+    domains: ["firebasestorage.googleapis.com"],
   },
 };
 

@@ -1,16 +1,10 @@
-  "use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { db } from "@/app/(public)/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  DocumentData,
-} from "firebase/firestore";
+import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 
 import {
   Breadcrumb,
@@ -20,6 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
 import { Button } from "@/components/ui/button";
 import { FaLocationDot, FaClock, FaTag, FaHeart } from "react-icons/fa6";
 import { FaShareAlt, FaUserFriends } from "react-icons/fa";
@@ -36,33 +31,35 @@ import EndComponent from "@/components/custom/EndComponent";
 import Subscribe from "@/components/custom/Subcribe";
 import { StickyHeader } from "@/components/custom/StickyHeader";
 
-interface Title {
-  id: string;
-  lang: string;
-  title: string;
+// ---------- Типы ----------
+type Lang = "en" | "ru" | "uz";
+
+interface MultiLangString {
+  en?: string;
+  ru?: string;
+  uz?: string;
 }
 
-interface Description {
-  id: string;
-  lang: string;
-  description: string;
+interface Duration {
+  days?: string | number;
+  nights?: string | number;
 }
 
 interface Tour {
   id: string;
   images: string[];
-  titles: Title[];
-  descriptions: Description[];
+  title: MultiLangString;
+  description: MultiLangString;
   price: string;
-  duration: string;
+  duration: Duration | string | any;
   style: string;
 }
 
+// ---------- Компонент ----------
 export default function TourPage() {
   const params = useParams();
-  const locale = useLocale();
-  const rawId = params.id;
-  const tourId = typeof rawId === "string" ? rawId : undefined;
+  const locale = useLocale() as Lang;
+  const tourId = typeof params.id === "string" ? params.id : undefined;
 
   const [tour, setTour] = useState<Tour | null>(null);
 
@@ -72,62 +69,57 @@ export default function TourPage() {
     const fetchTour = async () => {
       const tourRef = doc(db, "tours", tourId);
       const tourSnap = await getDoc(tourRef);
+
       if (!tourSnap.exists()) return;
 
-      const data = tourSnap.data() as DocumentData;
+      const data = tourSnap.data();
 
-      const titlesSnap = await getDocs(
-        collection(db, "tours", tourId, "titles")
-      );
-      const descriptionsSnap = await getDocs(
-        collection(db, "tours", tourId, "descriptions")
-      );
+      const titleObj = data.title || {};
+      const descObj = data.description || {};
 
-      const titles: Title[] = titlesSnap.docs.map((d) => ({
-        id: d.id,
-        ...(d.data() as { lang: string; title: string }),
-      }));
+      const title =
+        titleObj[locale] || titleObj["en"] || Object.values(titleObj)[0] || "";
 
-      const descriptions: Description[] = descriptionsSnap.docs.map((d) => ({
-        id: d.id,
-        ...(d.data() as { lang: string; description: string }),
-      }));
+      const description =
+        descObj[locale] || descObj["en"] || Object.values(descObj)[0] || "";
+
+      // duration → всегда объект
+      const duration = data.duration || { days: "", nights: "" };
 
       setTour({
         id: tourSnap.id,
         images: data.images || [],
         price: data.price || "",
-        duration: data.duration || "",
+        duration,
         style: data.style || "",
-        titles,
-        descriptions,
+        title: titleObj,
+        description: descObj,
       });
     };
 
     fetchTour();
-  }, [tourId]);
+  }, [tourId, locale]);
 
   if (!tour) return <div className="p-10 text-center">Loading...</div>;
 
+  // ---------- Выбор локализированного текста ----------
   const title =
-    tour.titles.find((t) => t.lang === locale)?.title ||
-    tour.titles.find((t) => t.lang === "en")?.title ||
-    tour.titles[0]?.title ||
-    "";
+    tour.title[locale] || tour.title.en || Object.values(tour.title)[0] || "";
 
   const description =
-    tour.descriptions.find((d) => d.lang === locale)?.description ||
-    tour.descriptions.find((d) => d.lang === "en")?.description ||
-    tour.descriptions[0]?.description ||
+    tour.description[locale] ||
+    tour.description.en ||
+    Object.values(tour.description)[0] ||
     "";
 
   const images = tour.images || [];
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      <StickyHeader/>
+      <StickyHeader />
 
       <div className="max-w-[1250px] mt-10 w-full mx-auto px-4 md:px-6 lg:px-0">
+        {/* Breadcrumb */}
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -144,6 +136,7 @@ export default function TourPage() {
           </BreadcrumbList>
         </Breadcrumb>
 
+        {/* Title */}
         <div className="mt-6 mb-6 border-b pb-6 border-gray-200">
           <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
             <div className="flex-1">
@@ -179,11 +172,12 @@ export default function TourPage() {
           </div>
         </div>
 
+        {/* Images */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 flex flex-col gap-6">
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
               {images.length > 1 ? (
-                <div className="w-full">
+                <div>
                   <div className="relative w-full h-[440px] md:h-[520px] lg:h-[420px]">
                     <Image
                       src={images[0]}
@@ -337,6 +331,13 @@ export default function TourPage() {
               </div>
             </section>
 
+            {/* Overview */}
+            <section className="bg-white rounded-2xl p-6 shadow-sm">
+              <h2 className="text-2xl font-semibold mb-3">Обзор</h2>
+              <p className="text-gray-700 leading-relaxed">{description}</p>
+            </section>
+
+            {/* Reviews */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-2xl font-semibold">Отзывы</h3>
@@ -352,6 +353,7 @@ export default function TourPage() {
             </section>
           </div>
 
+          {/* Sidebar */}
           <aside className="lg:col-span-4">
             <div className="lg:sticky lg:top-24">
               <div className="bg-white border rounded-2xl shadow-md p-6">
@@ -365,7 +367,10 @@ export default function TourPage() {
                     <FaClock className="text-[#8DD3BB]" />
                     <div>
                       <p className="font-medium">Длительность</p>
-                      <p>{tour.duration}</p>
+                      <p>
+                        {tour.duration.days} days / {tour.duration.nights}{" "}
+                        nights
+                      </p>
                     </div>
                   </div>
 
@@ -389,15 +394,6 @@ export default function TourPage() {
                 <Button className="w-full h-12 mt-4 bg-[#8DD3BB] text-[#112211] font-semibold rounded-lg">
                   Забронировать
                 </Button>
-                <div className="pt-3 border-t">
-                  <p className="text-sm text-gray-600">
-                    Includes: accommodation, breakfasts, guides, transfers.
-                  </p>
-                  <p className="text-xs text-gray-500 mt-2">
-                    Free cancellation up to 30 days before departure (T&Cs
-                    apply).
-                  </p>
-                </div>
               </div>
             </div>
           </aside>

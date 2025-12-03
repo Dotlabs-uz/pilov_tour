@@ -75,7 +75,7 @@ export default function UpcomingTours() {
           descObj[locale as keyof typeof descObj] ||
           descObj["en"] ||
           Object.values(descObj)[0] ||
-          "";2
+          "";
 
         return {
           id: tourDoc.id,
