@@ -1,6 +1,5 @@
 "use client";
 
-import HeaderforOther from "@/components/custom/Header-otherPages";
 import Subscribe from "@/components/custom/Subcribe";
 import TourFilter from "@/components/custom/TourFilter";
 import { useEffect, useState } from "react";
@@ -11,18 +10,47 @@ import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { StickyHeader } from "@/components/custom/StickyHeader";
 
-interface TourPreview {
+export type LangCodes = "en" | "ru" | "ge" | "it" | "sp" | "uk" | "uz";
+
+export type MultiLangString = {
+  [key in LangCodes]?: string;
+};
+
+export interface TourPreview {
   id: string;
   images: string[];
-  titles: { lang: string; title: string }[];
-  descriptions: { lang: string; description: string }[];
+  title: MultiLangString;
+  description: MultiLangString;
+  dates?: string[];
+  inclusions?: {
+    included: string[];
+    notincluded: string[];
+  };
+  itinerary?: any;
+  location?: string;
+  maxGroupCount?: number;
   price: string;
-  duration: string;
+  duration: {
+    days: number | string;
+    nights: number | string;
+  };
+  style: string;
+}
+export interface TourCard {
+  id: string;
+  images: string[];
+  title: string;
+  description: string;
+  price: string;
+  duration: {
+    days: number | string;
+    nights: number | string;
+  };
   style: string;
 }
 
 const Tours = () => {
-  const [tours, setTours] = useState<TourPreview[]>([]);
+  const [tours, setTours] = useState<TourCard[]>([]);
   const locale = useLocale();
   const router = useRouter();
 
@@ -30,46 +58,75 @@ const Tours = () => {
     const fetchTours = async () => {
       const snapshot = await getDocs(collection(db, "tours"));
 
-      const toursData: TourPreview[] = await Promise.all(
-        snapshot.docs.map(async (tourDoc) => {
-          const data = tourDoc.data();
+      const toursData: TourCard[] = snapshot.docs.map((tourDoc) => {
+        const data = tourDoc.data() as TourPreview;
 
-          const titlesSnap = await getDocs(
-            collection(db, "tours", tourDoc.id, "titles")
-          );
-          const descriptionsSnap = await getDocs(
-            collection(db, "tours", tourDoc.id, "descriptions")
-          );
+        const titleObj = data.title || {};
+        const descObj = data.description || {};
 
-          const titles = titlesSnap.docs.map(
-            (d) => d.data() as { lang: string; title: string }
-          );
+        const title =
+          titleObj[locale as keyof typeof titleObj] ||
+          titleObj["en"] ||
+          Object.values(titleObj)[0] ||
+          "";
 
-          const descriptions = descriptionsSnap.docs.map(
-            (d) => d.data() as { lang: string; description: string }
-          );
-
-          const selectedTitle = titles.find((t) => t.lang === locale) ||
-            titles.find((t) => t.lang === "en") ||
-            titles[0] || { title: "", lang: "en" };
-
-          const selectedDescription = descriptions.find(
-            (d) => d.lang === locale
-          ) ||
-            descriptions.find((d) => d.lang === "en") ||
-            descriptions[0] || { description: "", lang: "en" };
+        const description =
+          descObj[locale as keyof typeof descObj] ||
+          descObj["en"] ||
+          Object.values(descObj)[0] ||
+          "";
 
           return {
             id: tourDoc.id,
             images: data.images || [],
-            titles: [selectedTitle],
-            descriptions: [selectedDescription],
+            title,
+            description,
             price: data.price || "",
-            duration: data.duration || "",
-            style: data.style || "",
-          };
-        })
-      );
+            duration: data.duration || {days: "", nights: ""},
+            style: data.style || ""
+          }
+      });
+
+      // const toursData: TourPreview[] = await Promise.all(
+      //   snapshot.docs.map(async (tourDoc) => {
+      //     const data = tourDoc.data();
+
+      //     const titlesSnap = await getDocs(
+      //       collection(db, "tours", tourDoc.id, "titles")
+      //     );
+      //     const descriptionsSnap = await getDocs(
+      //       collection(db, "tours", tourDoc.id, "descriptions")
+      //     );
+
+      //     const titles = titlesSnap.docs.map(
+      //       (d) => d.data() as { lang: string; title: string }
+      //     );
+
+      //     const descriptions = descriptionsSnap.docs.map(
+      //       (d) => d.data() as { lang: string; description: string }
+      //     );
+
+      //     const selectedTitle = titles.find((t) => t.lang === locale) ||
+      //       titles.find((t) => t.lang === "en") ||
+      //       titles[0] || { title: "", lang: "en" };
+
+      //     const selectedDescription = descriptions.find(
+      //       (d) => d.lang === locale
+      //     ) ||
+      //       descriptions.find((d) => d.lang === "en") ||
+      //       descriptions[0] || { description: "", lang: "en" };
+
+      //     return {
+      //       id: tourDoc.id,
+      //       images: data.images || [],
+      //       titles: [selectedTitle],
+      //       descriptions: [selectedDescription],
+      //       price: data.price || "",
+      //       duration: data.duration || "",
+      //       style: data.style || "",
+      //     };
+      //   })
+      // );
 
       setTours(toursData);
     };
@@ -79,7 +136,7 @@ const Tours = () => {
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto min-h-screen">
-      <StickyHeader/>
+      <StickyHeader />
 
       <section className="flex mt-20 justify-center">
         <TourFilter />
@@ -95,18 +152,18 @@ const Tours = () => {
               {tour.images[0] && (
                 <img
                   src={tour.images[0]}
-                  alt={tour.titles[0].title}
+                  alt={tour.title}
                   className="h-48 w-full object-cover"
                 />
               )}
 
               <div className="p-4 flex flex-col gap-2">
                 <h3 className="text-lg font-semibold text-[#112211]">
-                  {tour.titles[0].title}
+                  {tour.title}
                 </h3>
 
                 <p className="text-sm text-gray-600 line-clamp-3">
-                  {tour.descriptions[0].description}
+                  {tour.description}
                 </p>
 
                 <Button

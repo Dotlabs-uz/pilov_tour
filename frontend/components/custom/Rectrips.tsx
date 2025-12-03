@@ -9,24 +9,13 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { HotelsFlights } from "@/utils/Flights&Hotels";
-import Card from "@/components/custom/Card";
 import { useLocale } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
-
-interface TourPreview {
-  id: string;
-  images: string[];
-  titles: { lang: string; title: string }[];
-  descriptions: { lang: string; description: string }[];
-  price: string;
-  duration: string;
-  style: string;
-}
+import { TourCard, TourPreview } from "./UpcomingTours";
 
 const RecTrips = () => {
-  const [tours, setTours] = useState<TourPreview[]>([]);
+  const [tours, setTours] = useState<TourCard[]>([]);
   const router = useRouter();
   const locale = useLocale();
 
@@ -34,53 +23,39 @@ const RecTrips = () => {
     const fetchTours = async () => {
       const snapshot = await getDocs(collection(db, "tours"));
 
-      const toursData: TourPreview[] = await Promise.all(
-        snapshot.docs.map(async (tourDoc) => {
-          const data = tourDoc.data();
+      const toursData: TourCard[] = snapshot.docs.map((tourDoc) => {
+        const data = tourDoc.data() as TourPreview;
 
-          const titlesSnap = await getDocs(
-            collection(db, "tours", tourDoc.id, "titles")
-          );
-          const descriptionsSnap = await getDocs(
-            collection(db, "tours", tourDoc.id, "descriptions")
-          );
+        const titleObj = data.title || {};
+        const descObj = data.description || {};
 
-          const titles = titlesSnap.docs.map(
-            (d) => d.data() as { lang: string; title: string }
-          );
+        const title =
+          titleObj[locale as keyof typeof titleObj] ||
+          titleObj["en"] ||
+          Object.values(titleObj)[0] ||
+          "";
 
-          const descriptions = descriptionsSnap.docs.map(
-            (d) => d.data() as { lang: string; description: string }
-          );
+        const description =
+          descObj[locale as keyof typeof descObj] ||
+          descObj["en"] ||
+          Object.values(descObj)[0] ||
+          "";
 
-          const selectedTitle = titles.find((t) => t.lang === locale) ||
-            titles.find((t) => t.lang === "en") ||
-            titles[0] || { title: "", lang: "en" };
-
-          const selectedDescription = descriptions.find(
-            (d) => d.lang === locale
-          ) ||
-            descriptions.find((d) => d.lang === "en") ||
-            descriptions[0] || { description: "", lang: "en" };
-
-          return {
-            id: tourDoc.id,
-            images: data.images || [],
-            titles: [selectedTitle],
-            descriptions: [selectedDescription],
-            price: data.price || "",
-            duration: data.duration || "",
-            style: data.style || "",
-          };
-        })
-      );
-
+        return {
+          id: tourDoc.id,
+          images: data.images || [],
+          title,
+          description,
+          price: data.price || "",
+          duration: data.duration || { days: "", nights: "" },
+          style: data.style || "",
+        };
+      });
       setTours(toursData);
     };
 
     fetchTours();
   }, [locale]);
-
   return (
     <div>
       <section className="flex container max-w-[1200px] mx-auto flex-col my-10 gap-6 px-4 lg:px-0">
@@ -110,16 +85,16 @@ const RecTrips = () => {
                     {tour.images?.[0] && (
                       <img
                         src={tour.images[0]}
-                        alt={tour.titles[0].title}
+                        alt={tour.title}
                         className="h-48 w-full object-cover"
                       />
                     )}
                     <div className="p-4 flex flex-col gap-2">
                       <h3 className="text-lg font-semibold text-[#112211]">
-                        {tour.titles[0].title}
+                        {tour.title}
                       </h3>
                       <p className="text-sm text-gray-600 line-clamp-3">
-                        {tour.descriptions[0].description}
+                        {tour.description}
                       </p>
                       <Button
                         onClick={() =>
