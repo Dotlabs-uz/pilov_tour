@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { db } from "@/app/(public)/firebase";
-import { collection, doc, getDoc, getDocs } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 import {
   Breadcrumb,
@@ -31,7 +31,6 @@ import EndComponent from "@/components/custom/EndComponent";
 import Subscribe from "@/components/custom/Subcribe";
 import { StickyHeader } from "@/components/custom/StickyHeader";
 
-// ---------- Типы ----------
 type Lang = "en" | "ru" | "uz";
 
 interface MultiLangString {
@@ -55,7 +54,6 @@ interface Tour {
   style: string;
 }
 
-// ---------- Компонент ----------
 export default function TourPage() {
   const params = useParams();
   const locale = useLocale() as Lang;
@@ -76,14 +74,6 @@ export default function TourPage() {
 
       const titleObj = data.title || {};
       const descObj = data.description || {};
-
-      const title =
-        titleObj[locale] || titleObj["en"] || Object.values(titleObj)[0] || "";
-
-      const description =
-        descObj[locale] || descObj["en"] || Object.values(descObj)[0] || "";
-
-      // duration → всегда объект
       const duration = data.duration || { days: "", nights: "" };
 
       setTour({
@@ -102,7 +92,6 @@ export default function TourPage() {
 
   if (!tour) return <div className="p-10 text-center">Loading...</div>;
 
-  // ---------- Выбор локализированного текста ----------
   const title =
     tour.title[locale] || tour.title.en || Object.values(tour.title)[0] || "";
 
@@ -119,7 +108,6 @@ export default function TourPage() {
       <StickyHeader />
 
       <div className="max-w-[1250px] mt-10 w-full mx-auto px-4 md:px-6 lg:px-0">
-        {/* Breadcrumb */}
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -136,7 +124,6 @@ export default function TourPage() {
           </BreadcrumbList>
         </Breadcrumb>
 
-        {/* Title */}
         <div className="mt-6 mb-6 border-b pb-6 border-gray-200">
           <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
             <div className="flex-1">
@@ -172,7 +159,6 @@ export default function TourPage() {
           </div>
         </div>
 
-        {/* Images */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 flex flex-col gap-6">
             <div className="bg-white rounded-2xl overflow-hidden shadow-sm">
@@ -331,13 +317,11 @@ export default function TourPage() {
               </div>
             </section>
 
-            {/* Overview */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <h2 className="text-2xl font-semibold mb-3">Обзор</h2>
               <p className="text-gray-700 leading-relaxed">{description}</p>
             </section>
 
-            {/* Reviews */}
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-2xl font-semibold">Отзывы</h3>
@@ -353,7 +337,6 @@ export default function TourPage() {
             </section>
           </div>
 
-          {/* Sidebar */}
           <aside className="lg:col-span-4">
             <div className="lg:sticky lg:top-24">
               <div className="bg-white border rounded-2xl shadow-md p-6">

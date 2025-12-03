@@ -13,7 +13,6 @@ type MultiLangString = {
   [key in LangCodes]?: string;
 };
 
-// Данные, как лежат в Firestore
 export interface TourPreview {
   id: string;
   images: string[];
@@ -35,7 +34,6 @@ export interface TourPreview {
   style: string;
 }
 
-// Данные, которые выводятся в UI
 export interface TourCard {
   id: string;
   images: string[];
