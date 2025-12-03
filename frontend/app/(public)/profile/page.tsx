@@ -17,7 +17,7 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 
-interface DatabaseUser {
+export interface DatabaseUser {
   uid: string;
   name?: string;
   email?: string;
