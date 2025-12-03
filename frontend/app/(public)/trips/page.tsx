@@ -87,47 +87,6 @@ const Tours = () => {
           }
       });
 
-      // const toursData: TourPreview[] = await Promise.all(
-      //   snapshot.docs.map(async (tourDoc) => {
-      //     const data = tourDoc.data();
-
-      //     const titlesSnap = await getDocs(
-      //       collection(db, "tours", tourDoc.id, "titles")
-      //     );
-      //     const descriptionsSnap = await getDocs(
-      //       collection(db, "tours", tourDoc.id, "descriptions")
-      //     );
-
-      //     const titles = titlesSnap.docs.map(
-      //       (d) => d.data() as { lang: string; title: string }
-      //     );
-
-      //     const descriptions = descriptionsSnap.docs.map(
-      //       (d) => d.data() as { lang: string; description: string }
-      //     );
-
-      //     const selectedTitle = titles.find((t) => t.lang === locale) ||
-      //       titles.find((t) => t.lang === "en") ||
-      //       titles[0] || { title: "", lang: "en" };
-
-      //     const selectedDescription = descriptions.find(
-      //       (d) => d.lang === locale
-      //     ) ||
-      //       descriptions.find((d) => d.lang === "en") ||
-      //       descriptions[0] || { description: "", lang: "en" };
-
-      //     return {
-      //       id: tourDoc.id,
-      //       images: data.images || [],
-      //       titles: [selectedTitle],
-      //       descriptions: [selectedDescription],
-      //       price: data.price || "",
-      //       duration: data.duration || "",
-      //       style: data.style || "",
-      //     };
-      //   })
-      // );
-
       setTours(toursData);
     };
 
