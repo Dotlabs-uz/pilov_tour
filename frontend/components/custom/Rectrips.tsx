@@ -90,7 +90,7 @@ const RecTrips = () => {
                       />
                     )}
                     <div className="p-4 flex flex-col gap-2">
-                      <h3 className="text-lg font-semibold text-[#112211]">
+                      <h3 className="text-lg font-semibold text-[#112211] truncate">
                         {tour.title}
                       </h3>
                       <p className="text-sm text-gray-600 line-clamp-3">

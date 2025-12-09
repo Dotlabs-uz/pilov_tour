@@ -104,9 +104,6 @@ export default function UpcomingTours() {
           <h1 className="text-4xl md:text-5xl font-bold text-black mb-4">
             {t("title")}
           </h1>
-          <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-            {t("description")}
-          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -128,11 +125,11 @@ export default function UpcomingTours() {
                   {tour.duration.days}d / {tour.duration.nights}n
                 </div>
 
-                <h3 className="text-lg font-bold text-black mb-2">
+                <h3 className="text-lg font-bold text-black mb-2 truncate">
                   {tour.title}
                 </h3>
 
-                <p className="text-gray-600 text-sm mb-3">{tour.description}</p>
+                <p className="text-gray-600 text-sm mb-3 line-clamp-3">{tour.description}</p>
 
                 <div className="mb-4">
                   <p className="text-xs font-semibold text-gray-500 uppercase mb-1">

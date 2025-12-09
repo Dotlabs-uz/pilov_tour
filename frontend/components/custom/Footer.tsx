@@ -30,13 +30,7 @@ const Footer = () => {
                 <FaFacebookF />
               </a>
               <a href="#">
-                <FaTwitter />
-              </a>
-              <a href="#">
                 <FaInstagram />
-              </a>
-              <a href="#">
-                <FaYoutube />
               </a>
             </div>
           </div>
