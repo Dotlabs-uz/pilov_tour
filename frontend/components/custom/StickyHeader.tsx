@@ -37,24 +37,9 @@ export function StickyHeader() {
       ],
     },
     {
-      label: t("private_tours"),
-      submenu: [
-        { label: t("private_tours_classic"), href: "#" },
-        { label: t("private_tours_cultural"), href: "#" },
-        { label: t("private_tours_luxury"), href: "#" },
-        { label: t("private_tours_eco"), href: "#" },
-      ],
-    },
-    {
-      label: t("group_packages"),
-      submenu: [
-        { label: t("group_packages_equal"), href: "#" },
-        { label: t("group_packages_2"), href: "#" },
-        { label: t("group_packages_3"), href: "#" },
-      ],
+      label: t("articles"),
     },
     { label: t("testimonials"), href: "#" },
-    { label: t("publications"), href: "#" },
   ];
 
   return (

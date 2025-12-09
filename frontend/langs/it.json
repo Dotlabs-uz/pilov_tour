@@ -92,17 +92,8 @@
     "destinations_uzbekistan": "Uzbekistan",
     "destinations_kazakhstan": "Kazachstan",
     "destinations_tajikistan": "Tagikistan",
-    "private_tours": "TOUR PRIVATI",
-    "private_tours_classic": "Tour classici",
-    "private_tours_cultural": "Tour culturali",
-    "private_tours_luxury": "Tour di lusso",
-    "private_tours_eco": "Tour ecologici",
-    "group_packages": "PACCHETTI DI GRUPPO",
-    "group_packages_equal": "Gruppo = Privato",
-    "group_packages_2": "Pacchetto 2",
-    "group_packages_3": "Pacchetto 3",
+    "articles": "ARTICOLI",
     "testimonials": "TESTIMONIANZE",
-    "publications": "PUBBLICAZIONI",
     "search_placeholder": "Cerca tour di gruppo e privati"
   }
 }
