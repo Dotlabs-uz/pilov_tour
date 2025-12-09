@@ -61,7 +61,7 @@ const Footer = () => {
 
             <div className="flex gap-10">
               <ul className="space-y-2 text-sm whitespace-nowrap">
-                <li><a href="#" className="hover:text-black">{t("about_us")}</a></li>
+                <li> <a href="#about" className="hover:text-black">{t("about_us")}</a></li>
                 <li><a href="#" className="hover:text-black">{t("testimonials")}</a></li>
                 <li><a href="#" className="hover:text-black">{t("our_team")}</a></li>
                 <li><a href="#" className="hover:text-black">{t("booking_terms")}</a></li>

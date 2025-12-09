@@ -95,5 +95,16 @@
     "articles": "ARTICOLI",
     "testimonials": "TESTIMONIANZE",
     "search_placeholder": "Cerca tour di gruppo e privati"
+  },
+  "about": {
+    "title": "Chi siamo",
+    "section1": {
+      "title": "Cosa ci distingue",
+      "description": "Ci concentriamo sulla condivisione della gioia di viaggiare. Da oltre 35 anni accompagniamo viaggiatori in tutto il mondo affinché possano vivere esperienze autentiche, rare e memorabili. Siamo grati per ciò che il viaggio ci offre – e restituiamo attraverso Pilav Tour, sostenendo comunità in tutto il mondo, con orgoglio certificati B Corp dal 2018."
+    },
+    "section2": {
+      "title": "Come facciamo la differenza",
+      "description": "Da più di 20 anni la nostra organizzazione senza scopo di lucro Pilav Tour permette ai viaggiatori di avere un impatto maggiore nei luoghi che visitano."
+    }
   }
 }
