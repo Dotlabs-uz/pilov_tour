@@ -63,82 +63,23 @@ const Footer = () => {
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">{t("services")}</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("service_small_groups")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("service_private")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("service_custom")}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
             <h4 className="font-semibold mb-4">{t("company")}</h4>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("about_us")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("testimonials")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("our_team")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("booking_terms")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("cancellations")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("privacy_policy")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("sustainability_policy")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("partnership")}
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-black">
-                  {t("contacts")}
-                </a>
-              </li>
-            </ul>
-          </div>
 
-          <div>
-            <h4 className="font-semibold mb-4">{t("payment_methods")}</h4>
-            <div className="flex gap-4 items-center">
-              <FaCcVisa className="text-5xl" color="blue" />
-              <FaCcMastercard className="text-5xl" color="" />
+            <div className="flex gap-10">
+              <ul className="space-y-2 text-sm whitespace-nowrap">
+                <li><a href="#" className="hover:text-black">{t("about_us")}</a></li>
+                <li><a href="#" className="hover:text-black">{t("testimonials")}</a></li>
+                <li><a href="#" className="hover:text-black">{t("our_team")}</a></li>
+                <li><a href="#" className="hover:text-black">{t("booking_terms")}</a></li>
+                <li><a href="#" className="hover:text-black">{t("cancellations")}</a></li>
+              </ul>
+
+              <ul className="space-y-2 text-sm whitespace-nowrap">
+                <li><a href="#" className="hover:text-black">{t("privacy_policy")}</a></li>
+                <li><a href="#" className="hover:text-black">{t("sustainability_policy")}</a></li>
+                <li><a href="#" className="hover:text-black">{t("partnership")}</a></li>
+                <li><a href="#" className="hover:text-black">{t("contacts")}</a></li>
+              </ul>
             </div>
           </div>
         </div>

@@ -19,20 +19,6 @@ const Subscribe: React.FC = () => {
             Get inspired! Receive travel discounts, tips and behind the scenes
             stories.
           </p>
-
-          <div className="flex flex-col gap-6 lg:flex-row items-center lg:gap-3 max-w-md">
-            <Input
-              type="email"
-              placeholder="Your email address"
-              className="lg:w-[473px] w-[200px] lg:h-[56px] h-[35px] bg-white "
-            />
-            <Button
-              type="button"
-              className="w-[104px] cursor-pointer hover:bg-[#8DD3BB] hover:border-white hover:border-1 hover:text-black transition-all h-[56px] rounded-md "
-            >
-              Subscribe
-            </Button>
-          </div>
         </div>
 
         <div className="flex-shrink-0">
