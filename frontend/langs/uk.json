@@ -91,17 +91,8 @@
         "destinations_uzbekistan": "Узбекистан",
         "destinations_kazakhstan": "Казахстан",
         "destinations_tajikistan": "Таджикистан",
-        "private_tours": "ПРИВАТНІ ТУРИ",
-        "private_tours_classic": "Класичні тури",
-        "private_tours_cultural": "Культурні тури",
-        "private_tours_luxury": "Люкс-тури",
-        "private_tours_eco": "Еко-тури",
-        "group_packages": "ГРУПОВІ ПАКЕТИ",
-        "group_packages_equal": "Група = Приватний",
-        "group_packages_2": "Пакет 2",
-        "group_packages_3": "Пакет 3",
+        "articles": "СТАТТІ",
         "testimonials": "ВІДГУКИ",
-        "publications": "ПУБЛІКАЦІЇ",
         "search_placeholder": "Пошук групових та приватних турів"
     }
 }
