@@ -6,6 +6,7 @@ import LifeTravel from "@/containers/life-travel";
 import { ContactSection } from "@/components/custom/ContactSection";
 import UpcomingTours from "@/components/custom/UpcomingTours";
 import { ArticlesList } from "@/components/custom/ArticlesList";
+import { AboutSection } from "@/components/custom/AboutSection";
 
 export default function Home() {
     return (
@@ -15,6 +16,7 @@ export default function Home() {
             {/* <HeaderMain /> */}
             <LifeTravel />
             <RecTrips />
+            <AboutSection />
             <ContactSection />
             <UpcomingTours />
             {/* <Reviews /> */}

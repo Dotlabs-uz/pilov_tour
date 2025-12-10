@@ -95,5 +95,16 @@
     "articles": "MAQOLALAR",
     "testimonials": "FIKRLAR",
     "search_placeholder": "Guruhli va shaxsiy turlarni qidiring"
+  },
+  "about": {
+    "title": "Biz haqimizda",
+    "section1": {
+      "title": "Bizni boshqalardan ajratib turadigan jihatlar",
+      "description": "Biz sayohat quvonchini ulashishga e’tibor qaratamiz. 35 yildan ortiq vaqt davomida sayohatchilarni dunyo bo‘ylab olib borib, ularga haqiqiy, noyob va esda qolarli tajribalarni taqdim etib kelmoqdamiz. Sayohat bizga bergan hamma narsaga minnatdormiz — va uni Pilav Tour orqali qaytaramiz, butun dunyo bo‘ylab jamoalarni qo‘llab-quvvatlab, 2018 yildan beri faxr bilan B Corp sertifikatiga egamiz."
+    },
+    "section2": {
+      "title": "Biz qanday farq qilamiz",
+      "description": "20 yildan ortiq vaqt davomida Pilav Tour nodavlat tashkiloti sayohatchilarga tashrif buyurilgan joylarda ko‘proq ta’sir ko‘rsatish imkoniyatini berib kelmoqda."
+    }
   }
 }
