@@ -106,15 +106,14 @@ export default function SignUp() {
   }
 
   return (
-    <div className="flex items-center mt-10 gap-50 justify-between max-w-[1400px] mx-auto">
+    <div className="flex items-center mt-10 gap-30 justify-between max-w-[1200px] w-full mx-auto">
       <AuthSlider
         images={["/preview-login1.png", "/preview-login2.png"]}
         delay={2000}
       />
 
-      <div className="flex flex-col gap-10">
-        <Image src={"/logo.png"} width={200} height={50} alt="Logo" />
-        <div className="flex flex-col mt-10 gap-5">
+      <div className="flex flex-col gap-7">
+        <div className="flex flex-col mt-10 gap-3">
           <div className="flex flex-col gap-4">
             <p className="text-5xl font-semibold ">Sign Up</p>
             <span className="text-[#112211] text-lg font-light">
@@ -312,16 +311,9 @@ export default function SignUp() {
                 await loginWithGoogle();
                 router.push("/");
               }}
-              className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer"
+              className="w-[640px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer"
             >
               <FcGoogle className="w-[24px] h-[24px]" />
-            </Button>
-
-            <Button className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
-              <FaApple className="w-[24px] h-[24px]" color="black" />
-            </Button>
-            <Button className="w-[202px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
-              <FaFacebook className="fill-[#1877F2] w-[24px] h-[24px]" />
             </Button>
           </div>
         </div>
