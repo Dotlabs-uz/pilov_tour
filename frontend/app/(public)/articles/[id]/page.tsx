@@ -3,121 +3,89 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { db } from "@/app/(public)/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  DocumentData,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
+import { useLocale } from "next-intl";
 import { StickyHeader } from "@/components/custom/StickyHeader";
+import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface Title {
-  id: string;
-  lang: string;
-  title: string;
-}
+export default function Article() {
+    const { id } = useParams();
+    const locale = useLocale();
 
-interface Description {
-  id: string;
-  lang: string;
-  description: string;
-}
+    const [article, setArticle] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
 
-interface Article {
-  id: string;
-  images: string[];
-  titles: Title[];
-  descriptions: Description[];
-}
+    useEffect(() => {
+        if (!id) return;
 
-const Article = () => {
-  const params = useParams();
-  const rawId = params.id;
+        const fetchArticle = async () => {
+            const ref = doc(db, "articles", id as string);
+            const snap = await getDoc(ref);
 
-  const articleId = typeof rawId === "string" ? rawId : undefined;
-
-  const [article, setArticle] = useState<Article | null>(null);
-
-  useEffect(() => {
-    if (!articleId) return;
-
-    const fetchArticle = async () => {
-      const articleRef = doc(db, "articles", articleId);
-      const articleSnap = await getDoc(articleRef);
-      if (!articleSnap.exists()) return;
-
-      const data = articleSnap.data() as DocumentData;
-
-      const titlesSnap = await getDocs(
-        collection(db, "articles", articleId, "titles")
-      );
-      const descriptionsSnap = await getDocs(
-        collection(db, "articles", articleId, "descriptions")
-      );
-
-      const titles: Title[] = titlesSnap.docs.map((d) => ({
-        id: d.id,
-        ...(d.data() as { lang: string; title: string }),
-      }));
-      const descriptions: Description[] = descriptionsSnap.docs.map((d) => ({
-        id: d.id,
-        ...(d.data() as { lang: string; description: string }),
-      }));
-
-      setArticle({
-        id: articleSnap.id,
-        images: data.images || [],
-        titles,
-        descriptions,
-      });
-    };
-
-    fetchArticle();
-  }, [articleId]);
-
-  if (!article) return <div className="p-4">Loading...</div>;
-
-  const headerImage = article.images[0];
-
-  return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
-      <StickyHeader/>
-      {headerImage && (
-        <div className="relative mt-15 h-96 w-full rounded-xl overflow-hidden">
-          <img
-            src={headerImage}
-            alt={
-              article.titles.find((t) => t.lang === "en")?.title || "Article"
+            if (!snap.exists()) {
+                setLoading(false);
+                return;
             }
-            className="w-full h-full object-cover"
-          />
+
+            const data = snap.data() as any;
+            const lang = locale.split("-")[0];
+
+            const titleObj = data.title || {};
+            const descObj = data.description || {};
+
+            setArticle({
+                coverImage: data.coverImage || "",
+                title:
+                    titleObj[lang] ||
+                    titleObj.en ||
+                    Object.values(titleObj)[0] ||
+                    "Untitled",
+                description:
+                    descObj[lang] ||
+                    descObj.en ||
+                    Object.values(descObj)[0] ||
+                    "",
+            });
+
+            setLoading(false);
+        };
+
+        fetchArticle();
+    }, [id, locale]);
+
+    if (loading)
+        return (
+            <div className="max-w-4xl mx-auto p-4">
+                <StickyHeader />
+                <div className="mt-10 space-y-6">
+                    <Skeleton className="w-full h-96 rounded-xl" />
+                    <Skeleton className="h-10 w-3/4 rounded-lg" />
+                    <Skeleton className="h-6 w-full rounded-lg" />
+                    <Skeleton className="h-6 w-full rounded-lg" />
+                </div>
+            </div>
+        );
+    if (!article) return <div className="p-10 text-center">Not Found</div>;
+
+    return (
+        <div className="max-w-4xl mx-auto px-4 lg:px-0">
+            <StickyHeader />
+
+            <div className="relative w-full h-96 mt-20 rounded-xl overflow-hidden">
+                <Image
+                    src={article.coverImage}
+                    alt={article.title}
+                    fill
+                    className="object-cover"
+                />
+            </div>
+
+            <h1 className="text-3xl font-bold mt-6">{article.title}</h1>
+
+            <p className="text-gray-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
+                {article.description}
+            </p>
         </div>
-      )}
-
-      <div className="space-y-4">
-        <h1 className="text-3xl font-bold">
-          {article.titles.find((t) => t.lang === "en")?.title}
-        </h1>
-        <p className="text-gray-700 text-lg">
-          {article.descriptions.find((d) => d.lang === "en")?.description}
-        </p>
-      </div>
-
-      {article.images.length > 1 && (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-          {article.images.slice(1).map((url) => (
-            <img
-              key={url}
-              src={url}
-              alt="article"
-              className="w-full h-48 object-cover rounded-xl"
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Article;
+    );
+}
