@@ -1,5 +1,4 @@
 "use client";
-
 import {
     Carousel,
     CarouselContent,
@@ -10,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
 import Link from "next/link";
@@ -25,6 +24,7 @@ const ArticlesList = () => {
     const [articles, setArticles] = useState<ArticleCard[]>([]);
     const router = useRouter();
     const locale = useLocale();
+    const t = useTranslations("articlesList");
 
     useEffect(() => {
         const fetchArticles = async () => {
@@ -34,7 +34,11 @@ const ArticlesList = () => {
             const articlesData: ArticleCard[] = snapshot.docs.map((doc) => {
                 const data = doc.data() as any;
                 const titleObj = data.title || {};
-                const title = titleObj[lang] || titleObj["en"] || Object.values(titleObj)[0] || "Untitled";
+                const title =
+                    titleObj[lang] ||
+                    titleObj["en"] ||
+                    Object.values(titleObj)[0] ||
+                    "Untitled";
 
                 return {
                     id: doc.id,
@@ -53,13 +57,13 @@ const ArticlesList = () => {
         <div className="container max-w-[1200px] mx-auto px-4 py-12 lg:px-0" id="articles">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold text-slate-900">
-                    Get inspired in the good times
+                    {t("section_title")}
                 </h2>
                 <Button
                     onClick={() => router.push("/articles")}
                     className="border border-[#8DD3BB] cursor-pointer bg-white text-[#112211] hover:bg-[#8DD3BB] px-5 py-2 rounded-lg font-semibold transition-colors"
                 >
-                    Read all articles
+                    {t("read_all")}
                 </Button>
             </div>
 

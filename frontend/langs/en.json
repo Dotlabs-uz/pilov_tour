@@ -106,5 +106,21 @@
             "description": "Dreaming of a journey created just for you?\n\nClick “Contact us”, fill out a short form — and we’ll turn your ideas into the perfect itinerary."
         },
         "contact_button": "CONTACT US"
+    },
+    "recTrips": {
+        "section_title": "Plan your perfect trip",
+        "section_subtitle": "Search Flights & Places Hire to our most popular destinations",
+        "see_more": "See more places",
+        "explore": "Explore"
+    },
+    "articlesList": {
+        "section_title": "Get inspired in the good times",
+        "read_all": "Read all articles"
+    },
+    "subscribe": {
+        "title": "Not sure where to travel next?",
+        "description": "Dreaming of a journey created just for you?",
+        "contact_button": "Contact Us",
+        "image_alt": "Mailbox illustration"
     }
 }

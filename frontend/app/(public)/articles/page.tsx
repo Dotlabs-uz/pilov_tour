@@ -61,7 +61,7 @@ const ArticlesPage = () => {
         <div className="max-w-6xl mx-auto px-4 lg:px-0">
             <StickyHeader />
 
-            <Carousel opts={{ align: "start" }}>
+            <Carousel opts={{ align: "start" }} className="py-20">
                 <CarouselContent>
                     {loading
                         ? skeletons.map((_, i) => (
@@ -95,7 +95,7 @@ const ArticlesPage = () => {
                                     )}
 
                                     <div className="p-4 flex flex-col">
-                                        <h3 className="text-lg font-semibold text-[#112211]">
+                                        <h3 className="text-lg font-semibold text-[#112211] truncate">
                                             {a.title}
                                         </h3>
                                     </div>

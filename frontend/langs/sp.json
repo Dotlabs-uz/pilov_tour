@@ -106,5 +106,21 @@
             "description": "¿Sueñas con un viaje creado especialmente para ti?\n\nHaz clic en “Contáctanos”, completa un breve formulario y convertiremos tus ideas en el itinerario perfecto."
         },
         "contact_button": "CONTÁCTANOS"
+    },
+    "recTrips": {
+        "section_title": "Planifica tu viaje perfecto",
+        "section_subtitle": "Busca vuelos y lugares hacia nuestros destinos más populares",
+        "see_more": "Ver más lugares",
+        "explore": "Explorar"
+    },
+    "articlesList": {
+        "section_title": "Inspírate en los buenos momentos",
+        "read_all": "Leer todos los artículos"
+    },
+    "subscribe": {
+        "title": "¿No sabes a dónde viajar después?",
+        "description": "¿Soñando con un viaje creado solo para ti?",
+        "contact_button": "Contáctanos",
+        "image_alt": "Ilustración de buzón"
     }
 }
