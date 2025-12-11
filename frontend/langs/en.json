@@ -102,8 +102,9 @@
             "description": "We focus on sharing the joy of travel. For over 35 years, we have been guiding travelers around the world so they can experience the real, the rare, and the remarkable. We are grateful for what travel gives us – and we give back through Pilav Tour, supporting communities across the globe, proudly holding B Corp certification since 2018."
         },
         "section2": {
-            "title": "How We Make a Difference",
-            "description": "For more than 20 years, our nonprofit organization Pilav Tour has empowered travelers to make a greater impact in the places they visit."
-        }
+            "title": "Don't know where to go next?",
+            "description": "Dreaming of a journey created just for you?\n\nClick “Contact us”, fill out a short form — and we’ll turn your ideas into the perfect itinerary."
+        },
+        "contact_button": "CONTACT US"
     }
 }
