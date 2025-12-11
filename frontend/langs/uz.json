@@ -84,7 +84,8 @@
         "contacts": "Aloqalar",
         "payment_methods": "To'lov usullari",
         "copyright": "© 2025 Barcha huquqlar himoyalangan.",
-        "company_full_name": "Pilav Destination Management Co."
+        "company_full_name": "Pilav Destination Management Co.",
+        "confidentiality": "Maxfiylik"
     },
     "header": {
         "destinations": "YO'NALISHLAR",

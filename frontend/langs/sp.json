@@ -83,7 +83,8 @@
         "contacts": "Contactos",
         "payment_methods": "Métodos de pago",
         "copyright": "© 2025 Todos los derechos reservados.",
-        "company_full_name": "Pilav Destination Management Co."
+        "company_full_name": "Pilav Destination Management Co.",
+        "confidentiality": "Confidencialidad"
     },
     "header": {
         "destinations": "DESTINOS",
