@@ -1,9 +1,7 @@
 {
     "Header": {
         "btn1": "Parvozni toping",
-        "btn2": "Joy toping",
-        "login": "Tizimga kirish",
-        "signup": "Ro'yxatdan o'tish"
+        "btn2": "Joy toping"
     },
     "LifeTravel": {
         "title1": "Boshqalarga yordam",
@@ -95,7 +93,9 @@
         "destinations_tajikistan": "Tojikiston",
         "articles": "MAQOLALAR",
         "testimonials": "FIKRLAR",
-        "search_placeholder": "Guruhli va shaxsiy turlarni qidiring"
+        "search_placeholder": "Guruhli va shaxsiy turlarni qidiring",
+        "login": "Tizimga kirish",
+        "signup": "Ro'yxatdan o'tish"
     },
     "about": {
         "title": "Biz haqimizda",

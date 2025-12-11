@@ -1,9 +1,7 @@
 {
     "Header": {
         "btn1": "Trova voli",
-        "btn2": "Trova hotel",
-        "login": "Accedi",
-        "signup": "Registrati"
+        "btn2": "Trova hotel"
     },
     "LifeTravel": {
         "title1": "Aiutare gli altri",
@@ -95,7 +93,9 @@
         "destinations_tajikistan": "Tagikistan",
         "articles": "ARTICOLI",
         "testimonials": "TESTIMONIANZE",
-        "search_placeholder": "Cerca tour di gruppo e privati"
+        "search_placeholder": "Cerca tour di gruppo e privati",
+        "login": "Accedi",
+        "signup": "Registrati"
     },
     "about": {
         "title": "Chi siamo",

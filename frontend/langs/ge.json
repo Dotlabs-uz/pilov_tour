@@ -1,9 +1,7 @@
 {
     "Header": {
         "btn1": "Flüge finden",
-        "btn2": "Hotels finden",
-        "login": "Anmelden",
-        "signup": "Registrieren"
+        "btn2": "Hotels finden"
     },
     "LifeTravel": {
         "title1": "Anderen helfen",
@@ -94,7 +92,9 @@
         "destinations_tajikistan": "Tadschikistan",
         "articles": "ARTIKEL",
         "testimonials": "BEWERTUNGEN",
-        "search_placeholder": "Suche nach Gruppen- und Privattouren"
+        "search_placeholder": "Suche nach Gruppen- und Privattouren",
+        "login": "Anmelden",
+        "signup": "Registrieren"
     },
     "about": {
         "title": "Über uns",

@@ -1,9 +1,7 @@
 {
     "Header": {
         "btn1": "Знайти польоти",
-        "btn2": "Знайти готелі",
-        "login": "Увійти",
-        "signup": "Зареєструватися"
+        "btn2": "Знайти готелі"
     },
     "LifeTravel": {
         "title1": "Допомога іншим",
@@ -94,7 +92,9 @@
         "destinations_tajikistan": "Таджикистан",
         "articles": "СТАТТІ",
         "testimonials": "ВІДГУКИ",
-        "search_placeholder": "Пошук групових та приватних турів"
+        "search_placeholder": "Пошук групових та приватних турів",
+        "login": "Увійти",
+        "signup": "Зареєструватися"
     },
     "about": {
         "title": "Про нас",
