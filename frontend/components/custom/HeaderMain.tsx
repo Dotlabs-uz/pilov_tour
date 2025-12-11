@@ -74,17 +74,7 @@ export default function HeaderMain() {
           <span className="text-white">
             Tour <u>Agency</u>
           </span>
-        </p>
-
-        {/* <div>
-                    <Image
-                        src="/Pilav_BestSeller.png"
-                        alt="Best Seller"
-                        width={160}
-                        height={50}
-                        className="object-contain"
-                    />
-                </div> */}
+        </p>      
         <div className="flex items-center gap-4">
           {user ? (
             <div

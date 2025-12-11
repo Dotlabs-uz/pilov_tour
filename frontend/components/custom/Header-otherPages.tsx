@@ -36,6 +36,7 @@ const HeaderforOther = () => {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const t = useTranslations("Header");
+  const t2 = useTranslations("header");
 
   function handleChange(lang: string): void {
     document.cookie = `locale=${lang}; path=/`;
@@ -79,18 +80,28 @@ const HeaderforOther = () => {
   };
 
   return (
-    <div className="shadow-lg pb-5">
-      <header className="flex pt-4 max-w-[1650px] mx-auto justify-between items-center px-4 lg:px-8 text-black">
+    <div className="bg-[#8DD3BB] shadow-md px-4 lg:px-0 pb-5">
+      <header className="flex pt-4 max-w-[1200px] mx-auto justify-between items-center px-4 lg:px-8 text-black">
+        <p
+          onClick={() => router.push("/")}
+          className="text-2xl cursor-pointer flex font-bold"
+        >
+          Pilav
+          <span className="text-white">
+            Tour <u>Agency</u>
+          </span>
+        </p>
+
         <div className="hidden lg:flex items-center gap-4">
           <p className="flex items-center cursor-pointer gap-2">
-            <CiPlane size={24} /> {t("btn1")}
+            <CiPlane size={24} /> Найти туры
           </p>
-          <p
-            onClick={() => router.push("/trips")}
-            className="flex cursor-pointer items-center gap-2"
-          >
-            <IoBed size={24} /> {t("btn2")}
-          </p>
+
+          <a href={"/articles"}>{t2("articles")}</a>
+          <a href={"/"}>{t2("testimonials")}</a>
+        </div>
+
+        <div className="flex gap-2 items-center">
           <DropdownMenu>
             <DropdownMenuTrigger className="cursor-pointer">
               <AiOutlineGlobal size={24} />
@@ -107,24 +118,7 @@ const HeaderforOther = () => {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-
-        <p
-          onClick={() => router.push("/")}
-          className="text-2xl cursor-pointer flex font-bold text-[#8DD3BB]"
-        >
-          Pilav
-          <span className="text-black">
-            Tour <u>Agency</u>
-          </span>
-        </p>
-
-        <div className="flex gap-2 items-center">
-          <div className="flex items-center">
-            <Heart />
-            <p>Favorites</p>
-          </div>
-          <p>|</p>
+          <span>|</span>
           <div className="hidden lg:flex items-center gap-4">
             {user || dbUser ? (
               <div

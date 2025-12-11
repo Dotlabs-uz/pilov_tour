@@ -49,9 +49,16 @@ export interface TourCard {
   style: string;
 }
 
+export interface Category {
+  id: string;
+  destination: string;
+  image: string;
+}
+
 const Tours = () => {
   const [tours, setTours] = useState<TourCard[]>([]);
   const locale = useLocale();
+  const [categories, setCategories] = useState<Category[]>([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -76,15 +83,15 @@ const Tours = () => {
           Object.values(descObj)[0] ||
           "";
 
-          return {
-            id: tourDoc.id,
-            images: data.images || [],
-            title,
-            description,
-            price: data.price || "",
-            duration: data.duration || {days: "", nights: ""},
-            style: data.style || ""
-          }
+        return {
+          id: tourDoc.id,
+          images: data.images || [],
+          title,
+          description,
+          price: data.price || "",
+          duration: data.duration || { days: "", nights: "" },
+          style: data.style || "",
+        };
       });
 
       setTours(toursData);
@@ -93,6 +100,27 @@ const Tours = () => {
     fetchTours();
   }, [locale]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "categories"));
+
+        const categoriesDb: Category[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Category, "id">),
+        }));
+
+        console.log(categoriesDb);
+        setCategories(categoriesDb);
+      } catch (error) {
+        console.log("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []); 
+
+
   return (
     <div className="flex flex-col max-w-7xl mx-auto min-h-screen">
       <StickyHeader />
@@ -100,6 +128,22 @@ const Tours = () => {
       <section className="flex mt-20 justify-center">
         <TourFilter />
       </section>
+
+      <div className="grid grid-cols-2 max-w-7xl mx-auto items-center justify-center mt-[100px]">
+        {categories.map((category) => (
+          <div
+            className="w-[300px] h-[150px] p-5 shadow-xl rounded-lg flex items-center justify-between"
+            key={category.id}
+          >
+            <p className="text-lg font-bold">{category.destination}</p>
+            <img
+              className="w-[120px] h-[100px] rounded-lg"
+              src={category.image}
+              alt="category image"
+            />
+          </div>
+        ))}
+      </div>
 
       <main className="flex justify-between max-w-7xl mx-auto w-full px-4 mt-12">
         <section className="grid grid-cols-4 gap-5">

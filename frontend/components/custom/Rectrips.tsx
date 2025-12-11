@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
-import { TourCard, TourPreview } from "./UpcomingTours";
+import { TourCard, TourPreview } from "@/app/(public)/trips/page";
 
 const RecTrips = () => {
   const [tours, setTours] = useState<TourCard[]>([]);
@@ -81,29 +81,38 @@ const RecTrips = () => {
                   key={tour.id || i}
                   className="basis-full sm:basis-1/2 lg:basis-1/3"
                 >
-                  <div className="rounded-2xl overflow-hidden shadow hover:shadow-lg transition flex flex-col bg-white">
-                    {tour.images?.[0] && (
+                  <div
+                    onClick={() => router.push(`/trips/${tour.id}`)}
+                    className="rounded-2xl cursor-pointer overflow-hidden shadow hover:shadow-lg transition flex flex-col bg-white"
+                  >
+                    <div className="relative h-64 w-full">
                       <img
-                        src={tour.images[0]}
+                        src={tour.images?.[0]}
                         alt={tour.title}
-                        className="h-48 w-full object-cover"
+                        className="h-full w-full object-cover"
                       />
-                    )}
-                    <div className="p-4 flex flex-col gap-2">
-                      <h3 className="text-lg font-semibold text-[#112211] truncate">
-                        {tour.title}
-                      </h3>
-                      <p className="text-sm text-gray-600 line-clamp-3">
-                        {tour.description}
+
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                        <h3 className="text-white truncate text-2xl font-bold text-center px-4 drop-shadow-lg">
+                          {tour.title}
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div className="p-4 flex flex-col gap-1">
+                      <p className="text-sm font-medium text-gray-500">
+                        {tour.duration?.days} days
                       </p>
-                      <Button
-                        onClick={() =>
-                          router.push(`/trips/${tour.id}?id=${tour.id}`)
-                        }
-                        className="mt-2 cursor-pointer bg-[#8DD3BB] text-[#112211] hover:bg-[#7bc9aa]"
-                      >
-                        Explore
-                      </Button>
+
+                      <p className="text-lg truncate font-semibold text-[#112211]">
+                        {tour.title}
+                      </p>
+
+                      <p className="text-sm items-end mt-2">
+                        <span className="text-black font-bold text-lg">
+                          EUR €{tour.price}
+                        </span>
+                      </p>
                     </div>
                   </div>
                 </CarouselItem>
@@ -114,18 +123,6 @@ const RecTrips = () => {
             <CarouselNext className="hidden md:flex" />
           </Carousel>
         </div>
-
-        {/* <div className="flex flex-col lg:flex-row mt-10 items-center gap-20 justify-between">
-          {HotelsFlights.map((item, i) => (
-            <Card
-              key={i}
-              name={item.name}
-              description={item.description}
-              image={item.imageUrl}
-              button={item.button}
-            />
-          ))}
-        </div> */}
       </section>
     </div>
   );

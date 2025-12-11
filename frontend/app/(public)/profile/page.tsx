@@ -107,14 +107,6 @@ const Profile = () => {
 
       <div className="max-w-[1200px] mx-auto">
         <div className="relative w-[1200px] h-[350px] bg-[url('/profile-bg.png')] rounded-lg shadow-md">
-          <Button
-            size="sm"
-            className="absolute cursor-pointer bottom-4 right-4 w-[180px] h-[48px] bg-[#8DD3BB] text-black shadow-md hover:bg-gray-100"
-          >
-            <IoMdCloudUpload />
-            Upload new cover
-          </Button>
-
           <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
             <img
               src={dbUser?.avatar || user?.photoURL || "/avatar-default.svg"}
@@ -132,10 +124,8 @@ const Profile = () => {
 
         <div className="mt-20 max-w-3xl mx-auto w-full">
           <Tabs defaultValue="account" className="w-full">
-            <TabsList className="grid grid-cols-3 w-full max-w-md mx-auto mb-6 rounded-2xl bg-gray-100 p-1">
+            <TabsList className="w-full mx-auto items-center justify-center mb-6 rounded-2xl bg-gray-100 p-1">
               <TabsTrigger value="account">Account</TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
-              <TabsTrigger value="payment">Payment methods</TabsTrigger>
             </TabsList>
 
             <TabsContent value="account">
@@ -162,29 +152,17 @@ const Profile = () => {
                       </Button>
                     </div>
                   ))}
+
+                  <div className="flex justify-center mt-5">
+                    <Button
+                      onClick={logout}
+                      className="w-[200px] h-[45px] bg-red-500 text-white hover:bg-red-600"
+                    >
+                      Sign out
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-
-            <TabsContent value="history">
-              <Card className="p-6 rounded-2xl shadow-md text-center">
-                <p className="text-gray-500">No history available yet.</p>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="payment">
-              <Card className="p-6 rounded-2xl shadow-md text-center">
-                <p className="text-gray-500">No payment methods added.</p>
-              </Card>
-
-              <div className="flex justify-center mt-5">
-                <Button
-                  onClick={logout}
-                  className="w-[200px] h-[45px] bg-red-500 text-white hover:bg-red-600"
-                >
-                  Sign out
-                </Button>
-              </div>
             </TabsContent>
           </Tabs>
         </div>
