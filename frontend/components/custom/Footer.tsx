@@ -3,9 +3,7 @@
 import { useTranslations } from "next-intl";
 import {
     FaFacebookF,
-    FaTwitter,
     FaInstagram,
-    FaYoutube,
     FaCcVisa,
     FaCcMastercard,
 } from "react-icons/fa";
@@ -94,6 +92,14 @@ const Footer = () => {
                                     <a href="#" className="hover:text-black">{t("contacts")}</a>
                                 </li>
                             </ul>
+                        </div>
+
+                        <div>
+                            <h4 className="font-semibold mb-4 whitespace-nowrap">{t("payment_methods")}</h4>
+                            <div className="flex gap-4 items-center">
+                                <FaCcVisa className="text-5xl" color="blue" />
+                                <FaCcMastercard className="text-5xl" color="" />
+                            </div>
                         </div>
                     </div>
                 </div>

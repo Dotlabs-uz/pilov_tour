@@ -125,5 +125,13 @@
         "description": "Träumen Sie von einer Reise, die nur für Sie erstellt wurde?",
         "contact_button": "Kontaktieren Sie uns",
         "image_alt": "Postkasten Illustration"
+    },
+    "profile": {
+        "title": "Konto",
+        "name": "Name",
+        "email": "E-Mail",
+        "phone": "Telefonnummer",
+        "change": "Ändern",
+        "sign_out": "Abmelden"
     }
 }

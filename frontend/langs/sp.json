@@ -125,5 +125,13 @@
         "description": "¿Soñando con un viaje creado solo para ti?",
         "contact_button": "Contáctanos",
         "image_alt": "Ilustración de buzón"
+    },
+    "profile": {
+        "title": "Cuenta",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "phone": "Número de teléfono",
+        "change": "Cambiar",
+        "sign_out": "Cerrar sesión"
     }
 }

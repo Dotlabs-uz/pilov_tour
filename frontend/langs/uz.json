@@ -126,5 +126,13 @@
         "description": "Siz uchun maxsus yaratilgan sayohatni orzu qilayapsizmi?",
         "contact_button": "Biz bilan bog‘laning",
         "image_alt": "Pochta qutisi tasviri"
+    },
+    "profile": {
+        "title": "Hisob qaydnomasi",
+        "name": "Ism",
+        "email": "Elektron pochta",
+        "phone": "Telefon raqami",
+        "change": "O'zgartirish",
+        "sign_out": "Chiqish"
     }
 }

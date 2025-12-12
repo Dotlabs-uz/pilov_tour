@@ -126,5 +126,13 @@
         "description": "Sogni un viaggio creato apposta per te?",
         "contact_button": "Contattaci",
         "image_alt": "Illustrazione cassetta postale"
+    },
+    "profile": {
+        "title": "Account",
+        "name": "Nome",
+        "email": "Email",
+        "phone": "Numero di telefono",
+        "change": "Cambia",
+        "sign_out": "Esci"
     }
 }
