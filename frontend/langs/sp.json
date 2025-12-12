@@ -7,7 +7,9 @@
         "title1": "Ayudando a los demás",
         "title2": "Vida y viajes",
         "title3": "Ofertas especiales que se adaptan a tu plan",
-        "button": "Explorar artículos"
+        "button": "Explorar artículos",
+        "search_placeholder": "Buscar Vietnam",
+        "search_button": "Buscar"
     },
     "contact": {
         "badge": "CONTÁCTANOS",

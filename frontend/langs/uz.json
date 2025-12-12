@@ -7,7 +7,9 @@
         "title1": "Boshqalarga yordam",
         "title2": "Hayot va sayohat",
         "title3": "Sizning rejangizga muvofiq maxsus takliflar",
-        "button": "Maqolalarni ko‘rish"
+        "button": "Maqolalarni ko‘rish",
+        "search_placeholder": "Vyetnamni qidirish",
+        "search_button": "Qidirish"
     },
     "contact": {
         "badge": "BIZ BILAN BOG'LANISH",

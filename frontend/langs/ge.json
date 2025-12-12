@@ -7,7 +7,9 @@
         "title1": "Anderen helfen",
         "title2": "Leben & Reisen",
         "title3": "Sonderangebote passend zu Ihrem Plan",
-        "button": "Artikel ansehen"
+        "button": "Artikel ansehen",
+        "search_placeholder": "Vietnam suchen",
+        "search_button": "Suchen"
     },
     "contact": {
         "badge": "KONTAKTIEREN SIE UNS",

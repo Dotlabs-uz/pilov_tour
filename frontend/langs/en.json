@@ -7,7 +7,9 @@
         "title1": "Helping Others",
         "title2": "Life & Travel",
         "title3": "Special offers to suit your plan",
-        "button": "Explore Articles"
+        "button": "Explore Articles",
+        "search_placeholder": "Search Vietnam",
+        "search_button": "Search"
     },
     "contact": {
         "badge": "CONTACT US",
