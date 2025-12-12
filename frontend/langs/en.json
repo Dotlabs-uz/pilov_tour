@@ -1,9 +1,7 @@
 {
     "Header": {
         "btn1": "Find Flight",
-        "btn2": "Find Stays",
-        "login": "Login",
-        "signup": "Sign up"
+        "btn2": "Find Stays"
     },
     "LifeTravel": {
         "title1": "Helping Others",
@@ -83,7 +81,8 @@
         "contacts": "Contacts",
         "payment_methods": "Payment Methods",
         "copyright": "© 2025 All rights reserved.",
-        "company_full_name": "Pilav Destination Management Co."
+        "company_full_name": "Pilav Destination Management Co.",
+        "confidentiality": "Confidentiality"
     },
     "header": {
         "destinations": "DESTINATIONS",
@@ -93,7 +92,9 @@
         "destinations_tajikistan": "Tajikistan",
         "articles": "ARTICLES",
         "testimonials": "TESTIMONIALS",
-        "search_placeholder": "Search for group and private tours"
+        "search_placeholder": "Search for group and private tours",
+        "login": "Login",
+        "signup": "Sign up"
     },
     "about": {
         "title": "About Us",
@@ -102,8 +103,25 @@
             "description": "We focus on sharing the joy of travel. For over 35 years, we have been guiding travelers around the world so they can experience the real, the rare, and the remarkable. We are grateful for what travel gives us – and we give back through Pilav Tour, supporting communities across the globe, proudly holding B Corp certification since 2018."
         },
         "section2": {
-            "title": "How We Make a Difference",
-            "description": "For more than 20 years, our nonprofit organization Pilav Tour has empowered travelers to make a greater impact in the places they visit."
-        }
+            "title": "Don't know where to go next?",
+            "description": "Dreaming of a journey created just for you?\n\nClick “Contact us”, fill out a short form — and we’ll turn your ideas into the perfect itinerary."
+        },
+        "contact_button": "CONTACT US"
+    },
+    "recTrips": {
+        "section_title": "Plan your perfect trip",
+        "section_subtitle": "Search Flights & Places Hire to our most popular destinations",
+        "see_more": "See more places",
+        "explore": "Explore"
+    },
+    "articlesList": {
+        "section_title": "Get inspired in the good times",
+        "read_all": "Read all articles"
+    },
+    "subscribe": {
+        "title": "Not sure where to travel next?",
+        "description": "Dreaming of a journey created just for you?",
+        "contact_button": "Contact Us",
+        "image_alt": "Mailbox illustration"
     }
 }

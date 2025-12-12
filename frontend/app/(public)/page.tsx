@@ -3,10 +3,10 @@ import { StickyHeader } from "@/components/custom/StickyHeader";
 import Subscribe from "@/components/custom/Subcribe";
 import LifeTravel from "@/containers/life-travel";
 // import Reviews from "@/containers/Reviews";
-import { ContactSection } from "@/components/custom/ContactSection";
+// import { ContactSection } from "@/components/custom/ContactSection";
 import UpcomingTours from "@/components/custom/ToursCategories";
-import { ArticlesList } from "@/components/custom/ArticlesList";
 import { AboutSection } from "@/components/custom/AboutSection";
+import ArticlesList from "@/components/custom/ArticlesList";
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
       <LifeTravel />
       <RecTrips />
       <AboutSection />
-      <ContactSection />
+      {/* <ContactSection /> */}
       <UpcomingTours />
       {/* <Reviews /> */}
       <ArticlesList />

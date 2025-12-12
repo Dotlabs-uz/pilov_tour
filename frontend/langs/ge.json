@@ -1,9 +1,7 @@
 {
     "Header": {
         "btn1": "Flüge finden",
-        "btn2": "Hotels finden",
-        "login": "Anmelden",
-        "signup": "Registrieren"
+        "btn2": "Hotels finden"
     },
     "LifeTravel": {
         "title1": "Anderen helfen",
@@ -83,7 +81,8 @@
         "contacts": "Kontakte",
         "payment_methods": "Zahlungsmethoden",
         "copyright": "© 2025 Alle Rechte vorbehalten.",
-        "company_full_name": "Pilav Destination Management Co."
+        "company_full_name": "Pilav Destination Management Co.",
+        "confidentiality": "Vertraulichkeit"
     },
     "header": {
         "destinations": "REISEZIELE",
@@ -93,7 +92,9 @@
         "destinations_tajikistan": "Tadschikistan",
         "articles": "ARTIKEL",
         "testimonials": "BEWERTUNGEN",
-        "search_placeholder": "Suche nach Gruppen- und Privattouren"
+        "search_placeholder": "Suche nach Gruppen- und Privattouren",
+        "login": "Anmelden",
+        "signup": "Registrieren"
     },
     "about": {
         "title": "Über uns",
@@ -102,8 +103,25 @@
             "description": "Wir konzentrieren uns darauf, die Freude am Reisen zu teilen. Seit über 35 Jahren führen wir Reisende rund um die Welt, damit sie das Echte, das Seltene und das Außergewöhnliche erleben können. Wir sind dankbar für das, was das Reisen uns gibt – und geben es durch Pilav Tour zurück, indem wir Gemeinden weltweit unterstützen und seit 2018 stolz B Corp zertifiziert sind."
         },
         "section2": {
-            "title": "Wie wir einen Unterschied machen",
-            "description": "Seit mehr als 20 Jahren ermöglicht unsere gemeinnützige Organisation Pilav Tour Reisenden, einen größeren Einfluss auf die Orte auszuüben, die sie besuchen."
-        }
+            "title": "Wissen Sie nicht, wohin Sie als Nächstes reisen sollen?",
+            "description": "Träumen Sie von einer Reise, die speziell für Sie erstellt wurde?\n\nKlicken Sie auf „Kontaktieren Sie uns“, füllen Sie ein kurzes Formular aus – und wir verwandeln Ihre Ideen in die perfekte Reiseroute."
+        },
+        "contact_button": "KONTAKTIEREN SIE UNS"
+    },
+    "recTrips": {
+        "section_title": "Planen Sie Ihre perfekte Reise",
+        "section_subtitle": "Suchen Sie Flüge & Orte zu unseren beliebtesten Reisezielen",
+        "see_more": "Mehr Orte ansehen",
+        "explore": "Entdecken"
+    },
+    "articlesList": {
+        "section_title": "Lassen Sie sich in guten Zeiten inspirieren",
+        "read_all": "Alle Artikel lesen"
+    },
+    "subscribe": {
+        "title": "Nicht sicher, wohin Sie als Nächstes reisen sollen?",
+        "description": "Träumen Sie von einer Reise, die nur für Sie erstellt wurde?",
+        "contact_button": "Kontaktieren Sie uns",
+        "image_alt": "Postkasten Illustration"
     }
 }

@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
 import { TourCard, TourPreview } from "@/app/(public)/trips/page";
@@ -18,6 +18,7 @@ const RecTrips = () => {
   const [tours, setTours] = useState<TourCard[]>([]);
   const router = useRouter();
   const locale = useLocale();
+  const t = useTranslations("recTrips");
 
   useEffect(() => {
     const fetchTours = async () => {

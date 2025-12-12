@@ -1,107 +1,102 @@
 "use client";
-
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+} from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
-import { collection, getDocs, DocumentData } from "firebase/firestore";
+import Link from "next/link";
 
-interface ArticlePreview {
-  id: string;
-  images: string[];
-  titles: { lang: string; title: string }[];
-  descriptions: { lang: string; description: string }[];
+interface ArticleCard {
+    id: string;
+    title: string;
+    coverImage: string;
 }
 
-export function ArticlesList() {
-  const [articles, setArticles] = useState<ArticlePreview[]>([]);
+const ArticlesList = () => {
+    const [articles, setArticles] = useState<ArticleCard[]>([]);
+    const router = useRouter();
+    const locale = useLocale();
+    const t = useTranslations("articlesList");
 
-  useEffect(() => {
-    const fetchArticles = async () => {
-      const snapshot = await getDocs(collection(db, "articles"));
+    useEffect(() => {
+        const fetchArticles = async () => {
+            const snapshot = await getDocs(collection(db, "articles"));
+            const lang = locale.split("-")[0];
 
-      const data: ArticlePreview[] = await Promise.all(
-        snapshot.docs.map(async (docSnap) => {
-          const docData = docSnap.data() as DocumentData;
+            const articlesData: ArticleCard[] = snapshot.docs.map((doc) => {
+                const data = doc.data() as any;
+                const titleObj = data.title || {};
+                const title =
+                    titleObj[lang] ||
+                    titleObj["en"] ||
+                    Object.values(titleObj)[0] ||
+                    "Untitled";
 
-          const titlesSnap = await getDocs(
-            collection(db, "articles", docSnap.id, "titles")
-          );
-          const descriptionsSnap = await getDocs(
-            collection(db, "articles", docSnap.id, "descriptions")
-          );
+                return {
+                    id: doc.id,
+                    title,
+                    coverImage: data.coverImage || "",
+                };
+            });
 
-          const titleData = titlesSnap.docs
-            .find((d) => d.data().lang === "en")
-            ?.data();
-          const title = {
-            lang: titleData?.lang || "en",
-            title: titleData?.title || "",
-          };
+            setArticles(articlesData);
+        };
 
-          const descriptionData = descriptionsSnap.docs
-            .find((d) => d.data().lang === "en")
-            ?.data();
-          const description = {
-            lang: descriptionData?.lang || "en",
-            description: descriptionData?.description || "",
-          };
+        fetchArticles();
+    }, [locale]);
 
-          return {
-            id: docSnap.id,
-            images: docData.images || [],
-            titles: [title],
-            descriptions: [description],
-          };
-        })
-      );
-
-      setArticles(data);
-    };
-
-    fetchArticles();
-  }, []);
-
-  const carouselArticles = articles.slice(0, 5);
-
-  return (
-    <div className="container max-w-[1200px] mx-auto px-4 py-12" id="articles">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold text-slate-900">
-          Get inspired in the good times
-        </h2>
-        <Link
-          href="/articles"
-          className="border border-[#8DD3BB] cursor-pointer text-[#112211] hover:bg-[#8DD3BB] px-5 py-2 rounded-lg font-semibold transition-colors"
-        >
-          Read all articles
-        </Link>
-      </div>
-
-      <div className="flex gap-6 overflow-x-auto scrollbar-hide py-2">
-        {carouselArticles.map((a) => (
-          <Link
-            key={a.id}
-            href={`/articles/${a.id}`}
-            className="flex-shrink-0 w-80 border rounded-xl shadow hover:shadow-lg overflow-hidden bg-white"
-          >
-            {a.images[0] && (
-              <img
-                src={a.images[0]}
-                alt={a.titles[0]?.title || "Article image"}
-                className="w-full h-40 object-cover"
-              />
-            )}
-            <div className="p-4 flex flex-col">
-              <h3 className="text-lg font-bold text-slate-900">
-                {a.titles[0]?.title}
-              </h3>
-              <p className="mt-2 text-gray-600 text-sm line-clamp-3">
-                {a.descriptions[0]?.description}
-              </p>
+    return (
+        <div className="container max-w-[1200px] mx-auto px-4 py-12 lg:px-0" id="articles">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-bold text-slate-900">
+                    {t("section_title")}
+                </h2>
+                <Button
+                    onClick={() => router.push("/articles")}
+                    className="border border-[#8DD3BB] cursor-pointer bg-white text-[#112211] hover:bg-[#8DD3BB] px-5 py-2 rounded-lg font-semibold transition-colors"
+                >
+                    {t("read_all")}
+                </Button>
             </div>
-          </Link>
-        ))}
-      </div>
-    </div>
-  );
-}
+
+            <Carousel opts={{ align: "start" }}>
+                <CarouselContent>
+                    {articles.map((a) => (
+                        <CarouselItem key={a.id} className="basis-full sm:basis-1/2 lg:basis-1/3">
+                            <Link
+                                href={`/articles/${a.id}`}
+                                className="flex-shrink-0 border rounded-2xl shadow hover:shadow-lg overflow-hidden bg-white flex flex-col"
+                            >
+                                {a.coverImage && (
+                                    <img
+                                        src={a.coverImage}
+                                        alt={a.title}
+                                        className="w-full h-56 object-cover"
+                                    />
+                                )}
+                                <div className="p-4 flex flex-col">
+                                    <h3 className="text-lg font-semibold text-[#112211] truncate">
+                                        {a.title}
+                                    </h3>
+                                </div>
+                            </Link>
+                        </CarouselItem>
+                    ))}
+                </CarouselContent>
+
+                <CarouselPrevious className="hidden md:flex" />
+                <CarouselNext className="hidden md:flex" />
+            </Carousel>
+        </div>
+    );
+};
+
+export default ArticlesList;

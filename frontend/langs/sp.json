@@ -1,9 +1,7 @@
 {
     "Header": {
         "btn1": "Buscar vuelos",
-        "btn2": "Buscar hoteles",
-        "login": "Iniciar sesión",
-        "signup": "Registrarse"
+        "btn2": "Buscar hoteles"
     },
     "LifeTravel": {
         "title1": "Ayudando a los demás",
@@ -83,7 +81,8 @@
         "contacts": "Contactos",
         "payment_methods": "Métodos de pago",
         "copyright": "© 2025 Todos los derechos reservados.",
-        "company_full_name": "Pilav Destination Management Co."
+        "company_full_name": "Pilav Destination Management Co.",
+        "confidentiality": "Confidencialidad"
     },
     "header": {
         "destinations": "DESTINOS",
@@ -93,7 +92,9 @@
         "destinations_tajikistan": "Tayikistán",
         "articles": "ARTÍCULOS",
         "testimonials": "TESTIMONIOS",
-        "search_placeholder": "Buscar tours de grupo y privados"
+        "search_placeholder": "Buscar tours de grupo y privados",
+        "login": "Iniciar sesión",
+        "signup": "Registrarse"
     },
     "about": {
         "title": "Sobre nosotros",
@@ -102,8 +103,25 @@
             "description": "Nos enfocamos en compartir la alegría de viajar. Durante más de 35 años hemos guiado a viajeros por todo el mundo para que puedan experimentar lo auténtico, lo raro y lo extraordinario. Agradecemos lo que los viajes nos dan y lo devolvemos a través de Pilav Tour, apoyando comunidades en todo el mundo y con orgullo certificados como B Corp desde 2018."
         },
         "section2": {
-            "title": "Cómo marcamos la diferencia",
-            "description": "Durante más de 20 años, nuestra organización sin fines de lucro Pilav Tour ha permitido a los viajeros generar un mayor impacto en los lugares que visitan."
-        }
+            "title": "¿No sabe adónde viajar después?",
+            "description": "¿Sueñas con un viaje creado especialmente para ti?\n\nHaz clic en “Contáctanos”, completa un breve formulario y convertiremos tus ideas en el itinerario perfecto."
+        },
+        "contact_button": "CONTÁCTANOS"
+    },
+    "recTrips": {
+        "section_title": "Planifica tu viaje perfecto",
+        "section_subtitle": "Busca vuelos y lugares hacia nuestros destinos más populares",
+        "see_more": "Ver más lugares",
+        "explore": "Explorar"
+    },
+    "articlesList": {
+        "section_title": "Inspírate en los buenos momentos",
+        "read_all": "Leer todos los artículos"
+    },
+    "subscribe": {
+        "title": "¿No sabes a dónde viajar después?",
+        "description": "¿Soñando con un viaje creado solo para ti?",
+        "contact_button": "Contáctanos",
+        "image_alt": "Ilustración de buzón"
     }
 }

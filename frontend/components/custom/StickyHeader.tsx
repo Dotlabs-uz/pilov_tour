@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RiArrowDownSLine } from "react-icons/ri";
+import { RiArrowDownSLine, RiCloseLine, RiMenu3Line } from "react-icons/ri";
 import { CiSearch } from "react-icons/ci";
-import { RiMenu3Line, RiCloseLine } from "react-icons/ri";
 import { useTranslations } from "next-intl";
 import {
   DropdownMenu,
@@ -34,14 +33,15 @@ export function StickyHeader() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const router = useRouter();
-  function handleChange(lang: string): void {
-    document.cookie = `locale=${lang}; path=/`;
-    router.refresh();
-  }
 
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [dbUser, setDbUser] = useState<DatabaseUser | null>(null);
   const [loading, setLoading] = useState(true);
+
+  function handleChange(lang: string): void {
+    document.cookie = `locale=${lang}; path=/`;
+    router.refresh();
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
@@ -89,9 +89,7 @@ export function StickyHeader() {
         { label: t("destinations_tajikistan"), href: "#" },
       ],
     },
-    {
-      label: t("articles"),
-    },
+    { label: t("articles") },
     { label: t("testimonials"), href: "#" },
   ];
 
@@ -132,6 +130,7 @@ export function StickyHeader() {
                         />
                       )}
                     </button>
+
                     {item.submenu && (
                       <div className="absolute left-0 mt-0 w-48 bg-white text-gray-800 rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 py-2">
                         {item.submenu.map((subitem) => (
@@ -196,6 +195,7 @@ export function StickyHeader() {
                 </Button>
               )}
 
+              {/* mobile buttons */}
               <div className="md:hidden flex gap-3 text-white">
                 <button onClick={() => router.push("/search")}>
                   <CiSearch size={24} />
@@ -250,17 +250,6 @@ export function StickyHeader() {
                     )}
                   </div>
                 ))}
-              </div>
-
-              <div className="flex items-center gap-2 bg-white rounded-full px-4 py-1.5 m-4">
-                <input
-                  type="text"
-                  placeholder={t("search_placeholder")}
-                  className="bg-transparent text-gray-800 text-sm outline-none w-full"
-                />
-                <button className="text-[#8DD3BB] hover:text-[#8DD3BB]">
-                  <CiSearch size={20} />
-                </button>
               </div>
             </div>
           )}
