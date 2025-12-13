@@ -4,7 +4,7 @@ import Subscribe from "@/components/custom/Subcribe";
 import LifeTravel from "@/containers/life-travel";
 // import Reviews from "@/containers/Reviews";
 // import { ContactSection } from "@/components/custom/ContactSection";
-import UpcomingTours from "@/components/custom/ToursCategories";
+import ToursCategories from "@/components/custom/ToursCategories";
 import { AboutSection } from "@/components/custom/AboutSection";
 import ArticlesList from "@/components/custom/ArticlesList";
 
@@ -18,7 +18,7 @@ export default function Home() {
       <RecTrips />
       <AboutSection />
       {/* <ContactSection /> */}
-      <UpcomingTours />
+      <ToursCategories />
       {/* <Reviews /> */}
       <ArticlesList />
       <Subscribe />
