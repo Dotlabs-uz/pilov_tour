@@ -1,8 +1,6 @@
 "use client";
 
-import { CiPlane } from "react-icons/ci";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { IoBed } from "react-icons/io5";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,11 +10,9 @@ import {
 import { AiOutlineGlobal } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Heart } from "lucide-react";
 import { langs } from "@/lib/langs";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import Link from "next/link";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { auth, db } from "@/app/(public)/firebase";
@@ -131,7 +127,6 @@ const HeaderforOther = () => {
                 className="cursor-pointer flex items-center gap-2"
               >
                 <Avatar className="rounded-xl">
-
                   <AvatarImage
                     src={
                       dbUser?.avatar || user?.photoURL || "/avatar-default.svg"
@@ -147,13 +142,6 @@ const HeaderforOther = () => {
               </div>
             ) : (
               <>
-                {/* <Link href="/login">{t2("login")}</Link>
-                <Button
-                  onClick={() => router.push("/signup")}
-                  className="w-[104px] h-[48px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"
-                >
-                  {t2("signup")}
-                </Button> */}
                 <Button
                   onClick={() => router.push("/login")}
                   className="w-[90px] h-[40px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"

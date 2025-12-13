@@ -7,7 +7,7 @@ import { db } from "@/app/(public)/firebase";
 import { Category } from "@/app/(public)/trips/page";
 import { useRouter } from "next/navigation";
 
-export default function UpcomingTours() {
+export default function ToursCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const t = useTranslations("tours");
   const router = useRouter()
