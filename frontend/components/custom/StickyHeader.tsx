@@ -13,11 +13,19 @@ import {
 import { AiOutlineGlobal } from "react-icons/ai";
 import { useRouter } from "next/navigation";
 import { langs } from "@/lib/langs";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { auth, db } from "@/app/(public)/firebase";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
+import { Category } from "@/app/(public)/trips/page";
 
 interface DatabaseUser {
   uid: string;
@@ -37,6 +45,28 @@ export function StickyHeader() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [dbUser, setDbUser] = useState<DatabaseUser | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "categories"));
+
+        const categoryDb: Category[] = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Omit<Category, "id">),
+        }));
+
+        console.log(categoryDb);
+        setCategories(categoryDb);
+      } catch (e) {
+        console.log(e, "Something w+ent wrong");
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   function handleChange(lang: string): void {
     document.cookie = `locale=${lang}; path=/`;
@@ -82,12 +112,10 @@ export function StickyHeader() {
   const menuItems = [
     {
       label: t("destinations"),
-      submenu: [
-        { label: t("destinations_silkroad"), href: "#" },
-        { label: t("destinations_uzbekistan"), href: "#" },
-        { label: t("destinations_kazakhstan"), href: "#" },
-        { label: t("destinations_tajikistan"), href: "#" },
-      ],
+      submenu: categories.map((category) => ({
+        label: category.destination,
+        href: `/trips?category=${category.destination}`,
+      })),
     },
     { label: t("articles") },
     { label: t("testimonials"), href: "#" },
