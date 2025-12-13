@@ -33,23 +33,8 @@ export function AboutSection() {
 
     return (
         <div id="about" className="w-full bg-white overflow-hidden container max-w-[1200px] mx-auto">
-            <div className="px-4 lg:px-0 py-10 lg:py-20 flex justify-between items-center">
-                <h1 className="text-xl sm:text-3xl lg:text-5xl font-black text-black leading-none">
-                    {(() => {
-                        const words = t("title").split(" ");
-                        const lastWord = words.pop();
-                        return (
-                            <>
-                                {words.join(" ")}{" "}
-                                <span className="bg-gradient-to-r from-[#8DD3BB] to-[#8DD3BB] bg-clip-text text-transparent">
-                                    {lastWord}
-                                </span>
-                            </>
-                        )
-                    })()}
-                </h1>
-
-                <p className="text-3xl text-black font-light max-w-2xl">Pilav Tour</p>
+            <div className="px-4 lg:px-0 py-10 lg:py-20">
+                <p className="text-5xl text-black font-light max-w-2xl">Pilav Tour</p>
             </div>
 
             <section className="px-4 lg:px-0">
@@ -102,7 +87,7 @@ export function AboutSection() {
                         <div className="flex justify-center lg:justify-start">
                             <button
                                 onClick={() => setIsOpen(true)}
-                                className="mt-4 px-6 py-3 bg-[#007bb5] text-white font-semibold rounded-lg hover:bg-[#005a8a] transition-colors cursor-pointer inline-flex"
+                                className="mt-4 px-6 py-3 bg-[#8DD3BB] text-white font-semibold rounded-lg hover:bg-[#478a72] transition-colors cursor-pointer inline-flex"
                             >
                                 {t("contact_button")}
                             </button>

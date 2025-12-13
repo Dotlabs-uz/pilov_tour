@@ -131,6 +131,7 @@ const HeaderforOther = () => {
                 className="cursor-pointer flex items-center gap-2"
               >
                 <Avatar className="rounded-xl">
+
                   <AvatarImage
                     src={
                       dbUser?.avatar || user?.photoURL || "/avatar-default.svg"
@@ -146,12 +147,18 @@ const HeaderforOther = () => {
               </div>
             ) : (
               <>
-                <Link href="/login">{t("login")}</Link>
+                {/* <Link href="/login">{t2("login")}</Link>
                 <Button
                   onClick={() => router.push("/signup")}
                   className="w-[104px] h-[48px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"
                 >
-                  {t("signup")}
+                  {t2("signup")}
+                </Button> */}
+                <Button
+                  onClick={() => router.push("/login")}
+                  className="w-[90px] h-[40px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"
+                >
+                  {t2("login")}
                 </Button>
               </>
             )}

@@ -56,7 +56,7 @@ export default function Article() {
 
     if (loading)
         return (
-            <div className="max-w-4xl mx-auto p-4">
+            <div className="max-w-4xl mx-auto">
                 <StickyHeader />
                 <div className="mt-10 space-y-6">
                     <Skeleton className="w-full h-96 rounded-xl" />
@@ -72,20 +72,22 @@ export default function Article() {
         <div className="max-w-4xl mx-auto px-4 lg:px-0">
             <StickyHeader />
 
-            <div className="relative w-full h-96 mt-20 rounded-xl overflow-hidden">
-                <Image
-                    src={article.coverImage}
-                    alt={article.title}
-                    fill
-                    className="object-cover"
-                />
+            <div className="py-20">
+                <div className="relative w-full h-96 rounded-xl overflow-hidden">
+                    <Image
+                        src={article.coverImage}
+                        alt={article.title}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+
+                <h1 className="text-3xl font-bold mt-6">{article.title}</h1>
+
+                <p className="text-gray-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
+                    {article.description}
+                </p>
             </div>
-
-            <h1 className="text-3xl font-bold mt-6">{article.title}</h1>
-
-            <p className="text-gray-700 text-lg mt-4 leading-relaxed whitespace-pre-line">
-                {article.description}
-            </p>
         </div>
     );
 }

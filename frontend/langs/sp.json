@@ -7,7 +7,9 @@
         "title1": "Ayudando a los demás",
         "title2": "Vida y viajes",
         "title3": "Ofertas especiales que se adaptan a tu plan",
-        "button": "Explorar artículos"
+        "button": "Explorar artículos",
+        "search_placeholder": "Buscar Vietnam",
+        "search_button": "Buscar"
     },
     "contact": {
         "badge": "CONTÁCTANOS",
@@ -123,5 +125,13 @@
         "description": "¿Soñando con un viaje creado solo para ti?",
         "contact_button": "Contáctanos",
         "image_alt": "Ilustración de buzón"
+    },
+    "profile": {
+        "title": "Cuenta",
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "phone": "Número de teléfono",
+        "change": "Cambiar",
+        "sign_out": "Cerrar sesión"
     }
 }

@@ -191,11 +191,10 @@ export function StickyHeader() {
                   onClick={() => router.push("/login")}
                   className="w-[90px] h-[40px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"
                 >
-                  Login
+                  {t("login")}
                 </Button>
               )}
 
-              {/* mobile buttons */}
               <div className="md:hidden flex gap-3 text-white">
                 <button onClick={() => router.push("/search")}>
                   <CiSearch size={24} />
