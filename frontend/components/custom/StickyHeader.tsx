@@ -173,7 +173,7 @@ export function StickyHeader() {
                   onClick={() => router.push("/profile")}
                   className="cursor-pointer flex items-center gap-2"
                 >
-                  <Avatar className="bg-white p-1">
+                  <Avatar className="rounded-xl">
                     <AvatarImage
                       src={
                         dbUser?.avatar ||

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { db } from "@/app/(public)/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, Timestamp } from "firebase/firestore";
 
 import {
   Breadcrumb,
@@ -50,10 +50,30 @@ interface Tour {
   title: MultiLangString;
   description: MultiLangString;
   price: string;
-  duration: Duration | string | any;
+  duration: {
+    days: number;
+    nights: number;
+  };
   style: string;
+  dates: TourDate[];
+  itinerary: ItineraryItem[];
+  inclusions: Inclusions;
 }
 
+interface TourDate {
+  startDate: Timestamp;
+  endDate: Timestamp;
+  status: string;
+  price: string;
+}
+interface ItineraryItem {
+  title: string;
+  description: string;
+}
+interface Inclusions {
+  included: string[];
+  notIncluded: string[];
+}
 export default function TourPage() {
   const params = useParams();
   const locale = useLocale() as Lang;
@@ -72,24 +92,24 @@ export default function TourPage() {
 
       const data = tourSnap.data();
 
-      const titleObj = data.title || {};
-      const descObj = data.description || {};
-      const duration = data.duration || { days: "", nights: "" };
-
       setTour({
         id: tourSnap.id,
         images: data.images || [],
         price: data.price || "",
-        duration,
+        duration: data.duration || { days: 0, nights: 0 },
         style: data.style || "",
-        title: titleObj,
-        description: descObj,
+        title: data.title || {},
+        description: data.description || {},
+        dates: data.dates || [],
+        itinerary: data.itinerary || [],
+        inclusions: data.inclusions || { included: [], notIncluded: [] },
       });
     };
 
     fetchTour();
   }, [tourId, locale]);
 
+  console.log(tour);
   if (!tour) return <div className="p-10 text-center">Loading...</div>;
 
   const title =
@@ -107,7 +127,7 @@ export default function TourPage() {
     <div className="flex flex-col min-h-screen bg-white">
       <StickyHeader />
 
-      <div className="max-w-[1250px] mt-10 w-full mx-auto px-4 md:px-6 lg:px-0">
+      <div className="max-w-[1250px] mt-20 w-full mx-auto px-4 md:px-6 lg:px-0">
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
@@ -118,13 +138,10 @@ export default function TourPage() {
               <BreadcrumbLink href="/tours">Туры</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{title}</BreadcrumbPage>
-            </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="mt-6 mb-6 border-b pb-6 border-gray-200">
+        <div className="mt-3 mb-6 border-b pb-6 border-gray-200">
           <div className="flex flex-col lg:flex-row justify-between items-start gap-4">
             <div className="flex-1">
               <h1 className="text-3xl lg:text-4xl font-bold text-[#112211]">
@@ -134,21 +151,18 @@ export default function TourPage() {
                 <p className="flex items-center gap-2 text-gray-700">
                   <FaLocationDot /> Uzbekistan
                 </p>
-                <div className="flex items-center gap-2 text-yellow-500">
+                {/* <div className="flex items-center gap-2 text-yellow-500">
                   {[...Array(5)].map((_, i) => (
                     <CiStar key={i} size={16} />
                   ))}
                   <span className="text-gray-600 text-sm ml-1">
                     4.8 · 230 reviews
                   </span>
-                </div>
+                </div> */}
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              <Button className="bg-white text-[#8DD3BB] border border-[#8DD3BB] w-11 h-11 rounded-md">
-                <FaHeart />
-              </Button>
               <Button className="bg-white text-[#8DD3BB] border border-[#8DD3BB] w-11 h-11 rounded-md">
                 <FaShareAlt />
               </Button>
@@ -235,29 +249,12 @@ export default function TourPage() {
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <h3 className="text-2xl font-semibold mb-4">Itinerary</h3>
               <Accordion type="single" collapsible>
-                <AccordionItem value="it-day-1">
-                  <AccordionTrigger>
-                    Day 1 – Arrival in Tashkent
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    Meet your guide on arrival, transfer to the hotel and short
-                    city orientation.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="it-day-2">
-                  <AccordionTrigger>Day 2 – Samarkand</AccordionTrigger>
-                  <AccordionContent>
-                    Full day exploring Registan Square, Gur-Emir Mausoleum and
-                    Shah-i-Zinda.
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="it-day-3">
-                  <AccordionTrigger>Day 3 – Bukhara</AccordionTrigger>
-                  <AccordionContent>
-                    Visit Lyabi-Hauz, the Ark Fortress and stroll ancient
-                    markets.
-                  </AccordionContent>
-                </AccordionItem>
+                {tour.itinerary.map((item, i) => (
+                  <AccordionItem key={i} value={`it-${i}`}>
+                    <AccordionTrigger>{item.title}</AccordionTrigger>
+                    <AccordionContent>{item.description}</AccordionContent>
+                  </AccordionItem>
+                ))}
               </Accordion>
             </section>
 
@@ -269,19 +266,18 @@ export default function TourPage() {
                 <div>
                   <h4 className="font-semibold mb-2">Included</h4>
                   <ul className="list-disc ml-6 text-gray-700">
-                    <li>Accommodation in premium hotels</li>
-                    <li>Daily breakfast and some dinners</li>
-                    <li>Professional English-speaking guide</li>
-                    <li>All internal transfers</li>
+                    {tour.inclusions.included.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
                   </ul>
                 </div>
+
                 <div>
                   <h4 className="font-semibold mb-2">Not included</h4>
                   <ul className="list-disc ml-6 text-gray-700">
-                    <li>International flights</li>
-                    <li>Visa fees</li>
-                    <li>Optional excursions</li>
-                    <li>Travel insurance</li>
+                    {tour.inclusions.notIncluded.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
                   </ul>
                 </div>
               </div>
@@ -299,29 +295,34 @@ export default function TourPage() {
                       <th className="p-3 text-right">Price</th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white">
-                    <tr className="border-t">
-                      <td className="p-3">Jan 10, 2025</td>
-                      <td className="p-3">Jan 17, 2025</td>
-                      <td className="p-3 text-green-600">Available</td>
-                      <td className="p-3 text-right font-semibold">$2,395</td>
-                    </tr>
-                    <tr className="border-t">
-                      <td className="p-3">Feb 05, 2025</td>
-                      <td className="p-3">Feb 12, 2025</td>
-                      <td className="p-3 text-red-600">Few spots</td>
-                      <td className="p-3 text-right font-semibold">$2,495</td>
-                    </tr>
+                  <tbody>
+                    {tour.dates.map((date, i) => (
+                      <tr key={i} className="border-t">
+                        <td className="p-3">
+                          {date.startDate.toDate().toLocaleDateString()}
+                        </td>
+                        <td className="p-3">
+                          {date.endDate.toDate().toLocaleDateString()}
+                        </td>
+                        <td
+                          className={`p-3 ${
+                            date.status === "Few spots"
+                              ? "text-red-600"
+                              : "text-green-600"
+                          }`}
+                        >
+                          {date.status}
+                        </td>
+                        <td className="p-3 text-right font-semibold">
+                          ${date.price}
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
             </section>
-
-            <section className="bg-white rounded-2xl p-6 shadow-sm">
-              <h2 className="text-2xl font-semibold mb-3">Обзор</h2>
-              <p className="text-gray-700 leading-relaxed">{description}</p>
-            </section>
-
+            {/*             
             <section className="bg-white rounded-2xl p-6 shadow-sm">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-2xl font-semibold">Отзывы</h3>
@@ -334,7 +335,7 @@ export default function TourPage() {
                 <Review />
                 <Review />
               </div>
-            </section>
+            </section> */}
           </div>
 
           <aside className="lg:col-span-4">

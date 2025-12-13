@@ -81,24 +81,29 @@ const HeaderforOther = () => {
 
   return (
     <div className="bg-[#8DD3BB] shadow-md px-4 lg:px-0 pb-5">
-      <header className="flex pt-4 max-w-[1200px] mx-auto justify-between items-center px-4 lg:px-8 text-black">
-        <p
-          onClick={() => router.push("/")}
-          className="text-2xl cursor-pointer flex font-bold"
-        >
-          Pilav
-          <span className="text-white">
-            Tour <u>Agency</u>
-          </span>
-        </p>
-
-        <div className="hidden lg:flex items-center gap-4">
-          <p className="flex items-center cursor-pointer gap-2">
-            <CiPlane size={24} /> Найти туры
+      <header className="flex pt-4 max-w-[1200px] mx-auto justify-between items-center text-black">
+        <div className="flex items-center justify-center gap-10">
+          <p
+            onClick={() => router.push("/")}
+            className="text-2xl cursor-pointer flex font-bold"
+          >
+            Pilav
+            <span className="text-white">
+              Tour <u>Agency</u>
+            </span>
           </p>
 
-          <a href={"/articles"}>{t2("articles")}</a>
-          <a href={"/"}>{t2("testimonials")}</a>
+          <div className="hidden lg:flex items-center gap-4">
+            <p
+              onClick={() => router.push("/trips")}
+              className="flex items-center cursor-pointer gap-2"
+            >
+              Найти туры
+            </p>
+
+            <a href={"/articles"}>{t2("articles")}</a>
+            <a href={"/"}>{t2("testimonials")}</a>
+          </div>
         </div>
 
         <div className="flex gap-2 items-center">
@@ -125,7 +130,7 @@ const HeaderforOther = () => {
                 onClick={() => router.push("/profile")}
                 className="cursor-pointer flex items-center gap-2"
               >
-                <Avatar className="bg-white p-1">
+                <Avatar className="rounded-xl">
                   <AvatarImage
                     src={
                       dbUser?.avatar || user?.photoURL || "/avatar-default.svg"
