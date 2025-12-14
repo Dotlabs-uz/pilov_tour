@@ -5,7 +5,7 @@ import TourFilter from "@/components/custom/TourFilter";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { StickyHeader } from "@/components/custom/StickyHeader";
@@ -60,45 +60,53 @@ const Tours = () => {
   const locale = useLocale();
   const [categories, setCategories] = useState<Category[]>([]);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeCategory = searchParams.get("category");
 
   useEffect(() => {
     const fetchTours = async () => {
       const snapshot = await getDocs(collection(db, "tours"));
 
-      const toursData: TourCard[] = snapshot.docs.map((tourDoc) => {
-        const data = tourDoc.data() as TourPreview;
+      const toursData: TourCard[] = snapshot.docs
+        .map((tourDoc) => {
+          const data = tourDoc.data() as TourPreview & { category?: string };
 
-        const titleObj = data.title || {};
-        const descObj = data.description || {};
+          if (activeCategory && data.category !== activeCategory) {
+            return null;
+          }
 
-        const title =
-          titleObj[locale as keyof typeof titleObj] ||
-          titleObj["en"] ||
-          Object.values(titleObj)[0] ||
-          "";
+          const titleObj = data.title || {};
+          const descObj = data.description || {};
 
-        const description =
-          descObj[locale as keyof typeof descObj] ||
-          descObj["en"] ||
-          Object.values(descObj)[0] ||
-          "";
+          const title =
+            titleObj[locale as keyof typeof titleObj] ||
+            titleObj["en"] ||
+            Object.values(titleObj)[0] ||
+            "";
 
-        return {
-          id: tourDoc.id,
-          images: data.images || [],
-          title,
-          description,
-          price: data.price || "",
-          duration: data.duration || { days: "", nights: "" },
-          style: data.style || "",
-        };
-      });
+          const description =
+            descObj[locale as keyof typeof descObj] ||
+            descObj["en"] ||
+            Object.values(descObj)[0] ||
+            "";
+
+          return {
+            id: tourDoc.id,
+            images: data.images || [],
+            title,
+            description,
+            price: data.price || "",
+            duration: data.duration || { days: "", nights: "" },
+            style: data.style || "",
+          };
+        })
+        .filter(Boolean) as TourCard[];
 
       setTours(toursData);
     };
 
     fetchTours();
-  }, [locale]);
+  }, [locale, activeCategory]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -118,8 +126,7 @@ const Tours = () => {
     };
 
     fetchCategories();
-  }, []); 
-
+  }, []);
 
   return (
     <div className="flex flex-col max-w-7xl mx-auto min-h-screen">
@@ -132,8 +139,11 @@ const Tours = () => {
       <div className="grid grid-cols-2 max-w-7xl mx-auto items-center justify-center mt-[100px]">
         {categories.map((category) => (
           <div
-            className="w-[300px] h-[150px] p-5 shadow-xl rounded-lg flex items-center justify-between"
+            className="w-[300px] cursor-pointer h-[150px] p-5 shadow-xl rounded-lg flex items-center justify-between"
             key={category.id}
+            onClick={() =>
+              router.push(`/trips?category=${category.destination}`)
+            }
           >
             <p className="text-lg font-bold">{category.destination}</p>
             <img

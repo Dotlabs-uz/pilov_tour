@@ -64,7 +64,7 @@ const Footer = () => {
               {categories.map((category) => (
                 <li key={category.id}>
                   <a
-                    href={`/trips?=category${category.destination}`}
+                    href={`/trips?category=${category.destination}`}
                     className="hover:text-black"
                   >
                     {category.destination}

@@ -48,7 +48,7 @@ export default function ToursCategories() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <div onClick={() => router.push("/trips")}
+            <div onClick={() => router.push(`/trips?category=${category.destination}`)}
               className="w-[300px] cursor-pointer h-[150px] p-5 shadow-xl rounded-lg flex items-center justify-between"
               key={category.id}
             >
