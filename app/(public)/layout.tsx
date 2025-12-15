@@ -1,15 +1,16 @@
 import Footer from "@/components/custom/Footer";
+import { Navbar } from "@/components/custom/Navbar";
 
 export default function Layout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  return (
-    <div>
-        {children}
-        <Footer />
-  
-    </div>
-    );
+	return (
+		<div>
+			<Navbar />
+			{children}
+			<Footer />
+		</div>
+	);
 }

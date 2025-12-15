@@ -1,27 +1,20 @@
+import { HeroSection } from "@/components/custom/HeroSection";
+import { FeaturedTours } from "@/components/custom/FeaturedTours";
+import { WhyPilavtour } from "@/components/custom/WhyPilavtour";
+import { CulturalHighlights } from "@/components/custom/CulturalHighlights";
+import { Testimonials } from "@/components/custom/Testimonials";
+import { CtaSection } from "@/components/custom/CtaSection";
 import RecTrips from "@/components/custom/Rectrips";
-import { StickyHeader } from "@/components/custom/StickyHeader";
-import Subscribe from "@/components/custom/Subcribe";
-import LifeTravel from "@/containers/life-travel";
-// import Reviews from "@/containers/Reviews";
-// import { ContactSection } from "@/components/custom/ContactSection";
-import ToursCategories from "@/components/custom/ToursCategories";
-import { AboutSection } from "@/components/custom/AboutSection";
-import ArticlesList from "@/components/custom/ArticlesList";
 
 export default function Home() {
-  return (
-    <div className="mx-auto flex mt-2 flex-col">
-      <StickyHeader />
-      {/* <HeaderTop /> */}
-      {/* <HeaderMain /> */}
-      <LifeTravel />
-      <RecTrips />
-      <AboutSection />
-      {/* <ContactSection /> */}
-      <ToursCategories />
-      {/* <Reviews /> */}
-      <ArticlesList />
-      <Subscribe />
-    </div>
-  );
+	return (
+		<main className="min-h-screen">
+			<HeroSection />
+			<FeaturedTours />
+			<WhyPilavtour />
+			<CulturalHighlights />
+			<Testimonials />
+			<CtaSection />
+		</main>
+	);
 }
