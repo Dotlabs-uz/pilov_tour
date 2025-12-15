@@ -21,21 +21,15 @@ export interface TourPreview {
   images: string[];
   title: MultiLangString;
   description: MultiLangString;
-  dates?: string[];
-  inclusions?: {
-    included: string[];
-    notincluded: string[];
-  };
-  itinerary?: any;
-  location?: string;
-  maxGroupCount?: number;
   price: string;
   duration: {
     days: number | string;
     nights: number | string;
   };
   style: string;
+  category?: string;
 }
+
 export interface TourCard {
   id: string;
   images: string[];
@@ -57,8 +51,8 @@ export interface Category {
 
 const Tours = () => {
   const [tours, setTours] = useState<TourCard[]>([]);
-  const locale = useLocale();
   const [categories, setCategories] = useState<Category[]>([]);
+  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get("category");
@@ -69,7 +63,7 @@ const Tours = () => {
 
       const toursData: TourCard[] = snapshot.docs
         .map((tourDoc) => {
-          const data = tourDoc.data() as TourPreview & { category?: string };
+          const data = tourDoc.data() as TourPreview;
 
           if (activeCategory && data.category !== activeCategory) {
             return null;
@@ -110,63 +104,83 @@ const Tours = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "categories"));
+      const snapshot = await getDocs(collection(db, "categories"));
 
-        const categoriesDb: Category[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...(doc.data() as Omit<Category, "id">),
-        }));
+      const categoriesDb: Category[] = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<Category, "id">),
+      }));
 
-        console.log(categoriesDb);
-        setCategories(categoriesDb);
-      } catch (error) {
-        console.log("Error fetching categories:", error);
-      }
+      setCategories(categoriesDb);
     };
 
     fetchCategories();
   }, []);
 
   return (
-    <div className="flex flex-col max-w-7xl mx-auto min-h-screen">
+    <div className="flex flex-col max-w-7xl mx-auto min-h-screen px-4">
       <StickyHeader />
 
-      <section className="flex mt-20 justify-center">
+      {/* FILTER */}
+      <section className="mt-24 bg-white rounded-2xl shadow-sm py-6 flex justify-center">
         <TourFilter />
       </section>
 
-      <div className="grid grid-cols-2 max-w-7xl mx-auto items-center justify-center mt-[100px]">
+      {/* ACTIVE CATEGORY */}
+      {activeCategory && (
+        <p className="text-center mt-6 text-sm text-gray-500">
+          Showing tours for:{" "}
+          <span className="font-semibold">{activeCategory}</span>
+        </p>
+      )}
+
+      {/* CATEGORIES */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
         {categories.map((category) => (
           <div
-            className="w-[300px] cursor-pointer h-[150px] p-5 shadow-xl rounded-lg flex items-center justify-between"
             key={category.id}
             onClick={() =>
               router.push(`/trips?category=${category.destination}`)
             }
+            className="
+              cursor-pointer h-[160px] p-5
+              rounded-2xl bg-white
+              shadow-md hover:shadow-xl
+              transition-all duration-300
+              hover:-translate-y-1
+              flex items-center justify-between
+            "
           >
-            <p className="text-lg font-bold">{category.destination}</p>
+            <p className="text-lg font-bold text-[#112211]">
+              {category.destination}
+            </p>
             <img
-              className="w-[120px] h-[100px] rounded-lg"
               src={category.image}
-              alt="category image"
+              alt="category"
+              className="w-[120px] h-[100px] rounded-xl object-cover"
             />
           </div>
         ))}
-      </div>
+      </section>
 
-      <main className="flex justify-between max-w-7xl mx-auto w-full px-4 mt-12">
-        <section className="grid grid-cols-4 gap-5">
+      {/* TOURS */}
+      <main className="mt-20">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {tours.map((tour) => (
             <div
               key={tour.id}
-              className="rounded-2xl shadow bg-white overflow-hidden"
+              className="
+                rounded-2xl bg-white overflow-hidden
+                shadow-md hover:shadow-xl
+                transition-all duration-300
+                hover:-translate-y-1
+              "
             >
               {tour.images[0] && (
                 <img
                   src={tour.images[0]}
                   alt={tour.title}
-                  className="h-48 w-full object-cover"
+                  className="h-52 w-full object-cover"
                 />
               )}
 
@@ -181,7 +195,11 @@ const Tours = () => {
 
                 <Button
                   onClick={() => router.push(`/trips/${tour.id}`)}
-                  className="mt-2 cursor-pointer bg-[#8DD3BB] text-[#112211]"
+                  className="
+                    mt-2 bg-[#8DD3BB] text-[#112211]
+                    hover:bg-[#6fbfa3]
+                    transition-colors
+                  "
                 >
                   Explore
                 </Button>
