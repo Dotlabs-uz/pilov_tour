@@ -7,14 +7,50 @@ import { Menu, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import { AiOutlineGlobal } from "react-icons/ai";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { langs } from "@/lib/langs";
+import { useRouter } from "next/navigation";
+import { collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { auth, db } from "@/app/(public)/firebase";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+interface DatabaseUser {
+	uid: string;
+	name?: string;
+	email?: string;
+	phone?: string;
+	avatar?: string;
+	createdAt?: any;
+}
+
+interface Category {
+	id: string;
+	name: string;
+	image: string;
+}
 
 export function Navbar() {
 	const [isScrolled, setIsScrolled] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+	const [user, setUser] = useState<FirebaseUser | null>(null);
+	const [dbUser, setDbUser] = useState<DatabaseUser | null>(null);
+	const [loading, setLoading] = useState(true);
+
+	const [categories, setCategories] = useState<Category[]>([]);
+
 	const pathname = usePathname();
 	const isHomePage = pathname === "/";
 	const t = useTranslations("Navbar");
-
+	const router = useRouter();
 	useEffect(() => {
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 50);
@@ -22,6 +58,67 @@ export function Navbar() {
 		window.addEventListener("scroll", handleScroll);
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, []);
+
+	function handleChange(lang: string): void {
+		document.cookie = `locale=${lang}; path=/`;
+		router.refresh();
+	}
+
+	useEffect(() => {
+		const fetchCategories = async () => {
+			try {
+				const snapshot = await getDocs(collection(db, "categories"));
+
+				const categoryDb: Category[] = snapshot.docs.map((doc) => ({
+					id: doc.id,
+					...(doc.data() as Omit<Category, "id">),
+				}));
+
+				console.log(categoryDb);
+				setCategories(categoryDb);
+			} catch (e) {
+				console.log(e, "Something w+ent wrong");
+			}
+		};
+
+		fetchCategories();
+	}, []);
+
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+			if (firebaseUser) {
+				setUser(firebaseUser);
+				await fetchOrCreateUser(firebaseUser);
+			}
+			setLoading(false);
+		});
+
+		return () => unsubscribe();
+	}, [router]);
+
+	const fetchOrCreateUser = async (firebaseUser: FirebaseUser) => {
+		try {
+			const userRef = doc(db, "users", firebaseUser.uid);
+			const docSnap = await getDoc(userRef);
+
+			if (!docSnap.exists()) {
+				const newUser: DatabaseUser = {
+					uid: firebaseUser.uid,
+					name: firebaseUser.displayName || "",
+					email: firebaseUser.email || "",
+					phone: firebaseUser.phoneNumber || "",
+					avatar: firebaseUser.photoURL || "/avatar-default.svg",
+					createdAt: serverTimestamp(),
+				};
+				await setDoc(userRef, newUser);
+				setDbUser(newUser);
+			} else {
+				setDbUser(docSnap.data() as DatabaseUser);
+			}
+		} catch (e) {
+			console.error("Error fetching user:", e);
+		}
+	};
 
 	const navLinks = [
 		{ name: t("explore"), href: "/trips" },
@@ -94,47 +191,76 @@ export function Navbar() {
 								</Link>
 							))}
 						</div>
+						<div className="flex items-center gap-4">
+							<DropdownMenu>
+								<DropdownMenuTrigger className="cursor-pointer">
+									<AiOutlineGlobal
+										size={24}
+										className="text-white"
+									/>
+								</DropdownMenuTrigger>
 
-						{/* Desktop CTA */}
-						<div className="hidden lg:flex items-center gap-3">
-							<Button
-								variant={
-									isScrolled || !isHomePage
-										? "gradient"
-										: "hero"
-								}
-								size="default"
-								asChild
-							>
-								<Link
-									href="/trips"
-									className="flex items-center gap-2"
+								<DropdownMenuContent className="bg-white text-black shadow-lg rounded-md px-2 py-2">
+									{langs.map(({ lang }, i) => (
+										<DropdownMenuItem
+											key={i}
+											className="cursor-pointer hover:bg-gray-100 rounded-md px-2 py-2"
+											onClick={() =>
+												handleChange(lang.toLowerCase())
+											}
+										>
+											{lang}
+										</DropdownMenuItem>
+									))}
+								</DropdownMenuContent>
+							</DropdownMenu>
+							{user ? (
+								<div
+									onClick={() => router.push("/profile")}
+									className="cursor-pointer flex items-center gap-2"
 								>
-									<Sparkles size={16} />
-									{t("start_adventure")}
-								</Link>
-							</Button>
-						</div>
-
-						{/* Mobile Menu Button */}
-						<motion.button
-							whileTap={{ scale: 0.9 }}
-							onClick={() =>
-								setIsMobileMenuOpen(!isMobileMenuOpen)
-							}
-							className={cn(
-								"lg:hidden p-2 rounded-full transition-colors",
-								textColor,
-								"hover:bg-white/10"
-							)}
-							aria-label={t("toggle_menu")}
-						>
-							{isMobileMenuOpen ? (
-								<X size={24} />
+									<Avatar className="rounded-xl">
+										<AvatarImage
+											src={
+												dbUser?.avatar ||
+												user?.photoURL ||
+												"/avatar-default.svg"
+											}
+										/>
+										<AvatarFallback>
+											{user?.displayName || dbUser?.name}
+										</AvatarFallback>
+									</Avatar>
+								</div>
 							) : (
-								<Menu size={24} />
+								<Button
+									onClick={() => router.push("/login")}
+									className="w-[90px] h-[40px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"
+								>
+									login
+								</Button>
 							)}
-						</motion.button>
+
+							{/* Mobile Menu Button */}
+							<motion.button
+								whileTap={{ scale: 0.9 }}
+								onClick={() =>
+									setIsMobileMenuOpen(!isMobileMenuOpen)
+								}
+								className={cn(
+									"lg:hidden p-2 rounded-full transition-colors",
+									textColor,
+									"hover:bg-white/10"
+								)}
+								aria-label={t("toggle_menu")}
+							>
+								{isMobileMenuOpen ? (
+									<X size={24} />
+								) : (
+									<Menu size={24} />
+								)}
+							</motion.button>
+						</div>
 					</div>
 				</nav>
 			</motion.header>
@@ -198,22 +324,37 @@ export function Navbar() {
 									transition={{ delay: 0.4 }}
 									className="mt-auto pb-8"
 								>
-									<Button
-										variant="gradient"
-										size="xl"
-										className="w-full"
-										asChild
-									>
-										<Link
-											href="/trips"
+									{user ? (
+										<div
 											onClick={() =>
-												setIsMobileMenuOpen(false)
+												router.push("/profile")
 											}
+											className="cursor-pointer flex items-center gap-2"
 										>
-											<Sparkles size={20} />
-											{t("start_adventure")}
-										</Link>
-									</Button>
+											<Avatar className="rounded-xl">
+												<AvatarImage
+													src={
+														dbUser?.avatar ||
+														user?.photoURL ||
+														"/avatar-default.svg"
+													}
+												/>
+												<AvatarFallback>
+													{user?.displayName ||
+														dbUser?.name}
+												</AvatarFallback>
+											</Avatar>
+										</div>
+									) : (
+										<Button
+											onClick={() =>
+												router.push("/login")
+											}
+											className="w-[90px] h-[40px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"
+										>
+											login
+										</Button>
+									)}
 								</motion.div>
 							</div>
 						</motion.div>
