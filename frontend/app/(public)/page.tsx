@@ -4,7 +4,6 @@ import { WhyPilavtour } from "@/components/custom/WhyPilavtour";
 import { CulturalHighlights } from "@/components/custom/CulturalHighlights";
 import { Testimonials } from "@/components/custom/Testimonials";
 import { CtaSection } from "@/components/custom/CtaSection";
-import RecTrips from "@/components/custom/Rectrips";
 
 export default function Home() {
 	return (

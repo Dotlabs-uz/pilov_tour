@@ -116,13 +116,13 @@ export function HeroSection() {
 									<ArrowRight size={20} />
 								</Link>
 							</Button>
-							<Button variant="hero" size="xl" className="group">
+							{/* <Button variant="hero" size="xl" className="group">
 								<Play
 									size={20}
 									className="group-hover:scale-110 transition-transform"
 								/>
 								Watch Film
-							</Button>
+							</Button> */}
 						</motion.div>
 
 						{/* Social Proof */}
@@ -155,7 +155,7 @@ export function HeroSection() {
 					</div>
 
 					{/* Search Bar */}
-					<motion.div
+					{/* <motion.div
 						initial={{ opacity: 0, y: 20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ duration: 0.8, delay: 0.8 }}
@@ -170,7 +170,7 @@ export function HeroSection() {
 						<Button variant="hero" size="lg">
 							{t("search_button")}
 						</Button>
-					</motion.div>
+					</motion.div> */}
 				</div>
 
 				{/* Scroll Indicator */}

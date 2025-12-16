@@ -16,24 +16,6 @@ export function Navbar() {
 	const t = useTranslations("Navbar");
 
 	useEffect(() => {
-		// #region agent log
-		fetch(
-			"http://127.0.0.1:7242/ingest/5c91615e-f2f5-4614-af04-c97f8ef47710",
-			{
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					location: "Navbar.tsx:26",
-					message: "Navbar useEffect triggered",
-					data: { isScrolled, isHomePage },
-					timestamp: Date.now(),
-					sessionId: "debug-session",
-					runId: "run1",
-					hypothesisId: "H1",
-				}),
-			}
-		).catch(() => {});
-		// #endregion
 		const handleScroll = () => {
 			setIsScrolled(window.scrollY > 50);
 		};
@@ -42,7 +24,7 @@ export function Navbar() {
 	}, []);
 
 	const navLinks = [
-		{ name: t("explore"), href: "/tours" },
+		{ name: t("explore"), href: "/trips" },
 		{ name: t("stories"), href: "/articles" },
 		{ name: t("about"), href: "/about" },
 	];
@@ -125,7 +107,7 @@ export function Navbar() {
 								asChild
 							>
 								<Link
-									href="/tours"
+									href="/trips"
 									className="flex items-center gap-2"
 								>
 									<Sparkles size={16} />
@@ -223,7 +205,7 @@ export function Navbar() {
 										asChild
 									>
 										<Link
-											href="/tours"
+											href="/trips"
 											onClick={() =>
 												setIsMobileMenuOpen(false)
 											}
