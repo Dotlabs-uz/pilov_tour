@@ -119,7 +119,7 @@ const RecTrips = () => {
 
 											<p className="text-sm items-end mt-2">
 												<span className="text-black font-bold text-lg">
-													EUR €{tour.price}
+													USD ${tour.price}
 												</span>
 											</p>
 										</div>

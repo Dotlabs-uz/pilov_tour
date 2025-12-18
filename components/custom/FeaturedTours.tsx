@@ -1,9 +1,9 @@
 "use client";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Calendar, Users, ArrowRight, Star, Heart, Zap } from "lucide-react";
+import { Calendar, Users, ArrowRight, Star, Heart, Zap, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TourData, LocalizedString } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
@@ -16,6 +16,7 @@ export type TourCard = {
 	title: string;
 	description: string;
 	price: string;
+	location: string[];
 	duration: {
 		days: string;
 		nights: string;
@@ -45,6 +46,11 @@ export function FeaturedTours() {
 					data.description.en ||
 					"";
 
+				const location =
+					data.location[locale as keyof LocalizedString] ||
+					data.location.en ||
+					"";
+
 				return {
 					id: tourDoc.id,
 					images: data.images || [],
@@ -55,6 +61,7 @@ export function FeaturedTours() {
 						days: data.duration.days?.toString() || "",
 						nights: data.duration.nights?.toString() || "",
 					},
+					location: location.split(",").map((loc) => loc.trim()),
 					style: data.style || "",
 					maxGroupCount: data.maxGroupCount || 0,
 				};
@@ -135,6 +142,22 @@ export function FeaturedTours() {
 function TourCard({ tour, index }: { tour: TourCard; index: number }) {
 	const cardRef = useRef<HTMLDivElement>(null);
 	const t = useTranslations("FeaturedTours");
+	const [currentImageIndex, setCurrentImageIndex] = useState(0);
+	const [isHovered, setIsHovered] = useState(false);
+	const images = tour.images.length ? tour.images : ["/tourImage1.jpg"];
+
+	useEffect(() => {
+		if (!isHovered || images.length <= 1) {
+			setCurrentImageIndex(0);
+			return;
+		}
+
+		const interval = setInterval(() => {
+			setCurrentImageIndex((prev) => (prev + 1) % images.length);
+		}, 2000); // Переключение каждые 2 секунды
+
+		return () => clearInterval(interval);
+	}, [isHovered, images.length]);
 
 	return (
 		<motion.article
@@ -143,24 +166,36 @@ function TourCard({ tour, index }: { tour: TourCard; index: number }) {
 			whileInView={{ opacity: 1, y: 0 }}
 			viewport={{ once: true }}
 			transition={{ duration: 0.6, delay: index * 0.15 }}
-			className={`group ${
-				index === 0 ? "md:col-span-2 lg:col-span-1" : ""
-			}`}
+			className="group"
+			onHoverStart={() => setIsHovered(true)}
+			onHoverEnd={() => setIsHovered(false)}
 		>
 			<Link href={`/trips/${tour.id}`}>
 				<motion.div
-					whileHover={{ y: -8, rotate: index % 2 === 0 ? 1 : -1 }}
+					whileHover={{ scale: 1.02 }}
 					transition={{ duration: 0.3 }}
 					className="card-playful h-full"
 				>
 					<div className="relative h-[320px] lg:h-[380px] overflow-hidden rounded-t-2xl">
-						{/* Image */}
-						<Image
-							src={tour.images[0]}
-							alt={tour.title}
-							fill
-							style={{ objectFit: "cover" }}
-						/>
+						{/* Images that switch one by one on hover */}
+						{images.map((src, idx) => (
+							<motion.div
+								key={idx}
+								className="absolute inset-0"
+								initial={{ opacity: idx === 0 ? 1 : 0 }}
+								animate={{
+									opacity: idx === currentImageIndex ? 1 : 0,
+								}}
+								transition={{ duration: 0.5, ease: "easeInOut" }}
+							>
+								<Image
+									src={src}
+									alt={`${tour.title} - Image ${idx + 1}`}
+									fill
+									className="object-cover"
+								/>
+							</motion.div>
+						))}
 
 						{/* Gradient Overlay */}
 						<div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent" />
@@ -173,48 +208,54 @@ function TourCard({ tour, index }: { tour: TourCard; index: number }) {
 						>
 							<Heart size={18} />
 						</motion.button>
-
-						{/* Content Overlay */}
-						<div className="absolute bottom-0 left-0 right-0 p-5">
-							<h3 className="font-display text-2xl font-bold text-white mb-1">
-								{tour.title}
-							</h3>
-							<p className="text-white/70 font-body text-sm">
-								{tour.description}
-							</p>
-						</div>
 					</div>
 
 					{/* Card Body */}
 					<div className="p-5 bg-white rounded-b-2xl">
-						<p className="text-muted-foreground font-body text-sm mb-4 line-clamp-2">
-							{tour.description}
-						</p>
+						<h3 className="font-display text-2xl font-bold text-muted-foreground mb-2">
+							{tour.title}
+						</h3>
 
-						{/* Meta */}
-						<div className="flex items-center gap-4 mb-4 text-muted-foreground text-sm font-body">
-							<span className="flex items-center gap-1.5">
-								<Calendar size={14} className="text-coral" />
-								{t("duration") +
-									" " +
-									tour.duration.days +
-									" days"}
-							</span>
+						{/* Location & Meta */}
+						<div className="flex flex-col gap-2 mb-4 text-muted-foreground font-body">
+							{/* Locations (max 2) */}
+							{tour.location && tour.location.length > 0 && (
+								<div className="flex items-center gap-1.5 text-sm">
+									<MapPin size={14} className="text-coral shrink-0" />
+									<span className="truncate">
+										{tour.location.slice(0, 2).join(" • ")}
+										{tour.location.length > 2 ? ` +${tour.location.length - 2} ` : ""}
+									</span>
+                                </div>
+							)}
+
+							<div className="flex items-center gap-4 text-sm">
+								<span className="flex items-center gap-1.5">
+									<Calendar size={14} className="text-coral" />
+									{t("duration") +
+										" " +
+										tour.duration.days +
+										" days"}
+								</span>
+							</div>
 						</div>
 
 						{/* Price & CTA */}
 						<div className="flex items-center justify-between pt-4 border-t border-border">
 							<div>
-								<span className="text-muted-foreground text-xs font-body">
-									{t("from")}
+								<span className="block text-muted-foreground text-xs font-body uppercase tracking-wide">
+									From
 								</span>
 								<span className="block font-display text-xl font-bold text-foreground">
-									€{tour.price}
+									US ${tour.price}
+								</span>
+								<span className="block text-xs text-muted-foreground font-body">
+									per person
 								</span>
 							</div>
-							<span className="flex items-center gap-2 text-coral text-sm font-body font-semibold group-hover:gap-3 transition-all">
-								{t("view_trip")}
-								<ArrowRight size={16} />
+							<span className="inline-flex items-center justify-center px-5 py-2 rounded-full bg-gradient-to-r from-coral to-gold text-white text-sm md:text-base font-body font-semibold shadow-md group-hover:shadow-lg group-hover:translate-x-0.5 transition-all">
+								View tour
+								<ArrowRight size={16} className="ml-1" />
 							</span>
 						</div>
 					</div>

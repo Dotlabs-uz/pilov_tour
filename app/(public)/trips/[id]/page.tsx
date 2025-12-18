@@ -497,7 +497,7 @@ export default function TourPage() {
 									</span>
 									<div className="flex items-baseline gap-2">
 										<span className="font-display text-4xl font-bold text-foreground">
-											€{tour.price}
+											${tour.price}
 										</span>
 										<span className="text-muted-foreground font-body">
 											/ person

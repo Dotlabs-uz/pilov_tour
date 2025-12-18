@@ -366,7 +366,7 @@ const Tours = () => {
 															From
 														</span>
 														<span className="block font-display text-xl font-bold">
-															€
+															$
 															{Number(
 																tour.price
 															).toLocaleString()}
