@@ -56,10 +56,17 @@ export function HeroSection() {
 						{/* Slide 1 */}
 						<CarouselItem className="h-full">
 							<div className="relative h-full">
-								<div
-									className="absolute inset-0 h-full w-full bg-gray-700 bg-cover bg-center"
-									style={{ backgroundImage: "url(/hero-registan.jpg)" }}
-								/>
+								<div className="absolute inset-0 h-full w-full overflow-hidden bg-gray-700">
+									<video
+										className="h-full w-full object-cover"
+										src="/banner1.mp4" // положи файл в public/ или укажи свой путь
+										autoPlay
+										muted
+										loop
+										playsInline
+										preload="metadata"
+									/>
+								</div>
 								<div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/30 to-navy/80" />
 								<div className="absolute inset-0 bg-gradient-to-r from-navy/60 via-transparent to-transparent" />
 
@@ -126,7 +133,7 @@ export function HeroSection() {
 							<div className="relative h-full">
 								<div
 									className="absolute inset-0 h-full w-full bg-gray-700 bg-cover bg-center"
-									style={{ backgroundImage: "url(/hero-registan.jpg)" }}
+									style={{ backgroundImage: "url(/banner2.webp)" }}
 								/>
 								<div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/30 to-navy/80" />
 								<div className="absolute inset-0 bg-gradient-to-r from-navy/60 via-transparent to-transparent" />
