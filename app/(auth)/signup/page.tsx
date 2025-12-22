@@ -106,7 +106,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="flex items-center mt-10 gap-30 justify-between max-w-[1200px] w-full mx-auto">
+    <div className="flex items-center mt-10 gap-[200px] justify-between max-w-[1200px] w-full mx-auto">
       <AuthSlider
         images={["/preview-login1.png", "/preview-login2.png"]}
         delay={2000}

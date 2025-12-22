@@ -12,7 +12,7 @@ const Reset = () => {
 
   return (
     <>
-      <div className="flex items-center mt-10 gap-50 justify-between max-w-[1200px] w-full mx-auto">
+      <div className="flex items-center mt-10 gap-[200px] justify-between max-w-[1200px] w-full mx-auto">
         <div className="flex flex-col gap-10">
           <div className="flex flex-col mt-10 gap-5">
             <p

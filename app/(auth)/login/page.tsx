@@ -102,7 +102,7 @@ export default function LoginPage() {
 	}
 
 	return (
-		<div className="flex items-center mt-10 justify-between w-full gap-50 max-w-[1200px] mx-auto">
+		<div className="flex items-center mt-10 justify-between w-full gap-[200px] max-w-[1200px] mx-auto">
 			<div className="flex flex-col gap-10">
 				<div className="flex flex-col gap-5">
 					<div className="flex flex-col gap-4">
