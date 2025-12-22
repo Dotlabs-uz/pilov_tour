@@ -7,7 +7,9 @@ const EndComponent = () => {
     <>
       <div className="flex w-[400px] justify-center pl-5 pr-5 h-[284px] border-1 border-[#8DD3BB] rounded-lg  flex-col gap-10">
         <div className="flex flex-col gap-3">
-          <p className="text-3xl max-w-[230px] font-bold">Cancellation Policy</p>
+          <p className="text-3xl max-w-[230px] font-bold">
+            Cancellation Policy
+          </p>
           <span className="text-xl font-light">
             You can cancel up to 24 hours in advance of the experience fo a full
             refund

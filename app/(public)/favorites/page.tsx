@@ -3,7 +3,7 @@ const Favorites = () => {
     <>
       <div>
         <div className="flex flex-col gap-2">
-            <p>Favorites Page</p>
+          <p>Favorites Page</p>
         </div>
       </div>
     </>

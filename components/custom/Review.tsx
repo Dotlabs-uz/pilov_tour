@@ -24,7 +24,7 @@ const Review = () => {
             aliquip ex ea commodo consequat.
           </p>
         </div>
-        <FaFlag size={26}/>
+        <FaFlag size={26} />
       </div>
     </>
   );

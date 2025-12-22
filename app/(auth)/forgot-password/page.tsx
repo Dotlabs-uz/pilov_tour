@@ -2,9 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AuthSlider from "@/containers/auth-slider";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { FaApple, FaArrowLeft, FaFacebook } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 const Reset = () => {
