@@ -126,15 +126,11 @@ export function Navbar() {
     { name: t("about"), href: "/about" },
   ];
 
-  const navBackground =
-    isScrolled || !isHomePage
-      ? "bg-white/90 backdrop-blur-xl shadow-soft"
-      : "bg-transparent";
+  const navBackground = "bg-white shadow-soft";
 
-  const textColor =
-    isScrolled || !isHomePage ? "text-foreground" : "text-white";
+  const textColor = "text-foreground";
 
-  const logoColor = isScrolled || !isHomePage ? "text-gradient" : "text-white";
+  const logoColor = "text-gradient";
 
   return (
     <>
@@ -169,11 +165,11 @@ export function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={cn(
-                    "relative px-5 py-2 font-body text-sm font-medium rounded-full transition-all duration-300",
-                    textColor,
-                    pathname === link.href ? "bg-white/20" : "hover:bg-white/10"
-                  )}
+                    className={cn(
+                      "relative px-5 py-2 font-body text-sm font-medium rounded-full transition-all duration-300",
+                      textColor,
+                      pathname === link.href ? "bg-gray-100" : "hover:bg-gray-50"
+                    )}
                 >
                   {link.name}
                   {pathname === link.href && (
@@ -186,9 +182,40 @@ export function Navbar() {
               ))}
             </div>
             <div className="flex items-center gap-4">
+              {/* Desktop only: User/login */}
+              <div className="hidden lg:flex items-center gap-4">
+                {user ? (
+                  <div
+                    onClick={() => router.push("/profile")}
+                    className="cursor-pointer flex items-center gap-2"
+                  >
+                    <Avatar className="rounded-xl">
+                      <AvatarImage
+                        src={
+                          dbUser?.avatar ||
+                          user?.photoURL ||
+                          "/avatar-default.svg"
+                        }
+                      />
+                      <AvatarFallback>
+                        {user?.displayName || dbUser?.name}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => router.push("/login")}
+                    className="w-[90px] h-[40px] hover:bg-gray-200 bg-gray-100 text-black rounded-lg cursor-pointer"
+                  >
+                    login
+                  </Button>
+                )}
+              </div>
+
+              {/* Language selector - visible on all screens */}
               <DropdownMenu>
                 <DropdownMenuTrigger className="cursor-pointer">
-                  <AiOutlineGlobal size={24} className="text-white" />
+                  <AiOutlineGlobal size={24} className="text-foreground" />
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent className="bg-white text-black shadow-lg rounded-md px-2 py-2">
@@ -203,32 +230,6 @@ export function Navbar() {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-              {user ? (
-                <div
-                  onClick={() => router.push("/profile")}
-                  className="cursor-pointer flex items-center gap-2"
-                >
-                  <Avatar className="rounded-xl">
-                    <AvatarImage
-                      src={
-                        dbUser?.avatar ||
-                        user?.photoURL ||
-                        "/avatar-default.svg"
-                      }
-                    />
-                    <AvatarFallback>
-                      {user?.displayName || dbUser?.name}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-              ) : (
-                <Button
-                  onClick={() => router.push("/login")}
-                  className="w-[90px] h-[40px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"
-                >
-                  login
-                </Button>
-              )}
 
               {/* Mobile Menu Button */}
               <motion.button
@@ -237,7 +238,7 @@ export function Navbar() {
                 className={cn(
                   "lg:hidden p-2 rounded-full transition-colors",
                   textColor,
-                  "hover:bg-white/10"
+                  "hover:bg-gray-100"
                 )}
                 aria-label={t("toggle_menu")}
               >
@@ -303,8 +304,29 @@ export function Navbar() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="mt-auto pb-8"
+                  className="mt-auto pb-8 flex flex-col gap-4"
                 >
+                  {/* Language Selector in Mobile Menu */}
+                  <div className="flex items-center gap-2">
+                    <AiOutlineGlobal size={20} className="text-foreground" />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="cursor-pointer text-foreground font-body text-sm">
+                        Language
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="bg-white text-black shadow-lg rounded-md px-2 py-2">
+                        {langs.map(({ lang }, i) => (
+                          <DropdownMenuItem
+                            key={i}
+                            className="cursor-pointer hover:bg-gray-100 rounded-md px-2 py-2"
+                            onClick={() => handleChange(lang.toLowerCase())}
+                          >
+                            {lang}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
                   {user ? (
                     <div
                       onClick={() => router.push("/profile")}
@@ -326,7 +348,7 @@ export function Navbar() {
                   ) : (
                     <Button
                       onClick={() => router.push("/login")}
-                      className="w-[90px] h-[40px] hover:bg-gray-400 bg-white text-black rounded-lg cursor-pointer"
+                      className="w-[90px] h-[40px] hover:bg-gray-200 bg-gray-100 text-black rounded-lg cursor-pointer"
                     >
                       login
                     </Button>

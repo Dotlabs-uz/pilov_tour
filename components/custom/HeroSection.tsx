@@ -26,7 +26,7 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative h-[550px] md:h-screen overflow-hidden bg-navy">
+    <section className="relative pt-20 md:pt-24 overflow-hidden bg-white md:overflow-visible">
       {/* Floating Location Tags */}
       {/* {floatingTags.map((tag, index) => (
 				<motion.div
@@ -43,18 +43,18 @@ export function HeroSection() {
 			))} */}
 
       {/* Carousel with video slides */}
-      <div className="relative h-full">
+      <div className="relative h-[550px] md:h-[calc(100vh-6rem)] px-4 md:px-6 lg:px-8 pb-4 md:pb-6 lg:pb-8">
         <Carousel
-          className="h-full"
+          className="h-full rounded-2xl overflow-hidden"
           opts={{
             loop: true,
           }}
         >
-          <CarouselContent className="h-[550px] md:h-screen">
+          <CarouselContent className="h-full">
             {/* Slide 1 */}
             <CarouselItem className="h-full">
-              <div className="relative h-full">
-                <div className="absolute inset-0 h-full w-full overflow-hidden bg-gray-700">
+              <div className="relative h-full rounded-2xl overflow-hidden">
+                <div className="absolute inset-0 h-full w-full overflow-hidden bg-gray-700 rounded-2xl">
                   <video
                     className="h-full w-full object-cover"
                     src="/banner1.mp4" // положи файл в public/ или укажи свой путь
@@ -69,7 +69,7 @@ export function HeroSection() {
                 <div className="absolute inset-0 bg-gradient-to-r from-navy/60 via-transparent to-transparent" />
 
                 <div className="relative z-10 h-full md:px-12">
-                  <div className="container mx-auto px-6 h-full flex flex-col justify-center pt-20">
+                  <div className="container mx-auto px-6 flex flex-col justify-center h-[550px] md:h-[650px]">
                     <div className="max-w-3xl">
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -128,16 +128,16 @@ export function HeroSection() {
 
             {/* Slide 2 */}
             <CarouselItem className="h-full">
-              <div className="relative h-full">
+              <div className="relative h-full rounded-2xl overflow-hidden">
                 <div
-                  className="absolute inset-0 h-full w-full bg-gray-700 bg-cover bg-center"
+                  className="absolute inset-0 h-full w-full bg-gray-700 bg-cover bg-center rounded-2xl"
                   style={{ backgroundImage: "url(/banner2.webp)" }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/30 to-navy/80" />
                 <div className="absolute inset-0 bg-gradient-to-r from-navy/60 via-transparent to-transparent" />
 
                 <div className="relative z-10 h-full md:px-12">
-                  <div className="container mx-auto px-6 h-full flex flex-col justify-center pt-20">
+                  <div className="container mx-auto px-6 flex flex-col justify-center h-[550px] md:h-[650px]">
                     <div className="max-w-3xl">
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -196,16 +196,16 @@ export function HeroSection() {
 
             {/* Slide 3 */}
             <CarouselItem className="h-full">
-              <div className="relative h-full">
+              <div className="relative h-full rounded-2xl overflow-hidden">
                 <div
-                  className="absolute inset-0 h-full w-full bg-gray-700 bg-cover bg-center"
+                  className="absolute inset-0 h-full w-full bg-gray-700 bg-cover bg-center rounded-2xl"
                   style={{ backgroundImage: "url(/hero-registan.jpg)" }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-navy/50 via-navy/30 to-navy/80" />
                 <div className="absolute inset-0 bg-gradient-to-r from-navy/60 via-transparent to-transparent" />
 
                 <div className="relative z-10 h-full md:px-12">
-                  <div className="container mx-auto px-6 h-full flex flex-col justify-center pt-20">
+                  <div className="container mx-auto px-6 flex flex-col justify-center h-[550px] md:h-[650px]">
                     <div className="max-w-3xl">
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -263,8 +263,8 @@ export function HeroSection() {
             </CarouselItem>
           </CarouselContent>
 
-          <CarouselPrevious className="hidden md:flex bg-white text-navy hover:bg-white/90 shadow-lg !left-6 top-1/2 -translate-y-1/2" />
-          <CarouselNext className="hidden md:flex bg-white text-navy hover:bg-white/90 shadow-lg !right-6 !top-1/2 -translate-y-1/2" />
+          <CarouselPrevious className="hidden md:flex bg-white text-navy hover:bg-white/90 shadow-lg !left-2 top-1/2 -translate-y-1/2" />
+          <CarouselNext className="hidden md:flex bg-white text-navy hover:bg-white/90 shadow-lg !right-2 !top-1/2 -translate-y-1/2" />
         </Carousel>
       </div>
 
