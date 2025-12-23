@@ -127,7 +127,7 @@ export function FeaturedTours() {
           className="mt-12 text-center"
         >
           <Button variant="outline" size="lg" asChild>
-            <Link href="/tours" className="group">
+            <Link href="/trips" className="group">
               {t("see_all_adventures")}
               <ArrowRight
                 size={18}

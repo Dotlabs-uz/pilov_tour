@@ -10,7 +10,7 @@ export default function Footer() {
 
   const footerLinks = {
     explore: [
-      { name: t("all_trips"), href: "/tours" },
+      { name: t("all_trips"), href: "/trips" },
       { name: t("about_us"), href: "/about" },
     ],
     support: [
