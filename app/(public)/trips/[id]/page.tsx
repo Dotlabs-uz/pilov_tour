@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useLocale } from "next-intl";
 import { db } from "@/app/(public)/firebase";
-import { doc, getDoc, Timestamp } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { motion } from "framer-motion";
 import {
   Calendar,
@@ -20,15 +20,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { LocalizedString } from "@/lib/types";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -37,6 +28,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { TourDate } from "@/components/custom/DatesPrices";
+import DatesAndPrices from "@/components/custom/DatesPrices";
 
 type Lang = keyof LocalizedString;
 
@@ -77,12 +70,6 @@ interface Tour {
   inclusions: Inclusions;
 }
 
-interface TourDate {
-  startDate: Timestamp;
-  endDate: Timestamp;
-  status: string;
-  price: string;
-}
 interface ItineraryItem {
   title: LocalizedString;
   description: LocalizedString;
@@ -140,10 +127,11 @@ export default function TourPage() {
   const title = t(tour.title, locale);
   const description = t(tour.description, locale);
   const groupCount = tour.maxGroupCount || 0;
-  
-  const truncatedDescription = description.length > 200 
-    ? description.substring(0, 200) + "..."
-    : description;
+
+  const truncatedDescription =
+    description.length > 200
+      ? description.substring(0, 200) + "..."
+      : description;
   const shouldShowReadMore = description.length > 200;
 
   return (
@@ -151,7 +139,6 @@ export default function TourPage() {
       {/* Hero */}
       <section className="pt-20 md:pt-24 lg:px-8 pb-4 md:pb-6 lg:pb-8">
         <div className="container mx-auto md:w-full">
-          {/* Title above the image block */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -164,7 +151,6 @@ export default function TourPage() {
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Image on the left - first on mobile */}
             <div className="lg:col-span-2 order-1 lg:order-1">
               <div className="relative h-[300px] md:h-[50vh] md:min-h-[400px] rounded-2xl overflow-hidden">
                 <motion.img
@@ -196,7 +182,6 @@ export default function TourPage() {
                 </div>
               </div>
 
-              {/* All images below the main image - swiper with 3 per row, hidden on mobile */}
               {images.length > 1 && (
                 <div className="hidden md:block mt-4">
                   <Carousel
@@ -240,9 +225,7 @@ export default function TourPage() {
               )}
             </div>
 
-            {/* Booking sidebar on the right - second on mobile */}
             <aside className="lg:col-span-1 order-2 lg:order-2">
-              {/* Description on mobile - shown after image */}
               <div className="lg:hidden bg-white rounded-3xl p-6 shadow-card">
                 <h2 className="font-display text-xl font-bold text-foreground mb-4">
                   What's this trip about?
@@ -253,7 +236,9 @@ export default function TourPage() {
                 {shouldShowReadMore && (
                   <Button
                     variant="ghost"
-                    onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                    onClick={() =>
+                      setIsDescriptionExpanded(!isDescriptionExpanded)
+                    }
                     className="mt-4 text-coral hover:text-coral/80 p-0 h-auto"
                   >
                     {isDescriptionExpanded ? "Read less" : "Read more"}
@@ -261,7 +246,6 @@ export default function TourPage() {
                 )}
               </div>
 
-              {/* Booking sidebar */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -325,7 +309,6 @@ export default function TourPage() {
       <section className="py-12">
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto space-y-12">
-            {/* Description on desktop - full version */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -454,10 +437,11 @@ export default function TourPage() {
                   <motion.div
                     key={index}
                     whileHover={{ scale: 1.02 }}
-                    className={`relative rounded-2xl overflow-hidden ${index === 0
-                      ? "col-span-2 row-span-2 aspect-[4/3]"
-                      : "aspect-square"
-                      }`}
+                    className={`relative rounded-2xl overflow-hidden ${
+                      index === 0
+                        ? "col-span-2 row-span-2 aspect-[4/3]"
+                        : "aspect-square"
+                    }`}
                   >
                     <Image
                       src={image}
@@ -519,44 +503,7 @@ export default function TourPage() {
               </motion.div>
             </div>
 
-            <section className="bg-white rounded-2xl p-6 shadow-sm">
-              <h3 className="text-2xl font-semibold mb-4">Dates & Prices</h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-[#8DD3BB] text-[#112211]">
-                      <th className="p-3">Start</th>
-                      <th className="p-3">End</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3 text-right">Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {tour.dates.map((date, i) => (
-                      <tr key={i} className="border-t">
-                        <td className="p-3">
-                          {date.startDate.toDate().toLocaleDateString()}
-                        </td>
-                        <td className="p-3">
-                          {date.endDate.toDate().toLocaleDateString()}
-                        </td>
-                        <td
-                          className={`p-3 ${date.status === "Few spots"
-                            ? "text-red-600"
-                            : "text-green-600"
-                            }`}
-                        >
-                          {date.status}
-                        </td>
-                        <td className="p-3 text-right font-semibold">
-                          ${date.price}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
+            <DatesAndPrices dates={tour.dates} />
           </div>
         </div>
       </section>
