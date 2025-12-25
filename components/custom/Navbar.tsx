@@ -165,11 +165,11 @@ export function Navbar() {
                 <Link
                   key={link.name}
                   href={link.href}
-                    className={cn(
-                      "relative px-5 py-2 font-body text-sm font-medium rounded-full transition-all duration-300",
-                      textColor,
+                  className={cn(
+                    "relative px-5 py-2 font-body text-sm font-medium rounded-full transition-all duration-300",
+                    textColor,
                       pathname === link.href ? "bg-gray-100" : "hover:bg-gray-50"
-                    )}
+                  )}
                 >
                   {link.name}
                   {pathname === link.href && (
@@ -184,32 +184,32 @@ export function Navbar() {
             <div className="flex items-center gap-4">
               {/* Desktop only: User/login */}
               <div className="hidden lg:flex items-center gap-4">
-                {user ? (
-                  <div
-                    onClick={() => router.push("/profile")}
-                    className="cursor-pointer flex items-center gap-2"
-                  >
-                    <Avatar className="rounded-xl">
-                      <AvatarImage
-                        src={
-                          dbUser?.avatar ||
-                          user?.photoURL ||
-                          "/avatar-default.svg"
-                        }
-                      />
-                      <AvatarFallback>
-                        {user?.displayName || dbUser?.name}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                ) : (
-                  <Button
-                    onClick={() => router.push("/login")}
+              {user ? (
+                <div
+                  onClick={() => router.push("/profile")}
+                  className="cursor-pointer flex items-center gap-2"
+                >
+                  <Avatar className="rounded-xl">
+                    <AvatarImage
+                      src={
+                        dbUser?.avatar ||
+                        user?.photoURL ||
+                        "/avatar-default.svg"
+                      }
+                    />
+                    <AvatarFallback>
+                      {user?.displayName || dbUser?.name}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+              ) : (
+                <Button
+                  onClick={() => router.push("/login")}
                     className="w-[90px] h-[40px] hover:bg-gray-200 bg-gray-100 text-black rounded-lg cursor-pointer"
-                  >
-                    login
-                  </Button>
-                )}
+                >
+                  login
+                </Button>
+              )}
               </div>
 
               {/* Language selector - visible on all screens */}

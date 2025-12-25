@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import { db } from "@/app/(public)/firebase";
+
+import { db, auth } from "@/app/(public)/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { useToast } from "@/hooks/use-toast";
 import { motion } from "framer-motion";
 import {
   Calendar,
@@ -12,11 +15,12 @@ import {
   Star,
   Check,
   X,
-  Utensils,
-  Home,
   Sparkles,
   Heart,
   Share2,
+  Info,
+  MapPin,
+  Plus,
 } from "lucide-react";
 import Image from "next/image";
 import { LocalizedString } from "@/lib/types";
@@ -56,6 +60,7 @@ function t(value: LocalizedValue, locale: Lang): string {
 interface Tour {
   id: string;
   images: string[];
+  name?: LocalizedString;
   title: LocalizedString;
   description: LocalizedString;
   price: string;
@@ -64,6 +69,15 @@ interface Tour {
     nights: number;
   };
   style: string;
+  theme?: string;
+  start?: string;
+  end?: string;
+  rating?: number;
+  reviewsCount?: number;
+  tripCode?: string;
+  physicalRating?: number;
+  minimumAge?: number;
+  groupSize: LocalizedString;
   maxGroupCount?: number;
   dates: TourDate[];
   itinerary: ItineraryItem[];
@@ -82,8 +96,13 @@ export default function TourPage() {
   const params = useParams();
   const locale = useLocale() as Lang;
   const tourId = typeof params.id === "string" ? params.id : undefined;
+  const router = useRouter();
+  const { toast } = useToast();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [expandedDays, setExpandedDays] = useState<Set<number>>(new Set());
+  const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [isLiked, setIsLiked] = useState(false);
 
   const [tour, setTour] = useState<Tour | null>(null);
 
@@ -104,11 +123,21 @@ export default function TourPage() {
         price: data.price || "",
         duration: data.duration || { days: 0, nights: 0 },
         style: data.style || "",
+        theme: data.theme || "",
+        start: data.start || "",
+        end: data.end || "",
+        rating: data.rating || 0,
+        reviewsCount: data.reviewsCount || 0,
+        tripCode: data.tripCode || "",
+        physicalRating: data.physicalRating || 0,
+        minimumAge: data.minimumAge || 0,
         maxGroupCount: data.maxGroupCount || 0,
+        name: data.name || {},
         title: data.title || {},
         description: data.description || {},
         dates: data.dates || [],
         itinerary: data.itinerary || [],
+        groupSize: data.groupSize || {},
         inclusions: data.inclusions || {
           included: [],
           notIncluded: [],
@@ -121,18 +150,46 @@ export default function TourPage() {
     fetchTour();
   }, [tourId, locale]);
 
+  useEffect(() => {
+    const name = t(tour?.name, locale);
+    if (name) {
+      document.title = name;
+    }
+  }, [tour]);
+
+  // Check user authentication state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      // TODO: Check if user has liked this tour
+      if (firebaseUser && tourId) {
+        // Check like status from Firestore
+        // For now, just set to false
+        setIsLiked(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [tourId]);
+
   if (!tour) return <div className="p-10 text-center">Loading...</div>;
 
   const images = tour.images || [];
+  const name = t(tour.name, locale);
+  const start = t(tour.start, locale);
+  const end = t(tour.end, locale);
   const title = t(tour.title, locale);
+  const theme = t(tour.theme, locale);
   const description = t(tour.description, locale);
-  const groupCount = tour.maxGroupCount || 0;
 
+  const groupSize = t(tour.groupSize, locale);
+
+  // For mobile: show 2 lines with line-clamp, for desktop: show full or truncated at 200 chars
   const truncatedDescription =
     description.length > 200
       ? description.substring(0, 200) + "..."
       : description;
-  const shouldShowReadMore = description.length > 200;
+  const shouldShowReadMore = description.length > 100; // Show read more if description is long enough
 
   return (
     <main className="min-h-screen bg-cream">
@@ -146,13 +203,43 @@ export default function TourPage() {
             className="mb-6"
           >
             <h1 className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-              {title}
+              {name}
             </h1>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 order-1 lg:order-1">
-              <div className="relative h-[300px] md:h-[50vh] md:min-h-[400px] rounded-2xl overflow-hidden">
+              {/* Mobile carousel for images */}
+              <div className="md:hidden mb-4">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    loop: true,
+                  }}
+                  className="w-full"
+                >
+                  <CarouselContent>
+                    {images.map((image, index) => (
+                      <CarouselItem key={index}>
+                        <div className="relative h-[300px] rounded-2xl overflow-hidden">
+                          <Image
+                            src={image}
+                            alt={`${title} - Image ${index + 1}`}
+                            fill
+                            className="object-cover rounded-2xl"
+                            onClick={() => setCurrentImageIndex(index)}
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="left-2 bg-white hover:bg-white/90 text-foreground border-0 shadow-lg" />
+                  <CarouselNext className="right-2 bg-white hover:bg-white/90 text-foreground border-0 shadow-lg" />
+                </Carousel>
+              </div>
+
+              {/* Desktop main image */}
+              <div className="hidden md:block relative h-[300px] md:h-[50vh] md:min-h-[400px] rounded-2xl overflow-hidden">
                 <motion.img
                   key={currentImageIndex}
                   initial={{ scale: 1.1, opacity: 0 }}
@@ -164,7 +251,7 @@ export default function TourPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/40 to-transparent rounded-2xl" />
 
-                <div className="absolute top-8 right-8 flex gap-2">
+                <div className="absolute top-8 right-8 hidden md:flex gap-2">
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
@@ -226,12 +313,17 @@ export default function TourPage() {
             </div>
 
             <aside className="lg:col-span-1 order-2 lg:order-2">
-              <div className="lg:hidden bg-white rounded-3xl p-6 shadow-card">
+              {/* Description on mobile - shown after image */}
+              <div className="lg:hidden bg-white rounded-3xl p-6 shadow-card mb-7">
                 <h2 className="font-display text-xl font-bold text-foreground mb-4">
-                  What's this trip about?
+                  {title}
                 </h2>
-                <p className="font-body text-muted-foreground text-base leading-relaxed">
-                  {isDescriptionExpanded ? description : truncatedDescription}
+                <p
+                  className={`font-body text-muted-foreground text-base leading-relaxed ${
+                    !isDescriptionExpanded ? "line-clamp-2" : ""
+                  }`}
+                >
+                  {isDescriptionExpanded ? description : description}
                 </p>
                 {shouldShowReadMore && (
                   <Button
@@ -244,6 +336,61 @@ export default function TourPage() {
                     {isDescriptionExpanded ? "Read less" : "Read more"}
                   </Button>
                 )}
+
+                {/* Like and Share buttons */}
+                <div className="flex gap-3 mt-6">
+                  <Button
+                    variant={isLiked ? "default" : "outline"}
+                    onClick={async () => {
+                      if (!user) {
+                        router.push("/login");
+                        return;
+                      }
+                      // Toggle like
+                      setIsLiked(!isLiked);
+                      // TODO: Save like to Firestore
+                      toast({
+                        title: isLiked
+                          ? "Removed from favorites"
+                          : "Added to favorites",
+                        description: isLiked
+                          ? "This tour has been removed from your favorites"
+                          : "This tour has been added to your favorites",
+                      });
+                    }}
+                    className="flex-1 flex items-center gap-2"
+                  >
+                    <Heart
+                      size={18}
+                      className={isLiked ? "fill-current" : ""}
+                    />
+                    {isLiked ? "Liked" : "Like"}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={async () => {
+                      try {
+                        const url = window.location.href;
+                        await navigator.clipboard.writeText(url);
+                        toast({
+                          title: "Link copied!",
+                          description:
+                            "The page link has been copied to your clipboard",
+                        });
+                      } catch (err) {
+                        toast({
+                          title: "Failed to copy",
+                          description: "Please try again",
+                          variant: "destructive",
+                        });
+                      }
+                    }}
+                    className="flex-1 flex items-center gap-2"
+                  >
+                    <Share2 size={18} />
+                    Share
+                  </Button>
+                </div>
               </div>
 
               <motion.div
@@ -252,54 +399,143 @@ export default function TourPage() {
                 transition={{ delay: 0.4 }}
                 className="sticky top-[80px] bg-white rounded-3xl p-6 shadow-card mt-0"
               >
+                {/* Rating and Trip Code */}
+                <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
+                  <div className="flex items-center gap-2">
+                    <Star
+                      size={26}
+                      className="fill-yellow-400 text-yellow-400"
+                    />
+                    <span className="font-body font-semibold text-foreground text-2xl">
+                      {tour.rating}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Start and End Locations */}
+                <div className="space-y-2 mb-4 pb-4 border-b border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground font-body text-sm">
+                    <MapPin size={14} />
+                    <span>
+                      Start: <strong>{start}</strong>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground font-body text-sm">
+                    <MapPin size={14} />
+                    <span>
+                      End: <strong>{end}</strong>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Details Grid - Two Columns */}
+                <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-6">
+                  {/* Left Column */}
+                  <div className="space-y-3">
+                    <div className="py-3 border-b border-border">
+                      <div className="flex items-center gap-2 text-muted-foreground font-body text-sm mb-1">
+                        <Calendar size={16} />
+                        Duration
+                      </div>
+                      <div className="font-body font-semibold">
+                        {tour.duration.days} days
+                      </div>
+                    </div>
+
+                    <div className="py-3 border-b border-border">
+                      <div className="text-muted-foreground font-body text-sm mb-1">
+                        Minimum age
+                      </div>
+                      <div className="font-body font-semibold">6 years old</div>
+                    </div>
+
+                    <div className="py-3 border-b border-border">
+                      <div className="flex items-center gap-2 text-muted-foreground font-body text-sm mb-1">
+                        Theme
+                        <Info size={14} className="text-muted-foreground/60" />
+                      </div>
+                      <div className="font-body font-semibold">
+                        {theme || "Overland, Wildlife"}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="space-y-3">
+                    <div className="py-3 border-b border-border">
+                      <div className="flex items-center gap-2 text-muted-foreground font-body text-sm mb-1">
+                        <Users size={16} />
+                        Group size
+                      </div>
+                      <div className="font-body font-semibold">{groupSize}</div>
+                    </div>
+
+                    <div className="py-3 border-b border-border">
+                      <div className="flex items-center gap-2 text-muted-foreground font-body text-sm mb-1">
+                        Style
+                        <Info size={14} className="text-muted-foreground/60" />
+                      </div>
+                      <div className="font-body font-semibold">
+                        {tour.style || "Basix"}
+                      </div>
+                    </div>
+
+                    <div className="py-3 border-b border-border">
+                      <div className="flex items-center gap-2 text-muted-foreground font-body text-sm mb-1">
+                        Physical rating
+                        <Info size={14} className="text-muted-foreground/60" />
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((level) => (
+                          <div
+                            key={level}
+                            className={`w-3 h-3 rounded-sm ${
+                              level <= (tour.physicalRating || 3)
+                                ? "bg-foreground"
+                                : "bg-border border border-border"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Price */}
                 <div className="mb-6">
-                  <span className="text-muted-foreground font-body text-sm">
-                    From
-                  </span>
                   <div className="flex items-baseline gap-2">
+                    <span className="text-muted-foreground font-body text-sm">
+                      From USD
+                    </span>
                     <span className="font-display text-4xl font-bold text-foreground">
                       ${tour.price}
                     </span>
-                    <span className="text-muted-foreground font-body">
-                      / person
-                    </span>
                   </div>
                 </div>
 
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <span className="flex items-center gap-2 text-muted-foreground font-body text-sm">
-                      <Calendar size={16} />
-                      Duration
-                    </span>
-                    <span className="font-body font-semibold">
-                      {tour.duration.days} days / {tour.duration.nights} nights
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between py-3 border-b border-border">
-                    <span className="flex items-center gap-2 text-muted-foreground font-body text-sm">
-                      <Users size={16} />
-                      Group
-                    </span>
-                    <span className="font-body font-semibold">
-                      {groupCount
-                        ? `up to ${groupCount} people`
-                        : "up to 12 people"}
-                    </span>
-                  </div>
-                </div>
-
-                <Button variant="gradient" size="xl" className="w-full mb-3">
+                <Button
+                  variant="gradient"
+                  size="xl"
+                  className="w-full mb-3"
+                  onClick={() => {
+                    const datesSection = document.getElementById(
+                      "dates-prices-section"
+                    );
+                    if (datesSection) {
+                      datesSection.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }
+                  }}
+                >
                   <Sparkles size={18} />
-                  Book Now
+                  Dates and prices
                 </Button>
-                <Button variant="outline" size="lg" className="w-full">
-                  Ask a question
-                </Button>
-
-                <p className="text-center text-muted-foreground text-xs font-body mt-4">
-                  Free cancellation up to 30 days before
-                </p>
+                <button className="w-full flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground font-body text-sm transition-colors">
+                  <Plus size={16} />
+                  Add to compare
+                </button>
               </motion.div>
             </aside>
           </div>
@@ -315,8 +551,8 @@ export default function TourPage() {
               viewport={{ once: true }}
               className="hidden lg:block"
             >
-              <h2 className="font-display text-2xl font-bold text-foreground mb-4">
-                What's this trip about?
+              <h2 className="font-display text-2xl font-bold text-foreground mb-2">
+                {title}
               </h2>
               <p className="font-body text-muted-foreground text-lg leading-relaxed">
                 {description}
@@ -405,19 +641,50 @@ export default function TourPage() {
                       <h3 className="font-display text-lg font-bold text-foreground mb-1">
                         {t(day.title, locale)}
                       </h3>
-                      <p className="font-body text-muted-foreground text-sm mb-3">
-                        {t(day.description, locale)}
-                      </p>
-                      <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <Utensils size={12} className="text-gold" />
-                          Meals provided
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Home size={12} className="text-turquoise" />
-                          Accommodation
-                        </span>
-                      </div>
+                      {(() => {
+                        const dayDescription = t(day.description, locale);
+                        // Approximate check: if text is likely more than 4 lines (roughly 200-250 chars)
+                        const isLongText = dayDescription.length > 200;
+                        const isExpanded = expandedDays.has(index);
+
+                        return (
+                          <>
+                            <p
+                              className={`font-body text-muted-foreground text-sm mb-3 ${
+                                !isExpanded && isLongText ? "line-clamp-4" : ""
+                              }`}
+                            >
+                              {dayDescription}
+                            </p>
+                            {isLongText && !isExpanded && (
+                              <Button
+                                variant="ghost"
+                                onClick={() =>
+                                  setExpandedDays(
+                                    new Set([...expandedDays, index])
+                                  )
+                                }
+                                className="text-coral hover:text-coral/80 p-0 h-auto text-sm"
+                              >
+                                Read more
+                              </Button>
+                            )}
+                            {isLongText && isExpanded && (
+                              <Button
+                                variant="ghost"
+                                onClick={() => {
+                                  const newSet = new Set(expandedDays);
+                                  newSet.delete(index);
+                                  setExpandedDays(newSet);
+                                }}
+                                className="text-coral hover:text-coral/80 p-0 h-auto text-sm"
+                              >
+                                Read less
+                              </Button>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
                   </motion.div>
                 ))}
@@ -432,16 +699,12 @@ export default function TourPage() {
               <h2 className="font-display text-2xl font-bold text-foreground mb-6">
                 Gallery 📸
               </h2>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {images.map((image, index) => (
                   <motion.div
                     key={index}
                     whileHover={{ scale: 1.02 }}
-                    className={`relative rounded-2xl overflow-hidden ${
-                      index === 0
-                        ? "col-span-2 row-span-2 aspect-[4/3]"
-                        : "aspect-square"
-                    }`}
+                    className="relative rounded-2xl overflow-hidden aspect-square"
                   >
                     <Image
                       src={image}
