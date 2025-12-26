@@ -24,6 +24,10 @@ import {
   ChevronDown,
   Bed,
   Utensils,
+  Train,
+  Award,
+  Flag,
+  Briefcase,
 } from "lucide-react";
 import Image from "next/image";
 import { LocalizedString } from "@/lib/types";
@@ -92,6 +96,18 @@ interface Tour {
   dates: TourDate[];
   itinerary: ItineraryItem[];
   inclusions: Inclusions;
+  location?: string | LocalizedString;
+  destinations?: (string | LocalizedString)[];
+  meals?: string | LocalizedString;
+  transport?: string | LocalizedString;
+  accommodation?: string | LocalizedString;
+  premiumInclusions?: (string | LocalizedString)[];
+  includedActivities?: (string | LocalizedString)[];
+  optionalActivities?: (string | LocalizedString)[];
+  isThisTripRightForYou?: string | LocalizedString;
+  accommodationRichText?: string | LocalizedString;
+  joiningPoint?: string | LocalizedString;
+  visas?: string | LocalizedString;
 }
 
 interface ItineraryItem {
@@ -120,6 +136,8 @@ export default function TourPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [selectedGalleryImageIndex, setSelectedGalleryImageIndex] = useState<number | null>(null);
+  const [showAllIncludedActivities, setShowAllIncludedActivities] = useState(false);
+  const [activeTab, setActiveTab] = useState<"trip" | "visas" | "accommodation" | "joining">("trip");
 
   const [tour, setTour] = useState<Tour | null>(null);
 
@@ -160,6 +178,18 @@ export default function TourPage() {
           included: [],
           notIncluded: [],
         },
+        location: data.location || "",
+        destinations: data.destinations || [],
+        meals: data.meals || "",
+        transport: data.transport || "",
+        accommodation: data.accommodation || "",
+        premiumInclusions: data.premiumInclusions || [],
+        includedActivities: data.includedActivities || [],
+        optionalActivities: data.optionalActivities || [],
+        isThisTripRightForYou: data.isThisTripRightForYou || "",
+        accommodationRichText: data.accommodationRichText || "",
+        joiningPoint: data.joiningPoint || "",
+        visas: data.visas || "",
       });
 
       setCurrentImageIndex(0);
@@ -308,8 +338,8 @@ export default function TourPage() {
                             transition={{ duration: 0.3, delay: index * 0.05 }}
                             onClick={() => setCurrentImageIndex(index)}
                             className={`relative h-28 md:h-32 rounded-2xl overflow-hidden cursor-pointer transition-all ${currentImageIndex === index
-                                ? "border-4 border-coral scale-105"
-                                : "hover:scale-105 opacity-80 hover:opacity-100"
+                              ? "border-4 border-coral scale-105"
+                              : "hover:scale-105 opacity-80 hover:opacity-100"
                               }`}
                           >
                             <Image
@@ -506,8 +536,8 @@ export default function TourPage() {
                           <div
                             key={level}
                             className={`w-3 h-3 rounded-sm ${level <= (tour.physicalRating || 3)
-                                ? "bg-foreground"
-                                : "bg-border border border-border"
+                              ? "bg-foreground"
+                              : "bg-border border border-border"
                               }`}
                           />
                         ))}
@@ -580,62 +610,6 @@ export default function TourPage() {
               viewport={{ once: true }}
             >
               <h2 className="font-display text-2xl font-bold text-foreground mb-6">
-                Highlights ✨
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.05 }}
-                  className="flex items-start gap-3 bg-white rounded-2xl p-4"
-                >
-                  <div className="w-8 h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
-                    <Check size={16} className="text-coral" />
-                  </div>
-                  <span className="font-body text-foreground">
-                    Premium accommodation: Hand-picked boutique and luxury
-                    hotels.
-                  </span>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.1 }}
-                  className="flex items-start gap-3 bg-white rounded-2xl p-4"
-                >
-                  <div className="w-8 h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
-                    <Check size={16} className="text-coral" />
-                  </div>
-                  <span className="font-body text-foreground">
-                    Premium experiences: Local guides & unique cultural
-                    activities.
-                  </span>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.15 }}
-                  className="flex items-start gap-3 bg-white rounded-2xl p-4"
-                >
-                  <div className="w-8 h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
-                    <Check size={16} className="text-coral" />
-                  </div>
-                  <span className="font-body text-foreground">
-                    Premium knowledge: In-depth historical & cultural insight.
-                  </span>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="font-display text-2xl font-bold text-foreground mb-6">
                 Itinerary 📅
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -678,7 +652,7 @@ export default function TourPage() {
                     {/* Header with Show all/Hide all button */}
                     <div className="flex items-center justify-between p-4 border-b border-border bg-muted/20">
                       <h3 className="font-display text-lg font-semibold text-foreground">
-                        
+
                       </h3>
                       <Button
                         variant="ghost"
@@ -886,6 +860,326 @@ export default function TourPage() {
               </div>
             </motion.div>
 
+            {/* Inclusions and Activities Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-6"
+            >
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h2 className="font-display text-2xl font-bold text-foreground mb-6">
+                  Inclusions and activities
+                </h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Left Column */}
+                  <div className="space-y-6">
+                    {/* Destinations */}
+                    {tour.destinations && tour.destinations.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <MapPin size={18} className="text-muted-foreground" />
+                          <h3 className="font-display text-base font-semibold text-foreground">
+                            Destinations
+                          </h3>
+                        </div>
+                        <div className="space-y-1">
+                          {tour.destinations.map((destination, index) => {
+                            const destText = t(destination, locale);
+                            return destText ? (
+                              <p
+                                key={index}
+                                className="text-sm text-muted-foreground font-body"
+                              >
+                                {destText}
+                              </p>
+                            ) : null;
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Meals */}
+                    {tour.meals && (
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <Utensils size={18} className="text-muted-foreground" />
+                          <h3 className="font-display text-base font-semibold text-foreground">
+                            Meals
+                          </h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground font-body">
+                          {t(tour.meals, locale)}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Transport */}
+                    {tour.transport && (
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <Train size={18} className="text-muted-foreground" />
+                          <h3 className="font-display text-base font-semibold text-foreground">
+                            Transport
+                          </h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground font-body">
+                          {t(tour.transport, locale)}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Accommodation */}
+                    {tour.accommodation && (
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <Bed size={18} className="text-muted-foreground" />
+                          <h3 className="font-display text-base font-semibold text-foreground">
+                            Accommodation
+                          </h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground font-body">
+                          {t(tour.accommodation, locale)}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Premium Inclusions */}
+                    {tour.premiumInclusions && tour.premiumInclusions.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <Award size={18} className="text-muted-foreground" />
+                          <h3 className="font-display text-base font-semibold text-foreground">
+                            Premium inclusions
+                          </h3>
+                        </div>
+                        <ul className="space-y-2">
+                          {tour.premiumInclusions.map((item, index) => {
+                            const itemText = t(item, locale);
+                            return itemText ? (
+                              <li
+                                key={index}
+                                className="text-sm text-muted-foreground font-body list-disc list-inside"
+                              >
+                                {itemText}
+                              </li>
+                            ) : null;
+                          })}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Column */}
+                  <div className="space-y-6">
+                    {/* Included Activities */}
+                    {tour.includedActivities && tour.includedActivities.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-4 h-4 rounded-full border-2 border-muted-foreground flex items-center justify-center">
+                            <Check size={12} />
+                          </div>
+                          <h3 className="font-display text-base font-semibold text-foreground">
+                            Included activities
+                          </h3>
+                        </div>
+                        <ul className="space-y-2 mb-3">
+                          {(showAllIncludedActivities
+                            ? tour.includedActivities
+                            : tour.includedActivities.slice(0, 5)
+                          ).map((item, index) => {
+                            const itemText = t(item, locale);
+                            return itemText ? (
+                              <li
+                                key={index}
+                                className="text-sm text-muted-foreground font-body list-disc list-inside"
+                              >
+                                {itemText}
+                              </li>
+                            ) : null;
+                          })}
+                        </ul>
+                        {tour.includedActivities.length > 5 && (
+                          <button
+                            onClick={() =>
+                              setShowAllIncludedActivities(!showAllIncludedActivities)
+                            }
+                            className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 underline font-body"
+                          >
+                            {showAllIncludedActivities ? "Show less" : `Show all (${tour.includedActivities.length})`}
+                            <ChevronDown
+                              size={14}
+                              className={`transition-transform ${showAllIncludedActivities ? "rotate-180" : ""
+                                }`}
+                            />
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Divider between Included and Optional Activities */}
+                    {tour.includedActivities && tour.includedActivities.length > 0 && tour.optionalActivities && tour.optionalActivities.length > 0 && (
+                      <div className="border-t border-border"></div>
+                    )}
+
+                    {/* Optional Activities */}
+                    {tour.optionalActivities && tour.optionalActivities.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <div className="w-5 h-5 rounded-full border-2 border-muted-foreground flex items-center justify-center">
+                            <Plus size={12} className="text-muted-foreground" />
+                          </div>
+                          <h3 className="font-display text-base font-semibold text-foreground">
+                            Optional activities
+                          </h3>
+                        </div>
+                        <ul className="space-y-2">
+                          {tour.optionalActivities.map((item, index) => {
+                            const itemText = t(item, locale);
+                            return itemText ? (
+                              <li
+                                key={index}
+                                className="text-sm text-muted-foreground font-body list-disc list-inside"
+                              >
+                                {itemText}
+                              </li>
+                            ) : null;
+                          })}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+            >
+              <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+                {/* Tab Navigation */}
+                <div className="flex border-b border-border overflow-x-auto">
+                  <button
+                    onClick={() => setActiveTab("trip")}
+                    className={`flex items-center gap-2 px-6 py-4 font-display text-sm font-medium transition-colors whitespace-nowrap ${
+                      activeTab === "trip"
+                        ? "text-foreground border-b-2 border-coral font-semibold"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Flag size={16} />
+                    Is this trip right for you?
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("visas")}
+                    className={`flex items-center gap-2 px-6 py-4 font-display text-sm font-medium transition-colors whitespace-nowrap ${
+                      activeTab === "visas"
+                        ? "text-foreground border-b-2 border-coral font-semibold"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Briefcase size={16} />
+                    Visas
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("accommodation")}
+                    className={`flex items-center gap-2 px-6 py-4 font-display text-sm font-medium transition-colors whitespace-nowrap ${
+                      activeTab === "accommodation"
+                        ? "text-foreground border-b-2 border-coral font-semibold"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <Bed size={16} />
+                    Accommodation
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("joining")}
+                    className={`flex items-center gap-2 px-6 py-4 font-display text-sm font-medium transition-colors whitespace-nowrap ${
+                      activeTab === "joining"
+                        ? "text-foreground border-b-2 border-coral font-semibold"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    <MapPin size={16} />
+                    Joining point
+                  </button>
+                </div>
+
+                {/* Tab Content */}
+                <div className="p-6 max-h-[600px] overflow-y-auto">
+                  {activeTab === "trip" && tour.isThisTripRightForYou && (
+                    <div
+                      className="text-muted-foreground font-body text-sm leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: t(tour.isThisTripRightForYou, locale),
+                      }}
+                    />
+                  )}
+                  {activeTab === "visas" && (
+                    <div className="w-full">
+                      {/* Sherpa Visa Widget */}
+                      <div className="w-full min-h-[600px]">
+                        <iframe
+                          src={`https://apply.joinsherpa.com/travel-restrictions?destination=${encodeURIComponent(
+                            t(tour.location || tour.end || "", locale) || "Uzbekistan"
+                          )}&origin=${encodeURIComponent(
+                            t(tour.start || "", locale) || "USA"
+                          )}`}
+                          className="w-full h-[600px] border-0 rounded-lg"
+                          title="Visa Requirements"
+                          allow="clipboard-read; clipboard-write"
+                        />
+                      </div>
+                      {/* Fallback HTML content if visas field exists */}
+                      {tour.visas && (
+                        <div className="mt-6 pt-6 border-t border-border">
+                          <div
+                            className="text-muted-foreground font-body text-sm leading-relaxed"
+                            dangerouslySetInnerHTML={{
+                              __html: t(tour.visas, locale),
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {activeTab === "accommodation" && tour.accommodationRichText && (
+                    <div
+                      className="text-muted-foreground font-body text-sm leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: t(tour.accommodationRichText, locale),
+                      }}
+                    />
+                  )}
+                  {activeTab === "joining" && tour.joiningPoint && (
+                    <div
+                      className="text-muted-foreground font-body text-sm leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: t(tour.joiningPoint, locale),
+                      }}
+                    />
+                  )}
+                  {activeTab === "trip" && !tour.isThisTripRightForYou && (
+                    <div className="text-muted-foreground font-body text-sm">
+                      No information available.
+                    </div>
+                  )}
+                  {activeTab === "accommodation" && !tour.accommodationRichText && (
+                    <div className="text-muted-foreground font-body text-sm">
+                      No information available.
+                    </div>
+                  )}
+                  {activeTab === "joining" && !tour.joiningPoint && (
+                    <div className="text-muted-foreground font-body text-sm">
+                      No information available.
+                    </div>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -938,55 +1232,6 @@ export default function TourPage() {
                 ))}
               </div>
             </motion.div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-3xl p-6"
-              >
-                <h3 className="font-display text-xl font-bold text-foreground mb-4">
-                  What's included ✓
-                </h3>
-                <ul className="space-y-2">
-                  {tour.inclusions.included.map((item, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-2 text-sm font-body"
-                    >
-                      <Check
-                        size={16}
-                        className="text-turquoise flex-shrink-0 mt-0.5"
-                      />
-                      {t(item, locale)}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="bg-white rounded-3xl p-6"
-              >
-                <h3 className="font-display text-xl font-bold text-foreground mb-4">
-                  Not included ✗
-                </h3>
-                <ul className="space-y-2">
-                  {tour.inclusions.notIncluded.map((item, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-2 text-sm font-body text-muted-foreground"
-                    >
-                      <X size={16} className="flex-shrink-0 mt-0.5" />
-                      {t(item, locale)}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            </div>
 
             <DatesAndPrices dates={tour.dates} />
           </div>

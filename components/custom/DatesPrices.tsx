@@ -7,10 +7,38 @@ import { ChevronDown } from "lucide-react";
 import { Timestamp } from "firebase/firestore";
 
 export interface TourDate {
-  startDate: Timestamp;
-  endDate: Timestamp;
+  startDate: Timestamp | Date | string;
+  endDate: Timestamp | Date | string;
   status: "Available" | "Few spots" | "On request" | "Sold out";
   price: string;
+}
+
+// Helper function to convert date to Date object
+function toDate(date: Timestamp | Date | string): Date {
+  if (date instanceof Date) {
+    return date;
+  }
+  if (date instanceof Timestamp) {
+    return date.toDate();
+  }
+  if (typeof date === "string") {
+    return new Date(date);
+  }
+  return new Date();
+}
+
+// Helper function to get timestamp for sorting
+function getTimestamp(date: Timestamp | Date | string): number {
+  if (date instanceof Date) {
+    return date.getTime();
+  }
+  if (date instanceof Timestamp) {
+    return date.toMillis();
+  }
+  if (typeof date === "string") {
+    return new Date(date).getTime();
+  }
+  return 0;
 }
 
 interface Props {
@@ -23,8 +51,8 @@ export default function DatesAndPrices({ dates }: Props) {
   const [showAll, setShowAll] = useState(false);
 
   const sortedDates = [...dates].sort((a, b) => {
-    const aTime = a.startDate.toMillis();
-    const bTime = b.startDate.toMillis();
+    const aTime = getTimestamp(a.startDate);
+    const bTime = getTimestamp(b.startDate);
     return sort === "asc" ? aTime - bTime : bTime - aTime;
   });
 
@@ -64,7 +92,7 @@ export default function DatesAndPrices({ dates }: Props) {
                   <div>
                     <p className="text-xs text-muted-foreground">Starting</p>
                     <p className="font-medium">
-                      {date.startDate.toDate().toLocaleDateString("en-US", {
+                      {toDate(date.startDate).toLocaleDateString("en-US", {
                         weekday: "long",
                         day: "numeric",
                         month: "short",
@@ -76,7 +104,7 @@ export default function DatesAndPrices({ dates }: Props) {
                   <div>
                     <p className="text-xs text-muted-foreground">Ending</p>
                     <p className="font-medium">
-                      {date.endDate.toDate().toLocaleDateString("en-US", {
+                      {toDate(date.endDate).toLocaleDateString("en-US", {
                         weekday: "long",
                         day: "numeric",
                         month: "short",
