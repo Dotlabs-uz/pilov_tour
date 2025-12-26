@@ -31,7 +31,7 @@ export default function DatesAndPrices({ dates }: Props) {
   const visibleDates = showAll ? sortedDates : sortedDates.slice(0, 3);
 
   return (
-    <section className="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <section id="dates-prices-section" className="bg-white rounded-2xl shadow-sm overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b">
         <h3 className="text-xl font-semibold">Travel dates</h3>
         <Button

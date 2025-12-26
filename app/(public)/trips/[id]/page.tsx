@@ -8,7 +8,7 @@ import { db, auth } from "@/app/(public)/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar,
   Users,
@@ -21,6 +21,9 @@ import {
   Info,
   MapPin,
   Plus,
+  ChevronDown,
+  Bed,
+  Utensils,
 } from "lucide-react";
 import Image from "next/image";
 import { LocalizedString } from "@/lib/types";
@@ -34,6 +37,12 @@ import {
 } from "@/components/ui/carousel";
 import { TourDate } from "@/components/custom/DatesPrices";
 import DatesAndPrices from "@/components/custom/DatesPrices";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type Lang = keyof LocalizedString;
 
@@ -60,6 +69,7 @@ function t(value: LocalizedValue, locale: Lang): string {
 interface Tour {
   id: string;
   images: string[];
+  itineraryImage?: string;
   name?: LocalizedString;
   title: LocalizedString;
   description: LocalizedString;
@@ -87,6 +97,11 @@ interface Tour {
 interface ItineraryItem {
   title: LocalizedString;
   description: LocalizedString;
+  accommodation?: (string | LocalizedString)[];
+  meals?: (string | LocalizedString)[];
+  includedActivities?: (string | LocalizedString)[];
+  optionalActivities?: (string | LocalizedString)[];
+  specialInformation?: string | LocalizedString;
 }
 interface Inclusions {
   included: LocalizedString[];
@@ -103,6 +118,8 @@ export default function TourPage() {
   const [expandedDays, setExpandedDays] = useState<Set<number>>(new Set());
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLiked, setIsLiked] = useState(false);
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
+  const [selectedGalleryImageIndex, setSelectedGalleryImageIndex] = useState<number | null>(null);
 
   const [tour, setTour] = useState<Tour | null>(null);
 
@@ -120,6 +137,7 @@ export default function TourPage() {
       setTour({
         id: tourSnap.id,
         images: data.images || [],
+        itineraryImage: data.itineraryImage || "",
         price: data.price || "",
         duration: data.duration || { days: 0, nights: 0 },
         style: data.style || "",
@@ -289,11 +307,10 @@ export default function TourPage() {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}
                             onClick={() => setCurrentImageIndex(index)}
-                            className={`relative h-28 md:h-32 rounded-2xl overflow-hidden cursor-pointer transition-all ${
-                              currentImageIndex === index
+                            className={`relative h-28 md:h-32 rounded-2xl overflow-hidden cursor-pointer transition-all ${currentImageIndex === index
                                 ? "border-4 border-coral scale-105"
                                 : "hover:scale-105 opacity-80 hover:opacity-100"
-                            }`}
+                              }`}
                           >
                             <Image
                               src={image}
@@ -319,9 +336,8 @@ export default function TourPage() {
                   {title}
                 </h2>
                 <p
-                  className={`font-body text-muted-foreground text-base leading-relaxed ${
-                    !isDescriptionExpanded ? "line-clamp-2" : ""
-                  }`}
+                  className={`font-body text-muted-foreground text-base leading-relaxed ${!isDescriptionExpanded ? "line-clamp-2" : ""
+                    }`}
                 >
                   {isDescriptionExpanded ? description : description}
                 </p>
@@ -489,11 +505,10 @@ export default function TourPage() {
                         {[1, 2, 3, 4, 5].map((level) => (
                           <div
                             key={level}
-                            className={`w-3 h-3 rounded-sm ${
-                              level <= (tour.physicalRating || 3)
+                            className={`w-3 h-3 rounded-sm ${level <= (tour.physicalRating || 3)
                                 ? "bg-foreground"
                                 : "bg-border border border-border"
-                            }`}
+                              }`}
                           />
                         ))}
                       </div>
@@ -544,7 +559,7 @@ export default function TourPage() {
 
       <section className="py-12">
         <div className="container mx-auto px-6">
-          <div className="max-w-4xl mx-auto space-y-12">
+          <div className="max-w-6xl mx-auto space-y-12">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -621,73 +636,253 @@ export default function TourPage() {
               viewport={{ once: true }}
             >
               <h2 className="font-display text-2xl font-bold text-foreground mb-6">
-                Day by Day 📅
+                Itinerary 📅
               </h2>
-              <div className="space-y-4">
-                {tour.itinerary.map((day, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.05 }}
-                    whileHover={{ x: 5 }}
-                    className="bg-white rounded-2xl p-5 flex gap-4"
-                  >
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-coral to-gold flex items-center justify-center text-white font-display font-bold flex-shrink-0">
-                      {index + 1}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Image on the left (desktop) / top (mobile) */}
+                {tour.itineraryImage && (
+                  <div className="lg:col-span-1 order-1 lg:order-1">
+                    <div className="lg:sticky lg:top-[80px]">
+                      <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+                        <DialogTrigger asChild>
+                          <div className="relative w-full rounded-2xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
+                            <Image
+                              src={tour.itineraryImage}
+                              alt="Itinerary"
+                              width={800}
+                              height={600}
+                              className="w-full h-auto object-cover rounded-2xl"
+                            />
+                          </div>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl w-full p-0 bg-transparent border-0">
+                          <DialogTitle className="sr-only">Itinerary Image</DialogTitle>
+                          <div className="relative w-full h-auto">
+                            <Image
+                              src={tour.itineraryImage}
+                              alt="Itinerary"
+                              width={1200}
+                              height={900}
+                              className="w-full h-auto object-contain rounded-lg"
+                            />
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
-                    <div className="flex-1">
-                      <h3 className="font-display text-lg font-bold text-foreground mb-1">
-                        {t(day.title, locale)}
-                      </h3>
-                      {(() => {
-                        const dayDescription = t(day.description, locale);
-                        // Approximate check: if text is likely more than 4 lines (roughly 200-250 chars)
-                        const isLongText = dayDescription.length > 200;
-                        const isExpanded = expandedDays.has(index);
+                  </div>
+                )}
 
-                        return (
-                          <>
-                            <p
-                              className={`font-body text-muted-foreground text-sm mb-3 ${
-                                !isExpanded && isLongText ? "line-clamp-4" : ""
-                              }`}
-                            >
-                              {dayDescription}
-                            </p>
-                            {isLongText && !isExpanded && (
-                              <Button
-                                variant="ghost"
-                                onClick={() =>
-                                  setExpandedDays(
-                                    new Set([...expandedDays, index])
-                                  )
-                                }
-                                className="text-coral hover:text-coral/80 p-0 h-auto text-sm"
-                              >
-                                Read more
-                              </Button>
-                            )}
-                            {isLongText && isExpanded && (
-                              <Button
-                                variant="ghost"
-                                onClick={() => {
-                                  const newSet = new Set(expandedDays);
-                                  newSet.delete(index);
-                                  setExpandedDays(newSet);
-                                }}
-                                className="text-coral hover:text-coral/80 p-0 h-auto text-sm"
-                              >
-                                Read less
-                              </Button>
-                            )}
-                          </>
-                        );
-                      })()}
+                {/* Accordion on the right (desktop) / bottom (mobile) */}
+                <div className={`${tour.itineraryImage ? "lg:col-span-2" : "lg:col-span-3"} order-2 lg:order-2`}>
+                  <div className="space-y-0 border border-border rounded-2xl overflow-hidden bg-white">
+                    {/* Header with Show all/Hide all button */}
+                    <div className="flex items-center justify-between p-4 border-b border-border bg-muted/20">
+                      <h3 className="font-display text-lg font-semibold text-foreground">
+                        
+                      </h3>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          if (expandedDays.size === tour.itinerary.length) {
+                            // All expanded, hide all
+                            setExpandedDays(new Set());
+                          } else {
+                            // Not all expanded, show all
+                            setExpandedDays(new Set(tour.itinerary.map((_, idx) => idx)));
+                          }
+                        }}
+                        className="text-sm"
+                      >
+                        {expandedDays.size === tour.itinerary.length
+                          ? "Hide all"
+                          : "Show all"}
+                      </Button>
                     </div>
-                  </motion.div>
-                ))}
+                    {tour.itinerary.map((day, index) => {
+                      const isExpanded = expandedDays.has(index);
+                      const dayTitle = t(day.title, locale);
+                      const dayDescription = t(day.description, locale);
+
+                      return (
+                        <motion.div
+                          key={index}
+                          initial={{ opacity: 0, y: 20 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.05 }}
+                          className="border-b border-border last:border-b-0"
+                        >
+                          {/* Accordion Header */}
+                          <button
+                            onClick={() => {
+                              const newSet = new Set(expandedDays);
+                              if (isExpanded) {
+                                newSet.delete(index);
+                              } else {
+                                newSet.add(index);
+                              }
+                              setExpandedDays(newSet);
+                            }}
+                            className="w-full flex items-center justify-between p-4 hover:bg-muted/40 transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="font-display text-base font-medium text-muted-foreground">
+                                Day {index + 1}
+                              </span>
+                              <span>•</span>
+                              <span className="font-display text-base font-semibold text-foreground">
+                                {dayTitle}
+                              </span>
+                            </div>
+                            <ChevronDown
+                              size={18}
+                              className={`text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""
+                                }`}
+                            />
+                          </button>
+
+                          {/* Accordion Content */}
+                          <AnimatePresence>
+                            {isExpanded && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                              >
+                                <div className="px-4 pb-6 pt-2 space-y-6">
+                                  {/* Main Description */}
+                                  {dayDescription && (
+                                    <p className="font-body text-muted-foreground text-sm leading-relaxed">
+                                      {dayDescription}
+                                    </p>
+                                  )}
+
+                                  {/* Two Column Grid for Sections */}
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Accommodation */}
+                                    {day.accommodation && day.accommodation.length > 0 && (
+                                      <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
+                                          <Bed size={16} className="text-muted-foreground" />
+                                          <h4 className="font-display text-sm font-semibold text-foreground">
+                                            Accommodation
+                                          </h4>
+                                        </div>
+                                        <ul className="space-y-1 pl-6">
+                                          {day.accommodation.map((item, idx) => {
+                                            const itemText = t(item, locale);
+                                            return itemText ? (
+                                              <li
+                                                key={idx}
+                                                className="font-body text-sm text-muted-foreground list-disc"
+                                              >
+                                                {itemText}
+                                              </li>
+                                            ) : null;
+                                          })}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {/* Meals */}
+                                    {day.meals && day.meals.length > 0 && (
+                                      <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
+                                          <Utensils size={16} className="text-muted-foreground" />
+                                          <h4 className="font-display text-sm font-semibold text-foreground">
+                                            Meals
+                                          </h4>
+                                        </div>
+                                        <ul className="space-y-1 pl-6">
+                                          {day.meals.map((item, idx) => {
+                                            const itemText = t(item, locale);
+                                            return itemText ? (
+                                              <li
+                                                key={idx}
+                                                className="font-body text-sm text-muted-foreground list-disc"
+                                              >
+                                                {itemText}
+                                              </li>
+                                            ) : null;
+                                          })}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {/* Included Activities */}
+                                    {day.includedActivities && day.includedActivities.length > 0 && (
+                                      <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
+                                          <Check size={16} className="text-muted-foreground" />
+                                          <h4 className="font-display text-sm font-semibold text-foreground">
+                                            Included activities
+                                          </h4>
+                                        </div>
+                                        <ul className="space-y-1 pl-6">
+                                          {day.includedActivities.map((item, idx) => {
+                                            const itemText = t(item, locale);
+                                            return itemText ? (
+                                              <li
+                                                key={idx}
+                                                className="font-body text-sm text-muted-foreground list-disc"
+                                              >
+                                                {itemText}
+                                              </li>
+                                            ) : null;
+                                          })}
+                                        </ul>
+                                      </div>
+                                    )}
+
+                                    {/* Optional Activities */}
+                                    {day.optionalActivities && day.optionalActivities.length > 0 && (
+                                      <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
+                                          <Plus size={16} className="text-muted-foreground" />
+                                          <h4 className="font-display text-sm font-semibold text-foreground">
+                                            Optional activities
+                                          </h4>
+                                        </div>
+                                        <ul className="space-y-1 pl-6">
+                                          {day.optionalActivities.map((item, idx) => {
+                                            const itemText = t(item, locale);
+                                            return itemText ? (
+                                              <li
+                                                key={idx}
+                                                className="font-body text-sm text-muted-foreground list-disc"
+                                              >
+                                                {itemText}
+                                              </li>
+                                            ) : null;
+                                          })}
+                                        </ul>
+                                      </div>
+                                    )}
+                                  </div>
+
+                                  {/* Special Information */}
+                                  {day.specialInformation && (
+                                    <div className="space-y-2 pt-2 border-t border-border">
+                                      <h4 className="font-display text-sm font-semibold text-foreground">
+                                        Special information
+                                      </h4>
+                                      <p className="font-body text-sm text-muted-foreground leading-relaxed">
+                                        {t(day.specialInformation, locale)}
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </motion.div>
 
@@ -701,18 +896,45 @@ export default function TourPage() {
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {images.map((image, index) => (
-                  <motion.div
+                  <Dialog
                     key={index}
-                    whileHover={{ scale: 1.02 }}
-                    className="relative rounded-2xl overflow-hidden aspect-square"
+                    open={selectedGalleryImageIndex === index}
+                    onOpenChange={(open) => {
+                      if (!open) {
+                        setSelectedGalleryImageIndex(null);
+                      } else {
+                        setSelectedGalleryImageIndex(index);
+                      }
+                    }}
                   >
-                    <Image
-                      src={image}
-                      alt={`Gallery ${index + 1}`}
-                      fill
-                      className="object-cover"
-                    />
-                  </motion.div>
+                    <DialogTrigger asChild>
+                      <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        className="relative rounded-2xl overflow-hidden aspect-square cursor-pointer"
+                      >
+                        <Image
+                          src={image}
+                          alt={`Gallery ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
+                      </motion.div>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl w-full p-0 bg-transparent border-0">
+                      <DialogTitle className="sr-only">
+                        Gallery Image {index + 1}
+                      </DialogTitle>
+                      <div className="relative w-full h-auto">
+                        <Image
+                          src={image}
+                          alt={`Gallery ${index + 1}`}
+                          width={1200}
+                          height={900}
+                          className="w-full h-auto object-contain rounded-lg"
+                        />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 ))}
               </div>
             </motion.div>
