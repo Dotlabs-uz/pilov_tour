@@ -1,17 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 import AuthSlider from "@/containers/auth-slider";
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/(public)/firebase";
 import { loginWithGoogle } from "@/lib/loginWithGoogle";
 
@@ -58,11 +54,8 @@ export default function LoginPage() {
 
       await signInWithEmailAndPassword(auth, data.email, data.password);
       router.push("/");
-    } catch (err: any) {
-      console.error("Login error:", err);
-      setError("root", {
-        message: err.message || "Login failed. Please check your credentials.",
-      });
+    } catch {
+      setError("root", { message: "Invalid email or password" });
     }
   };
 
@@ -71,134 +64,121 @@ export default function LoginPage() {
       setSocialLoading(true);
       await loginFunction();
       router.push("/");
-    } catch (err: any) {
-      console.error("Social login error:", err);
-      setError("root", {
-        message: "Social login failed. Please try again.",
-      });
+    } catch {
+      setError("root", { message: "Google login failed. Try again." });
     } finally {
       setSocialLoading(false);
     }
   };
 
-  const logout = async () => {
-    await signOut(auth);
-    setUser(null);
-  };
-
   if (user) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <p>Logged in as {user.displayName || user.email}</p>
-        <Button onClick={logout} className="mt-4">
-          Logout
-        </Button>
-      </div>
-    );
+    return null;
   }
 
   return (
-    <div className="flex items-center mt-10 justify-between w-full gap-[200px] max-w-[1200px] mx-auto">
-      <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col gap-4">
-            <p className="text-5xl font-semibold">Login</p>
-            <span className="text-[#112211] text-lg font-light">
+    <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center px-4">
+      <div className="flex w-full max-w-[1200px] items-center justify-center lg:justify-between gap-12">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-10 w-full max-w-[520px]">
+          <div className="flex flex-col gap-2 mb-8 text-center sm:text-left">
+            <h1 className="text-3xl sm:text-4xl font-bold text-[#112211]">
+              Login
+            </h1>
+            <p className="text-[#112211]/70 text-sm sm:text-base">
               Let’s get you all set up so you can access your account.
-            </span>
-          </div>
-        </div>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-          <Input
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
-              },
-            })}
-            placeholder="Enter your email"
-            type="email"
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm -mt-1">{errors.email.message}</p>
-          )}
-
-          <Input
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters",
-              },
-            })}
-            placeholder="Enter password"
-            type="password"
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm -mt-1">
-              {errors.password.message}
             </p>
-          )}
+          </div>
 
-          {errors.root && (
-            <p className="text-red-500 text-sm">{errors.root.message}</p>
-          )}
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-3"
+          >
+            <Input
+              {...register("email", { required: "Email is required" })}
+              placeholder="Email address"
+              type="email"
+              className="h-[48px] rounded-lg"
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm">{errors.email.message}</p>
+            )}
 
-          <div className="flex max-h-[100px] justify-between items-center">
-            <label className="flex items-center justify-center gap-2 cursor-pointer">
-              <input type="checkbox" {...register("rememberMe")} />
-              <p className="text-gray-800 font-semibold">Remember Me</p>
-            </label>
-            <span
-              onClick={() => router.push("/forgot-password")}
-              className="text-red-400 cursor-pointer hover:text-red-500 hover:font-bold transition-all"
+            <Input
+              {...register("password", { required: "Password is required" })}
+              placeholder="Password"
+              type="password"
+              className="h-[48px] rounded-lg"
+            />
+
+            {errors.root && (
+              <p className="text-red-500 text-sm">{errors.root.message}</p>
+            )}
+
+            <div className="flex justify-between items-center text-sm mt-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" {...register("rememberMe")} />
+                <span className="text-[#112211]/70">Remember me</span>
+              </label>
+
+              <span
+                onClick={() => router.push("/forgot-password")}
+                className="text-[#0B5D4B] hover:underline cursor-pointer"
+              >
+                Forgot password?
+              </span>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={isSubmitting}
+              className="
+                mt-4 h-[48px] rounded-lg
+                bg-[#0B5D4B]
+                hover:bg-[#094D3F]
+                text-white
+                text-lg font-semibold
+                transition-all
+              "
             >
-              Forgot Password
-            </span>
+              {isSubmitting ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+
+          <div className="flex items-center gap-3 my-6">
+            <div className="h-px bg-gray-200 flex-1" />
+            <span className="text-sm text-gray-400">or</span>
+            <div className="h-px bg-gray-200 flex-1" />
           </div>
 
           <Button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] text-black text-lg font-semibold"
+            onClick={() => handleSocialLogin(loginWithGoogle)}
+            disabled={socialLoading}
+            variant="outline"
+            className="w-full h-[52px] rounded-lg flex items-center justify-center gap-3"
           >
-            {isSubmitting ? "Logging In..." : "Login"}
+            <FcGoogle size={22} />
+            <span className="font-medium text-[#112211]">
+              Continue with Google
+            </span>
           </Button>
-        </form>
 
-        <div className="flex justify-center items-center gap-2">
-          <span>Don't have an account?</span>
-          <p
-            onClick={() => router.push("/signup")}
-            className="text-red-400 cursor-pointer hover:text-red-500 hover:font-bold transition-all"
-          >
-            Sign up
-          </p>
+          <div className="text-center mt-6 text-sm">
+            <span className="text-[#112211]/70">Don’t have an account?</span>{" "}
+            <span
+              onClick={() => router.push("/signup")}
+              className="text-[#0B5D4B] cursor-pointer hover:underline font-medium"
+            >
+              Sign up
+            </span>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-5 items-center">
-          <div className="flex items-center gap-2">
-            <hr className="bg-gray-500 border-1 w-50 border-gray-300" />
-            <p className="flex text-gray-500">Or login with</p>
-            <hr className="bg-gray-500 border-1 w-50 border-gray-300" />
-          </div>
-          <div className="flex gap-5 items-center">
-            <Button
-              onClick={() => handleSocialLogin(loginWithGoogle)}
-              disabled={socialLoading}
-              className="w-[512px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer disabled:opacity-50"
-            >
-              <FcGoogle className="w-[24px] h-[24px]" />
-            </Button>
-          </div>
+        <div className="hidden lg:block w-[520px]">
+          <AuthSlider
+            images={["/preview-login1.png", "/preview-login2.png"]}
+            delay={2500}
+          />
         </div>
       </div>
-      <AuthSlider
-        images={["/preview-login1.png", "/preview-login2.png"]}
-        delay={2000}
-      />
     </div>
   );
 }

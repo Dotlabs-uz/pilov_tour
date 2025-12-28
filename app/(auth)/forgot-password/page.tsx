@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AuthSlider from "@/containers/auth-slider";
@@ -10,49 +11,74 @@ const Reset = () => {
   const router = useRouter();
 
   return (
-    <>
-      <div className="flex items-center mt-10 gap-[200px] justify-between max-w-[1200px] w-full mx-auto">
-        <div className="flex flex-col gap-10">
-          <div className="flex flex-col mt-10 gap-5">
-            <p
+    <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center px-4">
+      <div className="flex w-full max-w-[1200px] justify-center lg:justify-between gap-12">
+        <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-10 w-full max-w-[520px]">
+          <div className="flex flex-col gap-6 mb-8">
+            <button
               onClick={() => router.push("/login")}
-              className="flex gap-2 cursor-pointer items-center"
+              className="flex items-center gap-2 text-sm text-[#0B5D4B] hover:underline w-fit"
             >
-              <FaArrowLeft /> Back to login
-            </p>
-            <div className="flex flex-col gap-4">
-              <p className="text-5xl font-semibold">Forgot your password?</p>
-              <span className="text-[#112211] text-lg font-light">
-                Don’t worry, happens to all of us. Enter your email below to
-                recover your password
-              </span>
+              <FaArrowLeft size={14} />
+              Back to login
+            </button>
+
+            <div className="flex flex-col gap-3">
+              <h1 className="text-3xl sm:text-4xl font-bold text-[#112211]">
+                Forgot your password?
+              </h1>
+              <p className="text-[#112211]/70 text-sm sm:text-base">
+                Don’t worry, it happens. Enter your email and we’ll help you
+                reset your password.
+              </p>
             </div>
           </div>
-          <div className="flex flex-col gap-2 ">
-            <Input name="email" placeholder="Enter your email" type="email" />
+
+          <div className="flex flex-col gap-4">
+            <Input
+              name="email"
+              placeholder="Email address"
+              type="email"
+              className="h-[48px] rounded-lg"
+            />
+
+            <Button
+              className="
+                h-[48px]
+                bg-[#0B5D4B]
+                hover:bg-[#094D3F]
+                text-white
+                text-lg
+                font-semibold
+              "
+            >
+              Send reset link
+            </Button>
           </div>
-          <Button className="w-[512px] h-[48px] bg-[#8DD3BB] hover:bg-[#8DD3BB] text-black text-lg font-semibold">
-            Submit
+
+          <div className="flex items-center gap-3 my-6">
+            <div className="h-px bg-gray-200 flex-1" />
+            <span className="text-gray-400 text-sm">or</span>
+            <div className="h-px bg-gray-200 flex-1" />
+          </div>
+
+          <Button
+            variant="outline"
+            className="w-full h-[52px] flex items-center justify-center gap-3"
+          >
+            <FcGoogle size={22} />
+            Continue with Google
           </Button>
-          <div className="flex flex-col gap-5 items-center">
-            <div className="flex items-center gap-2">
-              <hr className="bg-gray-500 border-1 w-50 border-gray-300" />
-              <p className="flex text-gray-500">Or login with</p>
-              <hr className="bg-gray-500 border-1 w-50 border-gray-300" />
-            </div>
-            <div className="flex gap-5 items-center">
-              <Button className="w-[512px] h-[56px] rounded-[4px] border-[1px] items-center flex border-[#8DD3BB] bg-white hover:bg-gray-200 transition-all cursor-pointer">
-                <FcGoogle className="w-[24px] h-[24px]" />
-              </Button>
-            </div>
-          </div>
         </div>
-        <AuthSlider
-          images={["/preview-login1.png", "/preview-login2.png"]}
-          delay={2000}
-        />
+
+        <div className="hidden lg:block w-[520px]">
+          <AuthSlider
+            images={["/preview-login1.png", "/preview-login2.png"]}
+            delay={2500}
+          />
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
