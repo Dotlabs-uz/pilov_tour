@@ -77,7 +77,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center px-4">
-      <div className="flex w-full max-w-[1200px] items-center justify-center lg:justify-between gap-12">
+      <div className="flex w-full max-w-[1200px] items-center justify-center gap-12">
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-10 w-full max-w-[520px]">
           <div className="flex flex-col gap-2 mb-8 text-center sm:text-left">
             <h1 className="text-3xl sm:text-4xl font-bold text-[#112211]">
@@ -172,12 +172,12 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="hidden lg:block w-[520px]">
+        {/* <div className="hidden lg:block w-[520px]">
           <AuthSlider
             images={["/preview-login1.png", "/preview-login2.png"]}
             delay={2500}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

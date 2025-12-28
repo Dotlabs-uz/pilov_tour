@@ -12,7 +12,7 @@ const Reset = () => {
 
   return (
     <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center px-4">
-      <div className="flex w-full max-w-[1200px] justify-center lg:justify-between gap-12">
+      <div className="flex w-full max-w-[1200px] justify-center gap-12">
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-10 w-full max-w-[520px]">
           <div className="flex flex-col gap-6 mb-8">
             <button
@@ -71,12 +71,12 @@ const Reset = () => {
           </Button>
         </div>
 
-        <div className="hidden lg:block w-[520px]">
+        {/* <div className="hidden lg:block w-[520px]">
           <AuthSlider
             images={["/preview-login1.png", "/preview-login2.png"]}
             delay={2500}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -16,7 +16,6 @@ import { loginWithGoogle } from "@/lib/loginWithGoogle";
 interface FormData {
   email: string;
   password: string;
-  confirmPassword: string;
   name: string;
   surname: string;
   phone: string;
@@ -26,7 +25,6 @@ interface FormData {
 export default function SignUp() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -36,7 +34,6 @@ export default function SignUp() {
     setError,
   } = useForm<FormData>();
 
-  const password = watch("password");
   const agreeToTerms = watch("agreeToTerms");
 
   const onSubmit = async (data: FormData) => {
@@ -69,7 +66,7 @@ export default function SignUp() {
 
   return (
     <div className="min-h-screen bg-[#FAFBFC] flex items-center justify-center px-4">
-      <div className="flex w-full max-w-[1200px] justify-center lg:justify-between gap-12">
+      <div className="flex w-full max-w-[1200px] justify-center lg:justify-center gap-12">
         <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-10 w-full max-w-[560px]">
           <div className="mb-8 text-center sm:text-left">
             <h1 className="text-3xl sm:text-4xl font-bold text-[#112211]">
@@ -125,22 +122,6 @@ export default function SignUp() {
               </button>
             </div>
 
-            <div className="relative">
-              <Input
-                placeholder="Confirm password"
-                type={showConfirmPassword ? "text" : "password"}
-                {...register("confirmPassword", {
-                  validate: (v) => v === password || "Passwords do not match",
-                })}
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword((v) => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-              >
-                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-              </button>
-            </div>
 
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" {...register("agreeToTerms")} />
@@ -202,12 +183,12 @@ export default function SignUp() {
           </p>
         </div>
 
-        <div className="hidden lg:block w-[520px]">
+        {/* <div className="hidden lg:block w-[520px]">
           <AuthSlider
             images={["/preview-login1.png", "/preview-login2.png"]}
             delay={2500}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
