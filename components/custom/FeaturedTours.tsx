@@ -20,6 +20,7 @@ export type TourCard = {
   id: string;
   images: string[];
   title: string;
+  name: string;
   description: string;
   price: string;
   location: string[];
@@ -45,6 +46,9 @@ export function FeaturedTours() {
         const title =
           data.title[locale as keyof LocalizedString] || data.title.en || "";
 
+        const name =
+          data?.name?.[locale as keyof LocalizedString] || data?.name?.en || "";
+
         const description =
           data.description[locale as keyof LocalizedString] ||
           data.description.en ||
@@ -60,6 +64,7 @@ export function FeaturedTours() {
           images: data.images || [],
           title,
           description,
+          name,
           price: data.price || "",
           duration: {
             days: data.duration.days?.toString() || "",
@@ -215,7 +220,7 @@ function TourCard({ tour, index }: { tour: TourCard; index: number }) {
           {/* Card Body */}
           <div className="p-5 bg-white rounded-b-2xl">
             <h3 className="font-display text-2xl font-bold text-muted-foreground mb-2">
-              {tour.title}
+              {tour.name}
             </h3>
 
             {/* Location & Meta */}
@@ -255,7 +260,7 @@ function TourCard({ tour, index }: { tour: TourCard; index: number }) {
                 </span>
               </div>
               <span className="inline-flex items-center justify-center px-5 py-2 rounded-full bg-gradient-to-r from-coral to-gold text-white text-sm md:text-base font-body font-semibold shadow-md group-hover:shadow-lg group-hover:translate-x-0.5 transition-all">
-                View tour
+                {t("view_tour")}
                 <ArrowRight size={16} className="ml-1" />
               </span>
             </div>

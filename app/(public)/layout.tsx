@@ -1,5 +1,6 @@
 import Footer from "@/components/custom/Footer";
 import { Navbar } from "@/components/custom/Navbar";
+import { CompareButton } from "@/components/custom/CompareButton";
 
 export default function Layout({
 	children,
@@ -11,6 +12,7 @@ export default function Layout({
 			<Navbar />
 			{children}
 			<Footer />
+			<CompareButton />
 		</div>
 	);
 }

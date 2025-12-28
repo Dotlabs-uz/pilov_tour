@@ -24,6 +24,7 @@ export interface TourData {
 	description: LocalizedString;
 	duration: Duration;
 	images: string[];
+	name: LocalizedString;
 	inclusions: {
 		included: any[]; // Define specific type if available
 		notIncluded: any[]; // Define specific type if available

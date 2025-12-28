@@ -214,6 +214,7 @@
 		"duration": "Davomiyligi",
 		"group_size": "Guruh hajmi",
 		"from": "Dan",
-		"view_trip": "Sayohatni ko'rish"
+		"view_trip": "Sayohatni ko'rish",
+		"view_tour": "Turni ko'rish"
 	}
 }

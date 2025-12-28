@@ -213,7 +213,8 @@
 		"duration": "Продолжительность",
 		"group_size": "Размер группы",
 		"from": "От",
-		"view_trip": "Посмотреть поездку"
+		"view_trip": "Посмотреть поездку",
+		"view_tour": "Посмотреть тур"
 	},
 	"HeroSection": {
 		"title_part1": "",

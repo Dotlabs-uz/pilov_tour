@@ -28,6 +28,7 @@ import {
   Award,
   Flag,
   Briefcase,
+  CheckCircle2,
 } from "lucide-react";
 import Image from "next/image";
 import { LocalizedString } from "@/lib/types";
@@ -137,7 +138,9 @@ export default function TourPage() {
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [selectedGalleryImageIndex, setSelectedGalleryImageIndex] = useState<number | null>(null);
   const [showAllIncludedActivities, setShowAllIncludedActivities] = useState(false);
+  const [showAllOptionalActivities, setShowAllOptionalActivities] = useState(false);
   const [activeTab, setActiveTab] = useState<"trip" | "visas" | "accommodation" | "joining">("trip");
+  const [isInCompare, setIsInCompare] = useState(false);
 
   const [tour, setTour] = useState<Tour | null>(null);
 
@@ -197,6 +200,27 @@ export default function TourPage() {
 
     fetchTour();
   }, [tourId, locale]);
+
+  // Check if tour is in compare list
+  useEffect(() => {
+    if (!tourId) return;
+    
+    const checkCompareStatus = () => {
+      const compareTours = JSON.parse(
+        localStorage.getItem("compareTours") || "[]"
+      ) as string[];
+      setIsInCompare(compareTours.includes(tourId));
+    };
+
+    checkCompareStatus();
+    
+    // Listen for changes to compare list
+    window.addEventListener("compareToursUpdated", checkCompareStatus);
+    
+    return () => {
+      window.removeEventListener("compareToursUpdated", checkCompareStatus);
+    };
+  }, [tourId]);
 
   useEffect(() => {
     const name = t(tour?.name, locale);
@@ -577,9 +601,71 @@ export default function TourPage() {
                   <Sparkles size={18} />
                   Dates and prices
                 </Button>
-                <button className="w-full flex items-center justify-center gap-2 text-muted-foreground hover:text-foreground font-body text-sm transition-colors">
-                  <Plus size={16} />
-                  Add to compare
+                <button
+                  onClick={() => {
+                    if (!tourId) return;
+                    
+                    // Get existing compare list from localStorage
+                    const existingCompare = JSON.parse(
+                      localStorage.getItem("compareTours") || "[]"
+                    ) as string[];
+                    
+                    // Check if tour is already in compare list - remove it
+                    if (existingCompare.includes(tourId)) {
+                      const updatedCompare = existingCompare.filter((id) => id !== tourId);
+                      localStorage.setItem("compareTours", JSON.stringify(updatedCompare));
+                      
+                      // Dispatch custom event to update CompareButton
+                      window.dispatchEvent(new Event("compareToursUpdated"));
+                      
+                      setIsInCompare(false);
+                      toast({
+                        title: "Removed from compare",
+                        description: "Tour has been removed from your compare list",
+                      });
+                      return;
+                    }
+                    
+                    // Check if max 4 tours
+                    if (existingCompare.length >= 4) {
+                      toast({
+                        title: "Maximum reached",
+                        description: "You can compare up to 4 tours at a time",
+                        variant: "destructive",
+                      });
+                      return;
+                    }
+                    
+                    // Add tour id to compare list
+                    existingCompare.push(tourId);
+                    localStorage.setItem("compareTours", JSON.stringify(existingCompare));
+                    
+                    // Dispatch custom event to update CompareButton
+                    window.dispatchEvent(new Event("compareToursUpdated"));
+                    
+                    setIsInCompare(true);
+                    toast({
+                      title: "Added to compare",
+                      description: "Tour has been added to your compare list",
+                    });
+                  }}
+                  className={`w-full flex items-center justify-center gap-2 font-body text-sm transition-colors ${
+                    isInCompare
+                      ? "text-coral hover:text-coral/80"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {isInCompare ? (
+                    <>
+                      <CheckCircle2 size={16} className="fill-coral text-coral" />
+                      In compare
+                    </>
+                  ) : (
+                    <>
+                      <Plus size={16} />
+                      Add to compare
+                    </>
+                  )}
                 </button>
               </motion.div>
             </aside>
@@ -986,7 +1072,7 @@ export default function TourPage() {
                         <ul className="space-y-2 mb-3">
                           {(showAllIncludedActivities
                             ? tour.includedActivities
-                            : tour.includedActivities.slice(0, 5)
+                            : tour.includedActivities.slice(0, 3)
                           ).map((item, index) => {
                             const itemText = t(item, locale);
                             return itemText ? (
@@ -999,7 +1085,7 @@ export default function TourPage() {
                             ) : null;
                           })}
                         </ul>
-                        {tour.includedActivities.length > 5 && (
+                        {tour.includedActivities.length > 3 && (
                           <button
                             onClick={() =>
                               setShowAllIncludedActivities(!showAllIncludedActivities)
@@ -1033,8 +1119,11 @@ export default function TourPage() {
                             Optional activities
                           </h3>
                         </div>
-                        <ul className="space-y-2">
-                          {tour.optionalActivities.map((item, index) => {
+                        <ul className="space-y-2 mb-3">
+                          {(showAllOptionalActivities
+                            ? tour.optionalActivities
+                            : tour.optionalActivities.slice(0, 3)
+                          ).map((item, index) => {
                             const itemText = t(item, locale);
                             return itemText ? (
                               <li
@@ -1046,6 +1135,20 @@ export default function TourPage() {
                             ) : null;
                           })}
                         </ul>
+                        {tour.optionalActivities.length > 3 && (
+                          <button
+                            onClick={() =>
+                              setShowAllOptionalActivities(!showAllOptionalActivities)
+                            }
+                            className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 underline font-body"
+                          >
+                            {showAllOptionalActivities ? "Show less" : `Show all (${tour.optionalActivities.length})`}
+                            <ChevronDown
+                              size={14}
+                              className={`transition-transform ${showAllOptionalActivities ? "rotate-180" : ""}`}
+                            />
+                          </button>
+                        )}
                       </div>
                     )}
                   </div>

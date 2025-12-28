@@ -213,7 +213,8 @@
 		"duration": "Duration",
 		"group_size": "Group size",
 		"from": "From",
-		"view_trip": "View trip"
+		"view_trip": "View trip",
+		"view_tour": "View tour"
 	},
 	"HeroSection": {
 		"title_part1": "Explore the ancient",

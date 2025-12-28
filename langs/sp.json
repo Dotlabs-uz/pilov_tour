@@ -213,6 +213,7 @@
 		"duration": "Duración",
 		"group_size": "Tamaño del grupo",
 		"from": "Desde",
-		"view_trip": "Ver viaje"
+		"view_trip": "Ver viaje",
+		"view_tour": "Ver tour"
 	}
 }
