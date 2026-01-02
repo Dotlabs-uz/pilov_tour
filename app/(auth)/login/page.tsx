@@ -121,7 +121,7 @@ export default function LoginPage() {
 
               <span
                 onClick={() => router.push("/forgot-password")}
-                className="text-[#0B5D4B] hover:underline cursor-pointer"
+                className="text-gradient hover:underline cursor-pointer"
               >
                 Forgot password?
               </span>
@@ -132,8 +132,7 @@ export default function LoginPage() {
               disabled={isSubmitting}
               className="
                 mt-4 h-[48px] rounded-lg
-                bg-[#0B5D4B]
-                hover:bg-[#094D3F]
+                text-gradient
                 text-white
                 text-lg font-semibold
                 transition-all
@@ -165,7 +164,7 @@ export default function LoginPage() {
             <span className="text-[#112211]/70">Don’t have an account?</span>{" "}
             <span
               onClick={() => router.push("/signup")}
-              className="text-[#0B5D4B] cursor-pointer hover:underline font-medium"
+              className="text-gradient cursor-pointer hover:underline font-medium"
             >
               Sign up
             </span>

@@ -136,10 +136,16 @@ export default function TourPage() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
-  const [selectedGalleryImageIndex, setSelectedGalleryImageIndex] = useState<number | null>(null);
-  const [showAllIncludedActivities, setShowAllIncludedActivities] = useState(false);
-  const [showAllOptionalActivities, setShowAllOptionalActivities] = useState(false);
-  const [activeTab, setActiveTab] = useState<"trip" | "visas" | "accommodation" | "joining">("trip");
+  const [selectedGalleryImageIndex, setSelectedGalleryImageIndex] = useState<
+    number | null
+  >(null);
+  const [showAllIncludedActivities, setShowAllIncludedActivities] =
+    useState(false);
+  const [showAllOptionalActivities, setShowAllOptionalActivities] =
+    useState(false);
+  const [activeTab, setActiveTab] = useState<
+    "trip" | "visas" | "accommodation" | "joining"
+  >("trip");
   const [isInCompare, setIsInCompare] = useState(false);
 
   const [tour, setTour] = useState<Tour | null>(null);
@@ -204,7 +210,7 @@ export default function TourPage() {
   // Check if tour is in compare list
   useEffect(() => {
     if (!tourId) return;
-    
+
     const checkCompareStatus = () => {
       const compareTours = JSON.parse(
         localStorage.getItem("compareTours") || "[]"
@@ -213,10 +219,10 @@ export default function TourPage() {
     };
 
     checkCompareStatus();
-    
+
     // Listen for changes to compare list
     window.addEventListener("compareToursUpdated", checkCompareStatus);
-    
+
     return () => {
       window.removeEventListener("compareToursUpdated", checkCompareStatus);
     };
@@ -457,10 +463,11 @@ export default function TourPage() {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.3, delay: index * 0.05 }}
                             onClick={() => setCurrentImageIndex(index)}
-                            className={`relative h-28 md:h-32 rounded-2xl overflow-hidden cursor-pointer transition-all ${currentImageIndex === index
-                              ? "border-4 border-coral scale-105"
-                              : "hover:scale-105 opacity-80 hover:opacity-100"
-                              }`}
+                            className={`relative h-28 md:h-32 rounded-2xl overflow-hidden cursor-pointer transition-all ${
+                              currentImageIndex === index
+                                ? "border-4 border-coral scale-105"
+                                : "hover:scale-105 opacity-80 hover:opacity-100"
+                            }`}
                           >
                             <Image
                               src={image}
@@ -486,8 +493,9 @@ export default function TourPage() {
                   {title}
                 </h2>
                 <p
-                  className={`font-body text-muted-foreground text-base leading-relaxed ${!isDescriptionExpanded ? "line-clamp-2" : ""
-                    }`}
+                  className={`font-body text-muted-foreground text-base leading-relaxed ${
+                    !isDescriptionExpanded ? "line-clamp-2" : ""
+                  }`}
                 >
                   {isDescriptionExpanded ? description : description}
                 </p>
@@ -623,10 +631,11 @@ export default function TourPage() {
                         {[1, 2, 3, 4, 5].map((level) => (
                           <div
                             key={level}
-                            className={`w-3 h-3 rounded-sm ${level <= (tour.physicalRating || 3)
-                              ? "bg-foreground"
-                              : "bg-border border border-border"
-                              }`}
+                            className={`w-3 h-3 rounded-sm ${
+                              level <= (tour.physicalRating || 3)
+                                ? "bg-foreground"
+                                : "bg-border border border-border"
+                            }`}
                           />
                         ))}
                       </div>
@@ -668,28 +677,34 @@ export default function TourPage() {
                 <button
                   onClick={() => {
                     if (!tourId) return;
-                    
+
                     // Get existing compare list from localStorage
                     const existingCompare = JSON.parse(
                       localStorage.getItem("compareTours") || "[]"
                     ) as string[];
-                    
+
                     // Check if tour is already in compare list - remove it
                     if (existingCompare.includes(tourId)) {
-                      const updatedCompare = existingCompare.filter((id) => id !== tourId);
-                      localStorage.setItem("compareTours", JSON.stringify(updatedCompare));
-                      
+                      const updatedCompare = existingCompare.filter(
+                        (id) => id !== tourId
+                      );
+                      localStorage.setItem(
+                        "compareTours",
+                        JSON.stringify(updatedCompare)
+                      );
+
                       // Dispatch custom event to update CompareButton
                       window.dispatchEvent(new Event("compareToursUpdated"));
-                      
+
                       setIsInCompare(false);
                       toast({
                         title: "Removed from compare",
-                        description: "Tour has been removed from your compare list",
+                        description:
+                          "Tour has been removed from your compare list",
                       });
                       return;
                     }
-                    
+
                     // Check if max 4 tours
                     if (existingCompare.length >= 4) {
                       toast({
@@ -699,14 +714,17 @@ export default function TourPage() {
                       });
                       return;
                     }
-                    
+
                     // Add tour id to compare list
                     existingCompare.push(tourId);
-                    localStorage.setItem("compareTours", JSON.stringify(existingCompare));
-                    
+                    localStorage.setItem(
+                      "compareTours",
+                      JSON.stringify(existingCompare)
+                    );
+
                     // Dispatch custom event to update CompareButton
                     window.dispatchEvent(new Event("compareToursUpdated"));
-                    
+
                     setIsInCompare(true);
                     toast({
                       title: "Added to compare",
@@ -721,7 +739,10 @@ export default function TourPage() {
                 >
                   {isInCompare ? (
                     <>
-                      <CheckCircle2 size={16} className="fill-coral text-coral" />
+                      <CheckCircle2
+                        size={16}
+                        className="fill-coral text-coral"
+                      />
                       In compare
                     </>
                   ) : (
@@ -767,7 +788,10 @@ export default function TourPage() {
                 {tour.itineraryImage && (
                   <div className="lg:col-span-1 order-1 lg:order-1">
                     <div className="lg:sticky lg:top-[80px]">
-                      <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+                      <Dialog
+                        open={isImageDialogOpen}
+                        onOpenChange={setIsImageDialogOpen}
+                      >
                         <DialogTrigger asChild>
                           <div className="relative w-full rounded-2xl overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
                             <Image
@@ -780,7 +804,9 @@ export default function TourPage() {
                           </div>
                         </DialogTrigger>
                         <DialogContent className="max-w-4xl w-full p-0 bg-transparent border-0">
-                          <DialogTitle className="sr-only">Itinerary Image</DialogTitle>
+                          <DialogTitle className="sr-only">
+                            Itinerary Image
+                          </DialogTitle>
                           <div className="relative w-full h-auto">
                             <Image
                               src={tour.itineraryImage}
@@ -797,13 +823,15 @@ export default function TourPage() {
                 )}
 
                 {/* Accordion on the right (desktop) / bottom (mobile) */}
-                <div className={`${tour.itineraryImage ? "lg:col-span-2" : "lg:col-span-3"} order-2 lg:order-2`}>
+                <div
+                  className={`${
+                    tour.itineraryImage ? "lg:col-span-2" : "lg:col-span-3"
+                  } order-2 lg:order-2`}
+                >
                   <div className="space-y-0 border border-border rounded-2xl overflow-hidden bg-white">
                     {/* Header with Show all/Hide all button */}
                     <div className="flex items-center justify-between p-4 border-b border-border bg-muted/20">
-                      <h3 className="font-display text-lg font-semibold text-foreground">
-
-                      </h3>
+                      <h3 className="font-display text-lg font-semibold text-foreground"></h3>
                       <Button
                         variant="ghost"
                         size="sm"
@@ -813,7 +841,9 @@ export default function TourPage() {
                             setExpandedDays(new Set());
                           } else {
                             // Not all expanded, show all
-                            setExpandedDays(new Set(tour.itinerary.map((_, idx) => idx)));
+                            setExpandedDays(
+                              new Set(tour.itinerary.map((_, idx) => idx))
+                            );
                           }
                         }}
                         className="text-sm"
@@ -861,8 +891,9 @@ export default function TourPage() {
                             </div>
                             <ChevronDown
                               size={18}
-                              className={`text-muted-foreground transition-transform ${isExpanded ? "rotate-180" : ""
-                                }`}
+                              className={`text-muted-foreground transition-transform ${
+                                isExpanded ? "rotate-180" : ""
+                              }`}
                             />
                           </button>
 
@@ -887,35 +918,47 @@ export default function TourPage() {
                                   {/* Two Column Grid for Sections */}
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {/* Accommodation */}
-                                    {day.accommodation && day.accommodation.length > 0 && (
-                                      <div className="space-y-2">
-                                        <div className="flex items-center gap-2">
-                                          <Bed size={16} className="text-muted-foreground" />
-                                          <h4 className="font-display text-sm font-semibold text-foreground">
-                                            Accommodation
-                                          </h4>
+                                    {day.accommodation &&
+                                      day.accommodation.length > 0 && (
+                                        <div className="space-y-2">
+                                          <div className="flex items-center gap-2">
+                                            <Bed
+                                              size={16}
+                                              className="text-muted-foreground"
+                                            />
+                                            <h4 className="font-display text-sm font-semibold text-foreground">
+                                              Accommodation
+                                            </h4>
+                                          </div>
+                                          <ul className="space-y-1 pl-6">
+                                            {day.accommodation.map(
+                                              (item, idx) => {
+                                                const itemText = t(
+                                                  item,
+                                                  locale
+                                                );
+                                                return itemText ? (
+                                                  <li
+                                                    key={idx}
+                                                    className="font-body text-sm text-muted-foreground list-disc"
+                                                  >
+                                                    {itemText}
+                                                  </li>
+                                                ) : null;
+                                              }
+                                            )}
+                                          </ul>
                                         </div>
-                                        <ul className="space-y-1 pl-6">
-                                          {day.accommodation.map((item, idx) => {
-                                            const itemText = t(item, locale);
-                                            return itemText ? (
-                                              <li
-                                                key={idx}
-                                                className="font-body text-sm text-muted-foreground list-disc"
-                                              >
-                                                {itemText}
-                                              </li>
-                                            ) : null;
-                                          })}
-                                        </ul>
-                                      </div>
-                                    )}
+                                      )}
 
                                     {/* Meals */}
                                     {day.meals && day.meals.length > 0 && (
                                       <div className="space-y-2">
                                         <div className="flex items-center gap-2">
-                                          <Utensils size={16} className="text-muted-foreground" />
+                                          <Utensils
+                                            size={16}
+                                            className="text-muted-foreground"
+                                          />
                                           <h4 className="font-display text-sm font-semibold text-foreground">
                                             Meals
                                           </h4>
@@ -937,54 +980,72 @@ export default function TourPage() {
                                     )}
 
                                     {/* Included Activities */}
-                                    {day.includedActivities && day.includedActivities.length > 0 && (
-                                      <div className="space-y-2">
-                                        <div className="flex items-center gap-2">
-                                          <Check size={16} className="text-muted-foreground" />
-                                          <h4 className="font-display text-sm font-semibold text-foreground">
-                                            Included activities
-                                          </h4>
+                                    {day.includedActivities &&
+                                      day.includedActivities.length > 0 && (
+                                        <div className="space-y-2">
+                                          <div className="flex items-center gap-2">
+                                            <Check
+                                              size={16}
+                                              className="text-muted-foreground"
+                                            />
+                                            <h4 className="font-display text-sm font-semibold text-foreground">
+                                              Included activities
+                                            </h4>
+                                          </div>
+                                          <ul className="space-y-1 pl-6">
+                                            {day.includedActivities.map(
+                                              (item, idx) => {
+                                                const itemText = t(
+                                                  item,
+                                                  locale
+                                                );
+                                                return itemText ? (
+                                                  <li
+                                                    key={idx}
+                                                    className="font-body text-sm text-muted-foreground list-disc"
+                                                  >
+                                                    {itemText}
+                                                  </li>
+                                                ) : null;
+                                              }
+                                            )}
+                                          </ul>
                                         </div>
-                                        <ul className="space-y-1 pl-6">
-                                          {day.includedActivities.map((item, idx) => {
-                                            const itemText = t(item, locale);
-                                            return itemText ? (
-                                              <li
-                                                key={idx}
-                                                className="font-body text-sm text-muted-foreground list-disc"
-                                              >
-                                                {itemText}
-                                              </li>
-                                            ) : null;
-                                          })}
-                                        </ul>
-                                      </div>
-                                    )}
+                                      )}
 
                                     {/* Optional Activities */}
-                                    {day.optionalActivities && day.optionalActivities.length > 0 && (
-                                      <div className="space-y-2">
-                                        <div className="flex items-center gap-2">
-                                          <Plus size={16} className="text-muted-foreground" />
-                                          <h4 className="font-display text-sm font-semibold text-foreground">
-                                            Optional activities
-                                          </h4>
+                                    {day.optionalActivities &&
+                                      day.optionalActivities.length > 0 && (
+                                        <div className="space-y-2">
+                                          <div className="flex items-center gap-2">
+                                            <Plus
+                                              size={16}
+                                              className="text-muted-foreground"
+                                            />
+                                            <h4 className="font-display text-sm font-semibold text-foreground">
+                                              Optional activities
+                                            </h4>
+                                          </div>
+                                          <ul className="space-y-1 pl-6">
+                                            {day.optionalActivities.map(
+                                              (item, idx) => {
+                                                const itemText = t(
+                                                  item,
+                                                  locale
+                                                );
+                                                return itemText ? (
+                                                  <li
+                                                    key={idx}
+                                                    className="font-body text-sm text-muted-foreground list-disc"
+                                                  >
+                                                    {itemText}
+                                                  </li>
+                                                ) : null;
+                                              }
+                                            )}
+                                          </ul>
                                         </div>
-                                        <ul className="space-y-1 pl-6">
-                                          {day.optionalActivities.map((item, idx) => {
-                                            const itemText = t(item, locale);
-                                            return itemText ? (
-                                              <li
-                                                key={idx}
-                                                className="font-body text-sm text-muted-foreground list-disc"
-                                              >
-                                                {itemText}
-                                              </li>
-                                            ) : null;
-                                          })}
-                                        </ul>
-                                      </div>
-                                    )}
+                                      )}
                                   </div>
 
                                   {/* Special Information */}
@@ -1067,7 +1128,10 @@ export default function TourPage() {
                     {tour.meals && (
                       <div>
                         <div className="flex items-center gap-3 mb-3">
-                          <Utensils size={18} className="text-muted-foreground" />
+                          <Utensils
+                            size={18}
+                            className="text-muted-foreground"
+                          />
                           <h3 className="font-display text-base font-semibold text-foreground">
                             Meals
                           </h3>
@@ -1109,126 +1173,149 @@ export default function TourPage() {
                     )}
 
                     {/* Premium Inclusions */}
-                    {tour.premiumInclusions && tour.premiumInclusions.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-3 mb-3">
-                          <Award size={18} className="text-muted-foreground" />
-                          <h3 className="font-display text-base font-semibold text-foreground">
-                            Premium inclusions
-                          </h3>
+                    {tour.premiumInclusions &&
+                      tour.premiumInclusions.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-3 mb-3">
+                            <Award
+                              size={18}
+                              className="text-muted-foreground"
+                            />
+                            <h3 className="font-display text-base font-semibold text-foreground">
+                              Premium inclusions
+                            </h3>
+                          </div>
+                          <ul className="space-y-2">
+                            {tour.premiumInclusions.map((item, index) => {
+                              const itemText = t(item, locale);
+                              return itemText ? (
+                                <li
+                                  key={index}
+                                  className="text-sm text-muted-foreground font-body list-disc list-inside"
+                                >
+                                  {itemText}
+                                </li>
+                              ) : null;
+                            })}
+                          </ul>
                         </div>
-                        <ul className="space-y-2">
-                          {tour.premiumInclusions.map((item, index) => {
-                            const itemText = t(item, locale);
-                            return itemText ? (
-                              <li
-                                key={index}
-                                className="text-sm text-muted-foreground font-body list-disc list-inside"
-                              >
-                                {itemText}
-                              </li>
-                            ) : null;
-                          })}
-                        </ul>
-                      </div>
-                    )}
+                      )}
                   </div>
 
                   {/* Right Column */}
                   <div className="space-y-6">
                     {/* Included Activities */}
-                    {tour.includedActivities && tour.includedActivities.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-4 h-4 rounded-full border-2 border-muted-foreground flex items-center justify-center">
-                            <Check size={12} />
+                    {tour.includedActivities &&
+                      tour.includedActivities.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-4 h-4 rounded-full border-2 border-muted-foreground flex items-center justify-center">
+                              <Check size={12} />
+                            </div>
+                            <h3 className="font-display text-base font-semibold text-foreground">
+                              Included activities
+                            </h3>
                           </div>
-                          <h3 className="font-display text-base font-semibold text-foreground">
-                            Included activities
-                          </h3>
-                        </div>
-                        <ul className="space-y-2 mb-3">
-                          {(showAllIncludedActivities
-                            ? tour.includedActivities
-                            : tour.includedActivities.slice(0, 3)
-                          ).map((item, index) => {
-                            const itemText = t(item, locale);
-                            return itemText ? (
-                              <li
-                                key={index}
-                                className="text-sm text-muted-foreground font-body list-disc list-inside"
-                              >
-                                {itemText}
-                              </li>
-                            ) : null;
-                          })}
-                        </ul>
-                        {tour.includedActivities.length > 3 && (
-                          <button
-                            onClick={() =>
-                              setShowAllIncludedActivities(!showAllIncludedActivities)
-                            }
-                            className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 underline font-body"
-                          >
-                            {showAllIncludedActivities ? "Show less" : `Show all (${tour.includedActivities.length})`}
-                            <ChevronDown
-                              size={14}
-                              className={`transition-transform ${showAllIncludedActivities ? "rotate-180" : ""
+                          <ul className="space-y-2 mb-3">
+                            {(showAllIncludedActivities
+                              ? tour.includedActivities
+                              : tour.includedActivities.slice(0, 3)
+                            ).map((item, index) => {
+                              const itemText = t(item, locale);
+                              return itemText ? (
+                                <li
+                                  key={index}
+                                  className="text-sm text-muted-foreground font-body list-disc list-inside"
+                                >
+                                  {itemText}
+                                </li>
+                              ) : null;
+                            })}
+                          </ul>
+                          {tour.includedActivities.length > 3 && (
+                            <button
+                              onClick={() =>
+                                setShowAllIncludedActivities(
+                                  !showAllIncludedActivities
+                                )
+                              }
+                              className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 underline font-body"
+                            >
+                              {showAllIncludedActivities
+                                ? "Show less"
+                                : `Show all (${tour.includedActivities.length})`}
+                              <ChevronDown
+                                size={14}
+                                className={`transition-transform ${
+                                  showAllIncludedActivities ? "rotate-180" : ""
                                 }`}
-                            />
-                          </button>
-                        )}
-                      </div>
-                    )}
+                              />
+                            </button>
+                          )}
+                        </div>
+                      )}
 
                     {/* Divider between Included and Optional Activities */}
-                    {tour.includedActivities && tour.includedActivities.length > 0 && tour.optionalActivities && tour.optionalActivities.length > 0 && (
-                      <div className="border-t border-border"></div>
-                    )}
+                    {tour.includedActivities &&
+                      tour.includedActivities.length > 0 &&
+                      tour.optionalActivities &&
+                      tour.optionalActivities.length > 0 && (
+                        <div className="border-t border-border"></div>
+                      )}
 
                     {/* Optional Activities */}
-                    {tour.optionalActivities && tour.optionalActivities.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-5 h-5 rounded-full border-2 border-muted-foreground flex items-center justify-center">
-                            <Plus size={12} className="text-muted-foreground" />
+                    {tour.optionalActivities &&
+                      tour.optionalActivities.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className="w-5 h-5 rounded-full border-2 border-muted-foreground flex items-center justify-center">
+                              <Plus
+                                size={12}
+                                className="text-muted-foreground"
+                              />
+                            </div>
+                            <h3 className="font-display text-base font-semibold text-foreground">
+                              Optional activities
+                            </h3>
                           </div>
-                          <h3 className="font-display text-base font-semibold text-foreground">
-                            Optional activities
-                          </h3>
+                          <ul className="space-y-2 mb-3">
+                            {(showAllOptionalActivities
+                              ? tour.optionalActivities
+                              : tour.optionalActivities.slice(0, 3)
+                            ).map((item, index) => {
+                              const itemText = t(item, locale);
+                              return itemText ? (
+                                <li
+                                  key={index}
+                                  className="text-sm text-muted-foreground font-body list-disc list-inside"
+                                >
+                                  {itemText}
+                                </li>
+                              ) : null;
+                            })}
+                          </ul>
+                          {tour.optionalActivities.length > 3 && (
+                            <button
+                              onClick={() =>
+                                setShowAllOptionalActivities(
+                                  !showAllOptionalActivities
+                                )
+                              }
+                              className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 underline font-body"
+                            >
+                              {showAllOptionalActivities
+                                ? "Show less"
+                                : `Show all (${tour.optionalActivities.length})`}
+                              <ChevronDown
+                                size={14}
+                                className={`transition-transform ${
+                                  showAllOptionalActivities ? "rotate-180" : ""
+                                }`}
+                              />
+                            </button>
+                          )}
                         </div>
-                        <ul className="space-y-2 mb-3">
-                          {(showAllOptionalActivities
-                            ? tour.optionalActivities
-                            : tour.optionalActivities.slice(0, 3)
-                          ).map((item, index) => {
-                            const itemText = t(item, locale);
-                            return itemText ? (
-                              <li
-                                key={index}
-                                className="text-sm text-muted-foreground font-body list-disc list-inside"
-                              >
-                                {itemText}
-                              </li>
-                            ) : null;
-                          })}
-                        </ul>
-                        {tour.optionalActivities.length > 3 && (
-                          <button
-                            onClick={() =>
-                              setShowAllOptionalActivities(!showAllOptionalActivities)
-                            }
-                            className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 underline font-body"
-                          >
-                            {showAllOptionalActivities ? "Show less" : `Show all (${tour.optionalActivities.length})`}
-                            <ChevronDown
-                              size={14}
-                              className={`transition-transform ${showAllOptionalActivities ? "rotate-180" : ""}`}
-                            />
-                          </button>
-                        )}
-                      </div>
-                    )}
+                      )}
                   </div>
                 </div>
               </div>
@@ -1304,7 +1391,8 @@ export default function TourPage() {
                       <div className="w-full min-h-[600px]">
                         <iframe
                           src={`https://apply.joinsherpa.com/travel-restrictions?destination=${encodeURIComponent(
-                            t(tour.location || tour.end || "", locale) || "Uzbekistan"
+                            t(tour.location || tour.end || "", locale) ||
+                              "Uzbekistan"
                           )}&origin=${encodeURIComponent(
                             t(tour.start || "", locale) || "USA"
                           )}`}
@@ -1326,14 +1414,15 @@ export default function TourPage() {
                       )}
                     </div>
                   )}
-                  {activeTab === "accommodation" && tour.accommodationRichText && (
-                    <div
-                      className="text-muted-foreground font-body text-sm leading-relaxed"
-                      dangerouslySetInnerHTML={{
-                        __html: t(tour.accommodationRichText, locale),
-                      }}
-                    />
-                  )}
+                  {activeTab === "accommodation" &&
+                    tour.accommodationRichText && (
+                      <div
+                        className="text-muted-foreground font-body text-sm leading-relaxed"
+                        dangerouslySetInnerHTML={{
+                          __html: t(tour.accommodationRichText, locale),
+                        }}
+                      />
+                    )}
                   {activeTab === "joining" && tour.joiningPoint && (
                     <div
                       className="text-muted-foreground font-body text-sm leading-relaxed"
@@ -1347,11 +1436,12 @@ export default function TourPage() {
                       No information available.
                     </div>
                   )}
-                  {activeTab === "accommodation" && !tour.accommodationRichText && (
-                    <div className="text-muted-foreground font-body text-sm">
-                      No information available.
-                    </div>
-                  )}
+                  {activeTab === "accommodation" &&
+                    !tour.accommodationRichText && (
+                      <div className="text-muted-foreground font-body text-sm">
+                        No information available.
+                      </div>
+                    )}
                   {activeTab === "joining" && !tour.joiningPoint && (
                     <div className="text-muted-foreground font-body text-sm">
                       No information available.
