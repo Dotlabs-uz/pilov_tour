@@ -122,7 +122,6 @@ export default function SignUp() {
               </button>
             </div>
 
-
             <label className="flex items-center gap-2 text-sm">
               <input type="checkbox" {...register("agreeToTerms")} />
               <span className="text-[#112211]/70">
@@ -140,11 +139,10 @@ export default function SignUp() {
 
             <Button
               type="submit"
+              variant="gradient"
               disabled={isSubmitting || !agreeToTerms}
               className="
                 h-[48px]
-                bg-[#0B5D4B]
-                hover:bg-[#094D3F]
                 text-white
                 text-lg
                 font-semibold
@@ -176,7 +174,7 @@ export default function SignUp() {
             Already have an account?{" "}
             <span
               onClick={() => router.push("/login")}
-              className="text-[#0B5D4B] cursor-pointer font-medium hover:underline"
+              className="text-gradient cursor-pointer font-medium hover:underline"
             >
               Login
             </span>
