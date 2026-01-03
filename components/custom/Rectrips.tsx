@@ -13,10 +13,22 @@ import { useLocale, useTranslations } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
 import { TourPreview } from "@/app/(public)/trips/page";
-import { TourCard } from "./FeaturedTours";
+
+export interface TourPreviewCard {
+  id: string;
+  images: string[];
+  title: string;
+  description: string;
+  price: string;
+  duration: {
+    days: string | number;
+    nights: string | number;
+  };
+  style: string;
+}
 
 const RecTrips = () => {
-  const [tours, setTours] = useState<TourCard[]>([]);
+  const [tours, setTours] = useState<TourPreviewCard[]>([]);
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("recTrips");
@@ -27,7 +39,7 @@ const RecTrips = () => {
 
       console.log(snapshot);
 
-      const toursData: TourCard[] = snapshot.docs.map((tourDoc) => {
+      const toursData: TourPreviewCard[] = snapshot.docs.map((tourDoc) => {
         const data = tourDoc.data() as TourPreview;
 
         const titleObj = data.title || {};
