@@ -13,6 +13,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
 import { TourPreview } from "@/app/(public)/trips/page";
+import { TourCard } from "./FeaturedTours";
 
 const RecTrips = () => {
   const [tours, setTours] = useState<TourCard[]>([]);
