@@ -13,8 +13,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { TourData, LocalizedString } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/app/(public)/firebase";
+import { collection, getDocs, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { db, auth } from "@/app/(public)/firebase";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 export type TourCard = {
   id: string;
@@ -146,12 +149,105 @@ export function FeaturedTours() {
   );
 }
 
-function TourCard({ tour, index }: { tour: TourCard; index: number }) {
+export function TourCard({ tour, index }: { tour: TourCard; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const t = useTranslations("FeaturedTours");
+  const router = useRouter();
+  const { toast } = useToast();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
+  const [user, setUser] = useState<FirebaseUser | null>(null);
   const images = tour.images.length ? tour.images : ["/tourImage1.jpg"];
+
+  // Check authentication and like status
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
+      if (firebaseUser && tour.id) {
+        try {
+          const userRef = doc(db, "users", firebaseUser.uid);
+          const userSnap = await getDoc(userRef);
+          
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const likedTours = userData.likedTours || [];
+            setIsLiked(likedTours.includes(tour.id));
+          } else {
+            setIsLiked(false);
+          }
+        } catch (error) {
+          console.error("Error checking like status:", error);
+          setIsLiked(false);
+        }
+      } else {
+        setIsLiked(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [tour.id]);
+
+  // Handle like toggle
+  const handleLike = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!user || !tour.id) {
+      router.push("/login");
+      return;
+    }
+
+    // Optimistic update - show state immediately
+    const newLikedState = !isLiked;
+    setIsLiked(newLikedState);
+    
+    // Show toast immediately
+    toast({
+      title: newLikedState
+        ? "Added to favorites"
+        : "Removed from favorites",
+      description: newLikedState
+        ? "This tour has been added to your favorites"
+        : "This tour has been removed from your favorites",
+    });
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      
+      // Check if user document exists
+      const userSnap = await getDoc(userRef);
+      
+      if (!userSnap.exists()) {
+        // Create user document with likedTours array
+        await setDoc(userRef, {
+          likedTours: newLikedState ? [tour.id] : [],
+        });
+      } else {
+        // Update existing user document
+        if (newLikedState) {
+          // Add tour to likedTours array
+          await updateDoc(userRef, {
+            likedTours: arrayUnion(tour.id),
+          });
+        } else {
+          // Remove tour from likedTours array
+          await updateDoc(userRef, {
+            likedTours: arrayRemove(tour.id),
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Error updating like status:", err);
+      // Revert state on error
+      setIsLiked(!newLikedState);
+      toast({
+        title: "Failed to update favorites",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     if (!isHovered || images.length <= 1) {
@@ -211,9 +307,14 @@ function TourCard({ tour, index }: { tour: TourCard; index: number }) {
             <motion.button
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
-              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 flex items-center justify-center text-navy hover:text-coral transition-colors"
+              onClick={handleLike}
+              className={`absolute top-4 right-4 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                isLiked
+                  ? "bg-coral text-white hover:bg-coral/90"
+                  : "bg-white/90 text-navy hover:text-coral"
+              }`}
             >
-              <Heart size={18} />
+              <Heart size={18} className={isLiked ? "fill-current" : ""} />
             </motion.button>
           </div>
 

@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 
 import { db, auth } from "@/app/(public)/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -235,14 +235,28 @@ export default function TourPage() {
     }
   }, [tour]);
 
-  // Check user authentication state
+  // Check user authentication state and like status
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
-      // TODO: Check if user has liked this tour
       if (firebaseUser && tourId) {
         // Check like status from Firestore
-        // For now, just set to false
+        try {
+          const userRef = doc(db, "users", firebaseUser.uid);
+          const userSnap = await getDoc(userRef);
+          
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
+            const likedTours = userData.likedTours || [];
+            setIsLiked(likedTours.includes(tourId));
+          } else {
+            setIsLiked(false);
+          }
+        } catch (error) {
+          console.error("Error checking like status:", error);
+          setIsLiked(false);
+        }
+      } else {
         setIsLiked(false);
       }
     });
@@ -268,6 +282,82 @@ export default function TourPage() {
       ? description.substring(0, 200) + "..."
       : description;
   const shouldShowReadMore = description.length > 100; // Show read more if description is long enough
+
+  // Unified like function
+  const handleLike = async () => {
+    if (!user || !tourId) {
+      router.push("/login");
+      return;
+    }
+
+    // Optimistic update - show state immediately
+    const newLikedState = !isLiked;
+    setIsLiked(newLikedState);
+    
+    // Show toast immediately
+    toast({
+      title: newLikedState
+        ? "Added to favorites"
+        : "Removed from favorites",
+      description: newLikedState
+        ? "This tour has been added to your favorites"
+        : "This tour has been removed from your favorites",
+    });
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+      
+      // Check if user document exists
+      const userSnap = await getDoc(userRef);
+      
+      if (!userSnap.exists()) {
+        // Create user document with likedTours array
+        await setDoc(userRef, {
+          likedTours: newLikedState ? [tourId] : [],
+        });
+      } else {
+        // Update existing user document
+        if (newLikedState) {
+          // Add tour to likedTours array
+          await updateDoc(userRef, {
+            likedTours: arrayUnion(tourId),
+          });
+        } else {
+          // Remove tour from likedTours array
+          await updateDoc(userRef, {
+            likedTours: arrayRemove(tourId),
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Error updating like status:", err);
+      // Revert state on error
+      setIsLiked(!newLikedState);
+      toast({
+        title: "Failed to update favorites",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Unified share function
+  const handleShare = async () => {
+    try {
+      const url = window.location.href;
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: "Link copied!",
+        description: "The page link has been copied to your clipboard",
+      });
+    } catch (err) {
+      toast({
+        title: "Failed to copy",
+        description: "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <main className="min-h-screen bg-cream">
@@ -333,13 +423,19 @@ export default function TourPage() {
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
-                    className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-coral transition-colors"
+                    onClick={handleLike}
+                    className={`w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center transition-colors ${
+                      isLiked
+                        ? "bg-coral/30 text-coral hover:bg-coral/40"
+                        : "text-white hover:bg-white hover:text-coral"
+                    }`}
                   >
-                    <Heart size={20} />
+                    <Heart size={20} className={isLiked ? "fill-current" : ""} />
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
+                    onClick={handleShare}
                     className="w-12 h-12 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-coral transition-colors"
                   >
                     <Share2 size={20} />
@@ -419,23 +515,7 @@ export default function TourPage() {
                 <div className="flex gap-3 mt-6">
                   <Button
                     variant={isLiked ? "default" : "outline"}
-                    onClick={async () => {
-                      if (!user) {
-                        router.push("/login");
-                        return;
-                      }
-                      // Toggle like
-                      setIsLiked(!isLiked);
-                      // TODO: Save like to Firestore
-                      toast({
-                        title: isLiked
-                          ? "Removed from favorites"
-                          : "Added to favorites",
-                        description: isLiked
-                          ? "This tour has been removed from your favorites"
-                          : "This tour has been added to your favorites",
-                      });
-                    }}
+                    onClick={handleLike}
                     className="flex-1 flex items-center gap-2"
                   >
                     <Heart
@@ -446,23 +526,7 @@ export default function TourPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={async () => {
-                      try {
-                        const url = window.location.href;
-                        await navigator.clipboard.writeText(url);
-                        toast({
-                          title: "Link copied!",
-                          description:
-                            "The page link has been copied to your clipboard",
-                        });
-                      } catch (err) {
-                        toast({
-                          title: "Failed to copy",
-                          description: "Please try again",
-                          variant: "destructive",
-                        });
-                      }
-                    }}
+                    onClick={handleShare}
                     className="flex-1 flex items-center gap-2"
                   >
                     <Share2 size={18} />
@@ -717,7 +781,7 @@ export default function TourPage() {
               viewport={{ once: true }}
             >
               <h2 className="font-display text-2xl font-bold text-foreground mb-6">
-                Itinerary 📅
+                Itinerary
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Image on the left (desktop) / top (mobile) */}
@@ -1022,7 +1086,7 @@ export default function TourPage() {
                   {/* Left Column */}
                   <div className="space-y-6">
                     {/* Destinations */}
-                    {tour.destinations && tour.destinations.length > 0 && (
+                    {tour.destinations && Array.isArray(tour.destinations) && tour.destinations.length > 0 && (
                       <div>
                         <div className="flex items-center gap-3 mb-3">
                           <MapPin size={18} className="text-muted-foreground" />
@@ -1043,6 +1107,20 @@ export default function TourPage() {
                             ) : null;
                           })}
                         </div>
+                      </div>
+                    )}
+                    {/* Handle case where destinations is a single LocalizedString object */}
+                    {tour.destinations && !Array.isArray(tour.destinations) && (
+                      <div>
+                        <div className="flex items-center gap-3 mb-3">
+                          <MapPin size={18} className="text-muted-foreground" />
+                          <h3 className="font-display text-base font-semibold text-foreground">
+                            Destinations
+                          </h3>
+                        </div>
+                        <p className="text-sm text-muted-foreground font-body">
+                          {t(tour.destinations, locale)}
+                        </p>
                       </div>
                     )}
 

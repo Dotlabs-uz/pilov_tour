@@ -5,12 +5,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
-  Calendar,
-  Users,
-  Star,
   Search,
-  ArrowRight,
-  Heart,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,9 +14,9 @@ import { cn } from "@/lib/utils";
 import { useLocale } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
-
-import Footer from "@/components/custom/Footer";
 import { Navbar } from "@/components/custom/Navbar";
+import { TourCard, type TourCard as FeaturedTourCardType } from "@/components/custom/FeaturedTours";
+import { LocalizedString } from "@/lib/types";
 
 export type LangCodes = "en" | "ru" | "ge" | "it" | "sp" | "uk" | "uz";
 
@@ -48,25 +43,6 @@ export interface TourPreview {
   groupSize?: string;
 }
 
-export interface TourCard {
-  id: string;
-  images: string[];
-  title: string;
-  description: string;
-  price: string;
-  duration: {
-    days: number | string;
-    nights: number | string;
-  };
-  style: string;
-  category?: string;
-  tag?: string;
-  tagColor?: string;
-  rating?: number;
-  tagline?: string;
-  groupSize?: string;
-}
-
 export interface Category {
   id: string;
   name: string;
@@ -74,7 +50,7 @@ export interface Category {
 }
 
 const Tours = () => {
-  const [tours, setTours] = useState<TourCard[]>([]);
+  const [tours, setTours] = useState<FeaturedTourCardType[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const locale = useLocale();
@@ -86,12 +62,13 @@ const Tours = () => {
     const fetchTours = async () => {
       const snapshot = await getDocs(collection(db, "tours"));
 
-      const toursData: TourCard[] = snapshot.docs
+      const toursData: FeaturedTourCardType[] = snapshot.docs
         .map((tourDoc) => {
           const data = tourDoc.data() as TourPreview;
 
           const titleObj = data.title || {};
           const descObj = data.description || {};
+          const nameObj = (data as any).name || {};
 
           const title =
             titleObj[locale as keyof typeof titleObj] ||
@@ -99,35 +76,59 @@ const Tours = () => {
             Object.values(titleObj)[0] ||
             "";
 
+          const name =
+            typeof nameObj === "string"
+              ? nameObj
+              : nameObj && typeof nameObj === "object"
+              ? (nameObj as LocalizedString)[locale as keyof LocalizedString] ||
+                (nameObj as LocalizedString)["en"] ||
+                Object.values(nameObj)[0] ||
+                ""
+              : title; // Fallback to title if name doesn't exist
+
           const description =
             descObj[locale as keyof typeof descObj] ||
             descObj["en"] ||
             Object.values(descObj)[0] ||
             "";
 
+          // Handle location (could be LocalizedString or string)
+          const locationObj = (data as any).location || "";
+          let locationStr: string = "";
+          if (typeof locationObj === "string") {
+            locationStr = locationObj;
+          } else if (locationObj && typeof locationObj === "object") {
+            locationStr = (locationObj as LocalizedString)[locale as keyof LocalizedString] ||
+              (locationObj as LocalizedString)["en"] ||
+              (Object.values(locationObj)[0] as string) ||
+              "";
+          }
+
           return {
             id: tourDoc.id,
             images: data.images || [],
             title,
+            name,
             description,
             price: data.price || "",
-            duration: data.duration || { days: "", nights: "" },
+            duration: {
+              days: (data.duration?.days?.toString() || ""),
+              nights: (data.duration?.nights?.toString() || ""),
+            },
+            location: locationStr ? locationStr.split(",").map((loc: string) => loc.trim()) : [],
             style: data.style || "",
-            tag: data.tag || "",
-            tagColor: data.tagColor || "",
-            rating: data.rating || 0,
-            tagline: data.tagline || "",
-            groupSize: data.groupSize || "",
+            maxGroupCount: (data as any).maxGroupCount || 0,
           };
         })
-        .filter(Boolean) as TourCard[];
+        .filter(Boolean) as FeaturedTourCardType[];
 
       const filteredTours = toursData.filter((tour) => {
         const matchesCategory =
-          activeCategory === null || tour.category === activeCategory;
+          activeCategory === null || (tour as any).category === activeCategory;
         const matchesSearch =
           tour.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          tour.description.toLowerCase().includes(searchQuery.toLowerCase());
+          tour.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          tour.name.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
       });
 
@@ -238,109 +239,9 @@ const Tours = () => {
           </p>
 
           {tours.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
               {tours.map((tour, index) => (
-                <motion.article
-                  key={tour.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.5,
-                    delay: index * 0.1,
-                  }}
-                >
-                  <a href={`/trips/${tour.id}`}>
-                    <motion.div
-                      whileHover={{
-                        y: -8,
-                        rotate: index % 2 === 0 ? 1 : -1,
-                      }}
-                      className="card-playful group h-full"
-                    >
-                      <div className="relative h-[280px] overflow-hidden rounded-t-2xl">
-                        <motion.img
-                          whileHover={{ scale: 1.08 }}
-                          transition={{
-                            duration: 0.6,
-                          }}
-                          src={tour.images[0] || "/placeholder.svg"}
-                          alt={tour.title}
-                          className="w-full h-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-transparent" />
-
-                        <div className="absolute top-4 left-4 flex gap-2">
-                          {tour.tag && (
-                            <span
-                              className={`px-3 py-1.5 rounded-full ${
-                                tour.tagColor || "bg-primary"
-                              } text-white text-xs font-semibold`}
-                            >
-                              {tour.tag}
-                            </span>
-                          )}
-                        </div>
-
-                        <motion.button
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={(e) => e.preventDefault()}
-                          className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 flex items-center justify-center text-navy hover:text-coral transition-colors"
-                        >
-                          <Heart size={18} />
-                        </motion.button>
-
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <div className="flex items-center gap-1 mb-2">
-                            <Star size={14} className="fill-gold text-gold" />
-                            <span className="text-white text-sm font-medium">
-                              {tour.rating || "N/A"}
-                            </span>
-                          </div>
-                          <h3 className="font-display text-2xl font-bold text-white">
-                            {tour.title}
-                          </h3>
-                          <p className="text-white/70 text-sm">
-                            {tour.tagline}
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="p-5 bg-white rounded-b-2xl">
-                        <p className="text-muted-foreground font-body text-sm mb-4">
-                          {tour.description}
-                        </p>
-
-                        <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-                          <span className="flex items-center gap-1.5">
-                            <Calendar size={14} className="text-coral" />
-                            {tour.duration.days} days, {tour.duration.nights}{" "}
-                            nights
-                          </span>
-                          <span className="flex items-center gap-1.5">
-                            <Users size={14} className="text-turquoise" />
-                            {tour.groupSize || "N/A"}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center justify-between pt-4 border-t border-border">
-                          <div>
-                            <span className="text-muted-foreground text-xs">
-                              From
-                            </span>
-                            <span className="block font-display text-xl font-bold">
-                              ${Number(tour.price).toLocaleString()}
-                            </span>
-                          </div>
-                          <span className="flex items-center gap-2 text-coral text-sm font-semibold group-hover:gap-3 transition-all">
-                            View trip
-                            <ArrowRight size={16} />
-                          </span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </a>
-                </motion.article>
+                <TourCard key={tour.id} tour={tour} index={index} />
               ))}
             </div>
           ) : (
