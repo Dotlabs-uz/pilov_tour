@@ -59,7 +59,6 @@ const ArticlesPage = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 lg:px-0">
-      <StickyHeader />
 
       <Carousel opts={{ align: "start" }} className="py-20">
         <CarouselContent>

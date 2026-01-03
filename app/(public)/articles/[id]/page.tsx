@@ -54,7 +54,6 @@ export default function Article() {
   if (loading)
     return (
       <div className="max-w-4xl mx-auto">
-        <StickyHeader />
         <div className="mt-10 space-y-6">
           <Skeleton className="w-full h-96 rounded-xl" />
           <Skeleton className="h-10 w-3/4 rounded-lg" />
@@ -67,9 +66,8 @@ export default function Article() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 lg:px-0">
-      <StickyHeader />
 
-      <div className="py-20">
+      <div className="py-20 mt-5">
         <div className="relative w-full h-96 rounded-xl overflow-hidden">
           <Image
             src={article.coverImage}
