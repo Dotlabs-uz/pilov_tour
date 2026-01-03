@@ -12,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/app/(public)/firebase";
-import { TourCard, TourPreview } from "@/app/(public)/trips/page";
+import { TourPreview } from "@/app/(public)/trips/page";
 
 const RecTrips = () => {
   const [tours, setTours] = useState<TourCard[]>([]);
