@@ -2,13 +2,31 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, Sparkles, Send } from "lucide-react";
+import {
+  ArrowRight,
+  Sparkles,
+  Send,
+  Mail,
+  MessageCircle,
+  Phone,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
+
+enum ContactEnum {
+  Email = "email",
+  Telegram = "telegram",
+  Whatsapp = "whatsapp",
+}
 
 export function CtaSection() {
   const t = useTranslations("CtaSection");
+  const [contact, setContact] = useState<ContactEnum>(ContactEnum.Email);
+  const [email, setEmail] = useState("");
+  const [telegramUsername, setTelegramUsername] = useState("");
+  const [whatsappPhone, setWhatsappPhone] = useState("");
 
   return (
     <section className="relative py-24 md:py-32 overflow-hidden">
@@ -67,8 +85,18 @@ export function CtaSection() {
                   <ArrowRight size={20} />
                 </Link>
               </Button>
-              <Button variant="hero" size="xl" asChild>
-                <a href="mailto:hello@pilavtour.uz">{t("chat_with_us")}</a>
+              <Button
+                onClick={() => {
+                  const contactForm = document.getElementById("contact-form");
+                  if (contactForm) {
+                    contactForm.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                variant="hero"
+                size="xl"
+              >
+                {t("chat_with_us")}
+                <Send size={18} />
               </Button>
             </div>
           </motion.div>
@@ -79,6 +107,7 @@ export function CtaSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/10"
+            id="contact-form"
           >
             <h3 className="font-display text-2xl font-bold text-white mb-2">
               {t("get_travel_inspo")} ✨
@@ -87,22 +116,159 @@ export function CtaSection() {
               {t("newsletter_description")}
             </p>
 
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
-              <Input
-                type="email"
-                placeholder={t("email_placeholder")}
-                className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-2xl text-lg"
-              />
-              <Button
-                variant="gradient"
-                size="lg"
-                className="w-full"
-                type="submit"
+            <div className="flex gap-3 mb-6 flex-wrap">
+              <button
+                onClick={() => setContact(ContactEnum.Email)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-body font-semibold transition-all ${
+                  contact === ContactEnum.Email
+                    ? "bg-coral text-white"
+                    : "bg-white/10 text-white/70 hover:bg-white/20"
+                }`}
               >
-                <Send size={18} />
-                {t("subscribe_button")}
-              </Button>
-            </form>
+                <Mail size={18} />
+                Email
+              </button>
+              <button
+                onClick={() => setContact(ContactEnum.Telegram)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-body font-semibold transition-all ${
+                  contact === ContactEnum.Telegram
+                    ? "bg-coral text-white"
+                    : "bg-white/10 text-white/70 hover:bg-white/20"
+                }`}
+              >
+                <MessageCircle size={18} />
+                Telegram
+              </button>
+              <button
+                onClick={() => setContact(ContactEnum.Whatsapp)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-body font-semibold transition-all ${
+                  contact === ContactEnum.Whatsapp
+                    ? "bg-coral text-white"
+                    : "bg-white/10 text-white/70 hover:bg-white/20"
+                }`}
+              >
+                <Phone size={18} />
+                WhatsApp
+              </button>
+            </div>
+
+            {contact === ContactEnum.Email && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (email) {
+                    window.location.href = `mailto:hello@pilavtour.uz?subject=Contact from ${email}`;
+                    setEmail("");
+                  }
+                }}
+                className="space-y-4"
+              >
+                <Input
+                  type="email"
+                  placeholder={t("email_placeholder")}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-2xl text-lg"
+                />
+                <Input
+                  type="text"
+                  placeholder="Your name"
+                  className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-2xl text-lg"
+                />
+                <Button
+                  variant="gradient"
+                  size="lg"
+                  className="w-full"
+                  type="submit"
+                  disabled={!email}
+                >
+                  <Send size={18} />
+                  {t("subscribe_button")}
+                </Button>
+              </form>
+            )}
+
+            {contact === ContactEnum.Telegram && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (telegramUsername) {
+                    window.open(
+                      `https://t.me/pilavtour_bot?start=${telegramUsername}`,
+                      "_blank",
+                    );
+                    setTelegramUsername("");
+                  }
+                }}
+                className="space-y-4"
+              >
+                <Input
+                  type="text"
+                  placeholder="Your Telegram username (e.g., @username)"
+                  value={telegramUsername}
+                  onChange={(e) => setTelegramUsername(e.target.value)}
+                  className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-2xl text-lg"
+                />
+                <p className="text-white/50 text-sm font-body">
+                  Or contact us directly:
+                </p>
+                <Button
+                  variant="gradient"
+                  size="lg"
+                  className="w-full"
+                  type="button"
+                  onClick={() =>
+                    window.open("https://t.me/pilavtour_bot", "_blank")
+                  }
+                >
+                  <MessageCircle size={18} />
+                  Open Telegram
+                </Button>
+              </form>
+            )}
+
+            {contact === ContactEnum.Whatsapp && (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (whatsappPhone) {
+                    const message = encodeURIComponent(
+                      "Hi, I'd like to know more about your tours!",
+                    );
+                    window.open(
+                      `https://wa.me/998933881111?text=${message}`,
+                      "_blank",
+                    );
+                    setWhatsappPhone("");
+                  }
+                }}
+                className="space-y-4"
+              >
+                <Input
+                  type="tel"
+                  placeholder="Your WhatsApp phone number"
+                  value={whatsappPhone}
+                  onChange={(e) => setWhatsappPhone(e.target.value)}
+                  className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-2xl text-lg"
+                />
+                <p className="text-white/50 text-sm font-body">
+                  We'll respond within 1 hour
+                </p>
+                <Button
+                  variant="gradient"
+                  size="lg"
+                  className="w-full"
+                  type="button"
+                  onClick={() =>
+                    window.open("https://wa.me/998933881111", "_blank")
+                  }
+                >
+                  <Phone size={18} />
+                  Open WhatsApp
+                </Button>
+              </form>
+            )}
 
             <p className="text-white/50 text-xs font-body mt-4 text-center">
               {t("newsletter_join_text")}
