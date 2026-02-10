@@ -57,54 +57,74 @@ const ArticlesPage = () => {
   const skeletons = Array.from({ length: 5 });
 
   return (
-    <div className="max-w-6xl mx-auto px-4 lg:px-0">
-      <Carousel opts={{ align: "start" }} className="py-20">
-        <CarouselContent>
-          {loading
-            ? skeletons.map((_, i) => (
-                <CarouselItem
-                  key={i}
-                  className="basis-full sm:basis-1/2 lg:basis-1/3"
-                >
-                  <div className="flex-shrink-0 border rounded-2xl shadow overflow-hidden bg-white flex flex-col">
-                    <Skeleton className="w-full h-56 rounded-xl" />
-                    <div className="p-4 flex flex-col gap-2">
-                      <Skeleton className="h-6 w-3/4 rounded-lg" />
-                    </div>
-                  </div>
-                </CarouselItem>
-              ))
-            : articles.map((a) => (
-                <CarouselItem
-                  key={a.id}
-                  className="basis-full sm:basis-1/2 lg:basis-1/3"
-                >
-                  <Link
-                    href={`/articles/${a.id}`}
-                    className="flex-shrink-0 border rounded-2xl shadow hover:shadow-lg overflow-hidden bg-white flex flex-col"
+    <main className="min-h-screen bg-cream">
+      <div className="max-w-6xl mx-auto px-4 lg:px-0 py-12">
+        <div className="mt-8 mb-8 text-center">
+          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">
+            Articles
+          </h1>
+          <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
+            Insights, stories and travel ideas from our team — curated for
+            curious explorers.
+          </p>
+        </div>
+
+        <Carousel opts={{ align: "start" }} className="py-6">
+          <CarouselContent>
+            {loading
+              ? skeletons.map((_, i) => (
+                  <CarouselItem
+                    key={i}
+                    className="basis-full sm:basis-1/2 lg:basis-1/3"
                   >
-                    {a.coverImage && (
-                      <img
-                        src={a.coverImage}
-                        alt={a.title}
-                        className="w-full h-56 object-cover"
-                      />
-                    )}
-
-                    <div className="p-4 flex flex-col">
-                      <h3 className="text-lg font-semibold text-[#112211] truncate">
-                        {a.title}
-                      </h3>
+                    <div className="flex-shrink-0 border rounded-2xl shadow overflow-hidden bg-white flex flex-col">
+                      <Skeleton className="w-full h-56 rounded-xl" />
+                      <div className="p-4 flex flex-col gap-2">
+                        <Skeleton className="h-6 w-3/4 rounded-lg" />
+                      </div>
                     </div>
-                  </Link>
-                </CarouselItem>
-              ))}
-        </CarouselContent>
+                  </CarouselItem>
+                ))
+              : articles.map((a) => (
+                  <CarouselItem
+                    key={a.id}
+                    className="basis-full sm:basis-1/2 lg:basis-1/3"
+                  >
+                    <Link
+                      href={`/articles/${a.id}`}
+                      className="block relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl bg-white"
+                    >
+                      {a.coverImage ? (
+                        <div className="relative h-56">
+                          <img
+                            src={a.coverImage}
+                            alt={a.title}
+                            className="w-full h-full object-cover rounded-t-2xl"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                          <div className="absolute left-4 bottom-4">
+                            <h3 className="text-white font-display text-lg font-semibold drop-shadow">
+                              {a.title}
+                            </h3>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="p-4">
+                          <h3 className="text-lg font-semibold text-foreground">
+                            {a.title}
+                          </h3>
+                        </div>
+                      )}
+                    </Link>
+                  </CarouselItem>
+                ))}
+          </CarouselContent>
 
-        <CarouselPrevious className="hidden md:flex" />
-        <CarouselNext className="hidden md:flex" />
-      </Carousel>
-    </div>
+          <CarouselPrevious className="hidden md:flex" />
+          <CarouselNext className="hidden md:flex" />
+        </Carousel>
+      </div>
+    </main>
   );
 };
 
