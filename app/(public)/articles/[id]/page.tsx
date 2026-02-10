@@ -5,7 +5,6 @@ import { useParams } from "next/navigation";
 import { db } from "@/app/(public)/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { useLocale } from "next-intl";
-import { StickyHeader } from "@/components/custom/StickyHeader";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 

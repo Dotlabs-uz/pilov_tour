@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { db } from "@/app/(public)/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { StickyHeader } from "@/components/custom/StickyHeader";
 import {
   Carousel,
   CarouselContent,
