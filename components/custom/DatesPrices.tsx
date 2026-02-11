@@ -14,7 +14,6 @@ export interface TourDate {
   price: string;
 }
 
-// Helper function to convert date to Date object
 function toDate(date: Timestamp | Date | string): Date {
   if (date instanceof Date) {
     return date;
@@ -28,7 +27,6 @@ function toDate(date: Timestamp | Date | string): Date {
   return new Date();
 }
 
-// Helper function to get timestamp for sorting
 function getTimestamp(date: Timestamp | Date | string): number {
   if (date instanceof Date) {
     return date.getTime();
@@ -46,7 +44,7 @@ interface Props {
   dates: TourDate[];
   tourId?: string;
   tourName?: string;
-  userId?: string; // уже ок
+  userId?: string; 
 }
 
 export default function DatesAndPrices({

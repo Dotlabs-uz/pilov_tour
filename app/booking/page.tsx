@@ -30,7 +30,6 @@ const BookingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  // Get tour info from URL params
   const tourId = searchParams.get("tourId");
   const tourName = searchParams.get("tourName");
   const startDate = searchParams.get("startDate");
@@ -54,12 +53,10 @@ const BookingPage = () => {
     whatsappTelegram: "",
   });
 
-  // Calculate total price
   const totalPrice = price
     ? (parseInt(price) * formData.numberOfPeople).toLocaleString()
     : "0";
 
-  // If a userId is passed in search params, fetch user data to prefill form
   useEffect(() => {
     if (!userId) return;
 
@@ -127,7 +124,6 @@ Email: ${data.email || "Not provided"}
 Comment: ${data.comment || "None"}
       `.trim();
 
-      // Send to Telegram
       const botToken = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
       const chatId = process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID;
 
@@ -161,7 +157,6 @@ Comment: ${data.comment || "None"}
     setIsLoading(true);
 
     try {
-      // Add to Firestore
       const bookingsCollection = collection(db, "bookings");
       await addDoc(bookingsCollection, {
         tourId: tourId || null,
@@ -182,12 +177,10 @@ Comment: ${data.comment || "None"}
         status: "pending",
       });
 
-      // Send notification to manager
       await sendTelegramNotification(formData);
 
       setIsSubmitted(true);
 
-      // Reset form
       setFormData({
         name: "",
         phone: "",
@@ -203,7 +196,6 @@ Comment: ${data.comment || "None"}
         description: "Your booking request has been submitted!",
       });
 
-      // Reset modal after 3 seconds
       setTimeout(() => {
         setIsSubmitted(false);
       }, 3000);
@@ -236,7 +228,6 @@ Comment: ${data.comment || "None"}
           </p>
         </motion.div>
 
-        {/* Tour Info Card */}
         {tourName && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -388,7 +379,6 @@ Comment: ${data.comment || "None"}
           transition={{ delay: 0.1 }}
           className="bg-white rounded-3xl p-8 md:p-12 shadow-lg space-y-6"
         >
-          {/* Name Field */}
           <div>
             <label className="block font-display text-sm font-semibold text-foreground mb-3">
               Full Name <span className="text-coral">*</span>
@@ -409,7 +399,6 @@ Comment: ${data.comment || "None"}
             )}
           </div>
 
-          {/* Phone Field */}
           <div>
             <label className="block font-display text-sm font-semibold text-foreground mb-3">
               Phone Number <span className="text-coral">*</span>
@@ -430,7 +419,6 @@ Comment: ${data.comment || "None"}
             )}
           </div>
 
-          {/* Contact Method Selection */}
           <div>
             <label className="block font-display text-sm font-semibold text-foreground mb-3">
               Preferred Contact Method <span className="text-coral">*</span>
@@ -485,7 +473,6 @@ Comment: ${data.comment || "None"}
             )}
           </div>
 
-          {/* Number of People Field */}
           <div>
             <label className="block font-display text-sm font-semibold text-foreground mb-3">
               Number of Travelers <span className="text-coral">*</span>
@@ -538,7 +525,6 @@ Comment: ${data.comment || "None"}
             </div>
           </div>
 
-          {/* Email Field */}
           <div>
             <label className="block font-display text-sm font-semibold text-foreground mb-3">
               Email <span className="text-gray-400 text-xs">(Optional)</span>
@@ -554,7 +540,6 @@ Comment: ${data.comment || "None"}
             />
           </div>
 
-          {/* Comment Field */}
           <div>
             <label className="block font-display text-sm font-semibold text-foreground mb-3">
               Special Requests{" "}
@@ -570,7 +555,6 @@ Comment: ${data.comment || "None"}
             />
           </div>
 
-          {/* Submit Button */}
           <Button
             type="submit"
             variant="gradient"

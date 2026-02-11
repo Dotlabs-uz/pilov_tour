@@ -78,7 +78,6 @@ function t(value: LocalizedValue, locale: Lang): string {
   );
 }
 
-
 interface Tour {
   id: string;
   images: string[];
@@ -215,7 +214,6 @@ export default function TourPage() {
     fetchTour();
   }, [tourId, locale]);
 
-  // Check if tour is in compare list
   useEffect(() => {
     if (!tourId) return;
 
@@ -228,7 +226,6 @@ export default function TourPage() {
 
     checkCompareStatus();
 
-    // Listen for changes to compare list
     window.addEventListener("compareToursUpdated", checkCompareStatus);
 
     return () => {
@@ -243,12 +240,10 @@ export default function TourPage() {
     }
   }, [tour]);
 
-  // Check user authentication state and like status
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser && tourId) {
-        // Check like status from Firestore
         try {
           const userRef = doc(db, "users", firebaseUser.uid);
           const userSnap = await getDoc(userRef);
@@ -284,25 +279,21 @@ export default function TourPage() {
 
   const groupSize = t(tour.groupSize, locale);
 
-  // For mobile: show 2 lines with line-clamp, for desktop: show full or truncated at 200 chars
   const truncatedDescription =
     description.length > 200
       ? description.substring(0, 200) + "..."
       : description;
   const shouldShowReadMore = description.length > 100; // Show read more if description is long enough
 
-  // Unified like function
   const handleLike = async () => {
     if (!user || !tourId) {
       router.push("/login");
       return;
     }
 
-    // Optimistic update - show state immediately
     const newLikedState = !isLiked;
     setIsLiked(newLikedState);
 
-    // Show toast immediately
     toast({
       title: newLikedState ? "Added to favorites" : "Removed from favorites",
       description: newLikedState
@@ -313,23 +304,18 @@ export default function TourPage() {
     try {
       const userRef = doc(db, "users", user.uid);
 
-      // Check if user document exists
       const userSnap = await getDoc(userRef);
 
       if (!userSnap.exists()) {
-        // Create user document with likedTours array
         await setDoc(userRef, {
           likedTours: newLikedState ? [tourId] : [],
         });
       } else {
-        // Update existing user document
         if (newLikedState) {
-          // Add tour to likedTours array
           await updateDoc(userRef, {
             likedTours: arrayUnion(tourId),
           });
         } else {
-          // Remove tour from likedTours array
           await updateDoc(userRef, {
             likedTours: arrayRemove(tourId),
           });
@@ -337,7 +323,6 @@ export default function TourPage() {
       }
     } catch (err) {
       console.error("Error updating like status:", err);
-      // Revert state on error
       setIsLiked(!newLikedState);
       toast({
         title: "Failed to update favorites",
@@ -347,7 +332,6 @@ export default function TourPage() {
     }
   };
 
-  // Unified share function
   const handleShare = async () => {
     try {
       const url = window.location.href;
@@ -367,7 +351,6 @@ export default function TourPage() {
 
   return (
     <main className="min-h-screen bg-cream">
-      {/* Hero */}
       <section className="pt-20 md:pt-24 lg:px-8 pb-4 md:pb-6 lg:pb-8">
         <div className="container mx-auto md:w-full">
           <motion.div
@@ -383,7 +366,6 @@ export default function TourPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 order-1 lg:order-1">
-              {/* Mobile carousel for images */}
               <div className="md:hidden mb-4">
                 <Carousel
                   opts={{
@@ -412,7 +394,6 @@ export default function TourPage() {
                 </Carousel>
               </div>
 
-              {/* Desktop main image */}
               <div className="hidden md:block relative h-[300px] md:h-[50vh] md:min-h-[400px] rounded-2xl overflow-hidden">
                 <motion.img
                   key={currentImageIndex}
@@ -496,7 +477,6 @@ export default function TourPage() {
             </div>
 
             <aside className="lg:col-span-1 order-2 lg:order-2">
-              {/* Description on mobile - shown after image */}
               <div className="lg:hidden bg-white rounded-3xl p-6 shadow-card mb-7">
                 <h2 className="font-display text-xl font-bold text-foreground mb-4">
                   {title}
@@ -520,7 +500,6 @@ export default function TourPage() {
                   </Button>
                 )}
 
-                {/* Like and Share buttons */}
                 <div className="flex gap-3 mt-6">
                   <Button
                     variant={isLiked ? "default" : "outline"}
@@ -550,7 +529,6 @@ export default function TourPage() {
                 transition={{ delay: 0.4 }}
                 className="sticky top-[80px] bg-white rounded-3xl p-6 shadow-card mt-0"
               >
-                {/* Rating and Trip Code */}
                 <div className="flex items-center justify-between mb-4 pb-4 border-b border-border">
                   <div className="flex items-center gap-2">
                     <Star
@@ -563,7 +541,6 @@ export default function TourPage() {
                   </div>
                 </div>
 
-                {/* Start and End Locations */}
                 <div className="space-y-2 mb-4 pb-4 border-b border-border">
                   <div className="flex items-center gap-2 text-muted-foreground font-body text-sm">
                     <MapPin size={14} />
@@ -579,9 +556,7 @@ export default function TourPage() {
                   </div>
                 </div>
 
-                {/* Details Grid - Two Columns */}
                 <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-6">
-                  {/* Left Column */}
                   <div className="space-y-3">
                     <div className="py-3 border-b border-border">
                       <div className="flex items-center gap-2 text-muted-foreground font-body text-sm mb-1">
@@ -611,7 +586,6 @@ export default function TourPage() {
                     </div>
                   </div>
 
-                  {/* Right Column */}
                   <div className="space-y-3">
                     <div className="py-3 border-b border-border">
                       <div className="flex items-center gap-2 text-muted-foreground font-body text-sm mb-1">
@@ -652,7 +626,6 @@ export default function TourPage() {
                   </div>
                 </div>
 
-                {/* Price */}
                 <div className="mb-6">
                   <div className="flex items-baseline gap-2">
                     <span className="text-muted-foreground font-body text-sm">
@@ -687,12 +660,10 @@ export default function TourPage() {
                   onClick={() => {
                     if (!tourId) return;
 
-                    // Get existing compare list from localStorage
                     const existingCompare = JSON.parse(
                       localStorage.getItem("compareTours") || "[]",
                     ) as string[];
 
-                    // Check if tour is already in compare list - remove it
                     if (existingCompare.includes(tourId)) {
                       const updatedCompare = existingCompare.filter(
                         (id) => id !== tourId,
@@ -702,7 +673,6 @@ export default function TourPage() {
                         JSON.stringify(updatedCompare),
                       );
 
-                      // Dispatch custom event to update CompareButton
                       window.dispatchEvent(new Event("compareToursUpdated"));
 
                       setIsInCompare(false);
@@ -714,7 +684,6 @@ export default function TourPage() {
                       return;
                     }
 
-                    // Check if max 4 tours
                     if (existingCompare.length >= 4) {
                       toast({
                         title: "Maximum reached",
@@ -724,14 +693,12 @@ export default function TourPage() {
                       return;
                     }
 
-                    // Add tour id to compare list
                     existingCompare.push(tourId);
                     localStorage.setItem(
                       "compareTours",
                       JSON.stringify(existingCompare),
                     );
 
-                    // Dispatch custom event to update CompareButton
                     window.dispatchEvent(new Event("compareToursUpdated"));
 
                     setIsInCompare(true);
@@ -793,7 +760,6 @@ export default function TourPage() {
                 Itinerary
               </h2>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Image on the left (desktop) / top (mobile) */}
                 {tour.itineraryImage && (
                   <div className="lg:col-span-1 order-1 lg:order-1">
                     <div className="lg:sticky lg:top-[80px]">
@@ -831,14 +797,12 @@ export default function TourPage() {
                   </div>
                 )}
 
-                {/* Accordion on the right (desktop) / bottom (mobile) */}
                 <div
                   className={`${
                     tour.itineraryImage ? "lg:col-span-2" : "lg:col-span-3"
                   } order-2 lg:order-2`}
                 >
                   <div className="space-y-0 border border-border rounded-2xl overflow-hidden bg-white">
-                    {/* Header with Show all/Hide all button */}
                     <div className="flex items-center justify-between p-4 border-b border-border bg-muted/20">
                       <h3 className="font-display text-lg font-semibold text-foreground"></h3>
                       <Button
@@ -846,10 +810,8 @@ export default function TourPage() {
                         size="sm"
                         onClick={() => {
                           if (expandedDays.size === tour.itinerary.length) {
-                            // All expanded, hide all
                             setExpandedDays(new Set());
                           } else {
-                            // Not all expanded, show all
                             setExpandedDays(
                               new Set(tour.itinerary.map((_, idx) => idx)),
                             );
@@ -876,7 +838,6 @@ export default function TourPage() {
                           transition={{ delay: index * 0.05 }}
                           className="border-b border-border last:border-b-0"
                         >
-                          {/* Accordion Header */}
                           <button
                             onClick={() => {
                               const newSet = new Set(expandedDays);
@@ -906,7 +867,6 @@ export default function TourPage() {
                             />
                           </button>
 
-                          {/* Accordion Content */}
                           <AnimatePresence>
                             {isExpanded && (
                               <motion.div
@@ -917,16 +877,13 @@ export default function TourPage() {
                                 className="overflow-hidden"
                               >
                                 <div className="px-4 pb-6 pt-2 space-y-6">
-                                  {/* Main Description */}
                                   {dayDescription && (
                                     <p className="font-body text-muted-foreground text-sm leading-relaxed">
                                       {dayDescription}
                                     </p>
                                   )}
 
-                                  {/* Two Column Grid for Sections */}
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {/* Accommodation */}
                                     {day.accommodation &&
                                       day.accommodation.length > 0 && (
                                         <div className="space-y-2">
@@ -960,7 +917,6 @@ export default function TourPage() {
                                         </div>
                                       )}
 
-                                    {/* Meals */}
                                     {day.meals && day.meals.length > 0 && (
                                       <div className="space-y-2">
                                         <div className="flex items-center gap-2">
@@ -988,7 +944,6 @@ export default function TourPage() {
                                       </div>
                                     )}
 
-                                    {/* Included Activities */}
                                     {day.includedActivities &&
                                       day.includedActivities.length > 0 && (
                                         <div className="space-y-2">
@@ -1022,7 +977,6 @@ export default function TourPage() {
                                         </div>
                                       )}
 
-                                    {/* Optional Activities */}
                                     {day.optionalActivities &&
                                       day.optionalActivities.length > 0 && (
                                         <div className="space-y-2">
@@ -1057,7 +1011,6 @@ export default function TourPage() {
                                       )}
                                   </div>
 
-                                  {/* Special Information */}
                                   {day.specialInformation && (
                                     <div className="space-y-2 pt-2 border-t border-border">
                                       <h4 className="font-display text-sm font-semibold text-foreground">
@@ -1080,7 +1033,6 @@ export default function TourPage() {
               </div>
             </motion.div>
 
-            {/* Inclusions and Activities Section */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1092,9 +1044,7 @@ export default function TourPage() {
                   Inclusions and activities
                 </h2>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Left Column */}
                   <div className="space-y-6">
-                    {/* Destinations */}
                     {tour.destinations &&
                       Array.isArray(tour.destinations) &&
                       tour.destinations.length > 0 && (
@@ -1123,7 +1073,6 @@ export default function TourPage() {
                           </div>
                         </div>
                       )}
-                    {/* Handle case where destinations is a single LocalizedString object */}
                     {tour.destinations && !Array.isArray(tour.destinations) && (
                       <div>
                         <div className="flex items-center gap-3 mb-3">
@@ -1138,7 +1087,6 @@ export default function TourPage() {
                       </div>
                     )}
 
-                    {/* Meals */}
                     {tour.meals && (
                       <div>
                         <div className="flex items-center gap-3 mb-3">
@@ -1156,7 +1104,6 @@ export default function TourPage() {
                       </div>
                     )}
 
-                    {/* Transport */}
                     {tour.transport && (
                       <div>
                         <div className="flex items-center gap-3 mb-3">
@@ -1171,7 +1118,6 @@ export default function TourPage() {
                       </div>
                     )}
 
-                    {/* Accommodation */}
                     {tour.accommodation && (
                       <div>
                         <div className="flex items-center gap-3 mb-3">
@@ -1186,7 +1132,6 @@ export default function TourPage() {
                       </div>
                     )}
 
-                    {/* Premium Inclusions */}
                     {tour.premiumInclusions &&
                       tour.premiumInclusions.length > 0 && (
                         <div>
@@ -1216,9 +1161,7 @@ export default function TourPage() {
                       )}
                   </div>
 
-                  {/* Right Column */}
                   <div className="space-y-6">
-                    {/* Included Activities */}
                     {tour.includedActivities &&
                       tour.includedActivities.length > 0 && (
                         <div>
@@ -1269,7 +1212,6 @@ export default function TourPage() {
                         </div>
                       )}
 
-                    {/* Divider between Included and Optional Activities */}
                     {tour.includedActivities &&
                       tour.includedActivities.length > 0 &&
                       tour.optionalActivities &&
@@ -1277,7 +1219,6 @@ export default function TourPage() {
                         <div className="border-t border-border"></div>
                       )}
 
-                    {/* Optional Activities */}
                     {tour.optionalActivities &&
                       tour.optionalActivities.length > 0 && (
                         <div>
@@ -1341,7 +1282,6 @@ export default function TourPage() {
               viewport={{ once: true }}
             >
               <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-                {/* Tab Navigation */}
                 <div className="flex border-b border-border overflow-x-auto">
                   <button
                     onClick={() => setActiveTab("trip")}
@@ -1389,7 +1329,6 @@ export default function TourPage() {
                   </button>
                 </div>
 
-                {/* Tab Content */}
                 <div className="p-6 max-h-[600px] overflow-y-auto">
                   {activeTab === "trip" && tour.isThisTripRightForYou && (
                     <div
@@ -1401,7 +1340,6 @@ export default function TourPage() {
                   )}
                   {activeTab === "visas" && (
                     <div className="w-full">
-                      {/* Sherpa Visa Widget */}
                       <div className="w-full min-h-[600px]">
                         <iframe
                           src={`https://apply.joinsherpa.com/travel-restrictions?destination=${encodeURIComponent(
@@ -1415,7 +1353,6 @@ export default function TourPage() {
                           allow="clipboard-read; clipboard-write"
                         />
                       </div>
-                      {/* Fallback HTML content if visas field exists */}
                       {tour.visas && (
                         <div className="mt-6 pt-6 border-t border-border">
                           <div
