@@ -5,7 +5,14 @@ import { useParams, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
 
 import { db, auth } from "@/app/(public)/firebase";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
@@ -70,6 +77,7 @@ function t(value: LocalizedValue, locale: Lang): string {
     ""
   );
 }
+
 
 interface Tour {
   id: string;
@@ -213,7 +221,7 @@ export default function TourPage() {
 
     const checkCompareStatus = () => {
       const compareTours = JSON.parse(
-        localStorage.getItem("compareTours") || "[]"
+        localStorage.getItem("compareTours") || "[]",
       ) as string[];
       setIsInCompare(compareTours.includes(tourId));
     };
@@ -244,7 +252,7 @@ export default function TourPage() {
         try {
           const userRef = doc(db, "users", firebaseUser.uid);
           const userSnap = await getDoc(userRef);
-          
+
           if (userSnap.exists()) {
             const userData = userSnap.data();
             const likedTours = userData.likedTours || [];
@@ -293,12 +301,10 @@ export default function TourPage() {
     // Optimistic update - show state immediately
     const newLikedState = !isLiked;
     setIsLiked(newLikedState);
-    
+
     // Show toast immediately
     toast({
-      title: newLikedState
-        ? "Added to favorites"
-        : "Removed from favorites",
+      title: newLikedState ? "Added to favorites" : "Removed from favorites",
       description: newLikedState
         ? "This tour has been added to your favorites"
         : "This tour has been removed from your favorites",
@@ -306,10 +312,10 @@ export default function TourPage() {
 
     try {
       const userRef = doc(db, "users", user.uid);
-      
+
       // Check if user document exists
       const userSnap = await getDoc(userRef);
-      
+
       if (!userSnap.exists()) {
         // Create user document with likedTours array
         await setDoc(userRef, {
@@ -430,7 +436,10 @@ export default function TourPage() {
                         : "text-white hover:bg-white hover:text-coral"
                     }`}
                   >
-                    <Heart size={20} className={isLiked ? "fill-current" : ""} />
+                    <Heart
+                      size={20}
+                      className={isLiked ? "fill-current" : ""}
+                    />
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.1 }}
@@ -661,7 +670,7 @@ export default function TourPage() {
                   className="w-full mb-3"
                   onClick={() => {
                     const datesSection = document.getElementById(
-                      "dates-prices-section"
+                      "dates-prices-section",
                     );
                     if (datesSection) {
                       datesSection.scrollIntoView({
@@ -680,17 +689,17 @@ export default function TourPage() {
 
                     // Get existing compare list from localStorage
                     const existingCompare = JSON.parse(
-                      localStorage.getItem("compareTours") || "[]"
+                      localStorage.getItem("compareTours") || "[]",
                     ) as string[];
 
                     // Check if tour is already in compare list - remove it
                     if (existingCompare.includes(tourId)) {
                       const updatedCompare = existingCompare.filter(
-                        (id) => id !== tourId
+                        (id) => id !== tourId,
                       );
                       localStorage.setItem(
                         "compareTours",
-                        JSON.stringify(updatedCompare)
+                        JSON.stringify(updatedCompare),
                       );
 
                       // Dispatch custom event to update CompareButton
@@ -719,7 +728,7 @@ export default function TourPage() {
                     existingCompare.push(tourId);
                     localStorage.setItem(
                       "compareTours",
-                      JSON.stringify(existingCompare)
+                      JSON.stringify(existingCompare),
                     );
 
                     // Dispatch custom event to update CompareButton
@@ -842,7 +851,7 @@ export default function TourPage() {
                           } else {
                             // Not all expanded, show all
                             setExpandedDays(
-                              new Set(tour.itinerary.map((_, idx) => idx))
+                              new Set(tour.itinerary.map((_, idx) => idx)),
                             );
                           }
                         }}
@@ -935,7 +944,7 @@ export default function TourPage() {
                                               (item, idx) => {
                                                 const itemText = t(
                                                   item,
-                                                  locale
+                                                  locale,
                                                 );
                                                 return itemText ? (
                                                   <li
@@ -945,7 +954,7 @@ export default function TourPage() {
                                                     {itemText}
                                                   </li>
                                                 ) : null;
-                                              }
+                                              },
                                             )}
                                           </ul>
                                         </div>
@@ -997,7 +1006,7 @@ export default function TourPage() {
                                               (item, idx) => {
                                                 const itemText = t(
                                                   item,
-                                                  locale
+                                                  locale,
                                                 );
                                                 return itemText ? (
                                                   <li
@@ -1007,7 +1016,7 @@ export default function TourPage() {
                                                     {itemText}
                                                   </li>
                                                 ) : null;
-                                              }
+                                              },
                                             )}
                                           </ul>
                                         </div>
@@ -1031,7 +1040,7 @@ export default function TourPage() {
                                               (item, idx) => {
                                                 const itemText = t(
                                                   item,
-                                                  locale
+                                                  locale,
                                                 );
                                                 return itemText ? (
                                                   <li
@@ -1041,7 +1050,7 @@ export default function TourPage() {
                                                     {itemText}
                                                   </li>
                                                 ) : null;
-                                              }
+                                              },
                                             )}
                                           </ul>
                                         </div>
@@ -1086,29 +1095,34 @@ export default function TourPage() {
                   {/* Left Column */}
                   <div className="space-y-6">
                     {/* Destinations */}
-                    {tour.destinations && Array.isArray(tour.destinations) && tour.destinations.length > 0 && (
-                      <div>
-                        <div className="flex items-center gap-3 mb-3">
-                          <MapPin size={18} className="text-muted-foreground" />
-                          <h3 className="font-display text-base font-semibold text-foreground">
-                            Destinations
-                          </h3>
+                    {tour.destinations &&
+                      Array.isArray(tour.destinations) &&
+                      tour.destinations.length > 0 && (
+                        <div>
+                          <div className="flex items-center gap-3 mb-3">
+                            <MapPin
+                              size={18}
+                              className="text-muted-foreground"
+                            />
+                            <h3 className="font-display text-base font-semibold text-foreground">
+                              Destinations
+                            </h3>
+                          </div>
+                          <div className="space-y-1">
+                            {tour.destinations.map((destination, index) => {
+                              const destText = t(destination, locale);
+                              return destText ? (
+                                <p
+                                  key={index}
+                                  className="text-sm text-muted-foreground font-body"
+                                >
+                                  {destText}
+                                </p>
+                              ) : null;
+                            })}
+                          </div>
                         </div>
-                        <div className="space-y-1">
-                          {tour.destinations.map((destination, index) => {
-                            const destText = t(destination, locale);
-                            return destText ? (
-                              <p
-                                key={index}
-                                className="text-sm text-muted-foreground font-body"
-                              >
-                                {destText}
-                              </p>
-                            ) : null;
-                          })}
-                        </div>
-                      </div>
-                    )}
+                      )}
                     {/* Handle case where destinations is a single LocalizedString object */}
                     {tour.destinations && !Array.isArray(tour.destinations) && (
                       <div>
@@ -1236,7 +1250,7 @@ export default function TourPage() {
                             <button
                               onClick={() =>
                                 setShowAllIncludedActivities(
-                                  !showAllIncludedActivities
+                                  !showAllIncludedActivities,
                                 )
                               }
                               className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 underline font-body"
@@ -1298,7 +1312,7 @@ export default function TourPage() {
                             <button
                               onClick={() =>
                                 setShowAllOptionalActivities(
-                                  !showAllOptionalActivities
+                                  !showAllOptionalActivities,
                                 )
                               }
                               className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800 underline font-body"
@@ -1392,9 +1406,9 @@ export default function TourPage() {
                         <iframe
                           src={`https://apply.joinsherpa.com/travel-restrictions?destination=${encodeURIComponent(
                             t(tour.location || tour.end || "", locale) ||
-                              "Uzbekistan"
+                              "Uzbekistan",
                           )}&origin=${encodeURIComponent(
-                            t(tour.start || "", locale) || "USA"
+                            t(tour.start || "", locale) || "USA",
                           )}`}
                           className="w-full h-[600px] border-0 rounded-lg"
                           title="Visa Requirements"
@@ -1504,7 +1518,12 @@ export default function TourPage() {
               </div>
             </motion.div>
 
-            <DatesAndPrices dates={tour.dates} />
+            <DatesAndPrices
+              dates={tour.dates}
+              tourId={tour.id}
+              tourName={name}
+              userId={user?.uid}
+            />
           </div>
         </div>
       </section>

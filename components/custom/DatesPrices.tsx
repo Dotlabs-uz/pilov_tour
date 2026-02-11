@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ChevronDown } from "lucide-react";
@@ -43,9 +44,18 @@ function getTimestamp(date: Timestamp | Date | string): number {
 
 interface Props {
   dates: TourDate[];
+  tourId?: string;
+  tourName?: string;
+  userId?: string; // уже ок
 }
 
-export default function DatesAndPrices({ dates }: Props) {
+export default function DatesAndPrices({
+  dates,
+  tourId,
+  tourName,
+  userId,
+}: Props) {
+  const router = useRouter();
   const [expanded, setExpanded] = useState<number | null>(null);
   const [sort, setSort] = useState<"asc" | "desc">("asc");
   const [showAll, setShowAll] = useState(false);
@@ -59,7 +69,10 @@ export default function DatesAndPrices({ dates }: Props) {
   const visibleDates = showAll ? sortedDates : sortedDates.slice(0, 3);
 
   return (
-    <section id="dates-prices-section" className="bg-white rounded-2xl shadow-sm overflow-hidden">
+    <section
+      id="dates-prices-section"
+      className="bg-white rounded-2xl shadow-sm overflow-hidden"
+    >
       <div className="flex items-center justify-between p-4 border-b">
         <h3 className="text-xl font-semibold">Travel dates</h3>
         <Button
@@ -142,7 +155,26 @@ export default function DatesAndPrices({ dates }: Props) {
                     <p>• Price per person</p>
                     <p>• Limited availability</p>
 
-                    <Button size="sm" className="mt-3">
+                    <Button
+                      size="sm"
+                      className="mt-3"
+                      onClick={() => {
+                        const params = new URLSearchParams();
+                        if (tourId) params.append("tourId", tourId);
+                        if (tourName) params.append("tourName", tourName);
+                        if (userId) params.append("userId", userId);
+                        params.append(
+                          "startDate",
+                          toDate(date.startDate).toISOString(),
+                        );
+                        params.append(
+                          "endDate",
+                          toDate(date.endDate).toISOString(),
+                        );
+                        params.append("price", date.price);
+                        router.push(`/booking?${params.toString()}`);
+                      }}
+                    >
                       Book this date
                     </Button>
                   </motion.div>
@@ -163,7 +195,6 @@ export default function DatesAndPrices({ dates }: Props) {
     </section>
   );
 }
-
 
 function Status({ status }: { status: TourDate["status"] }) {
   const styles = {
