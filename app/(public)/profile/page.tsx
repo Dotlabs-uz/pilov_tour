@@ -1,6 +1,5 @@
 "use client";
 
-import HeaderforOther from "@/components/custom/Header-otherPages";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -30,10 +29,6 @@ import {
   onAuthStateChanged,
   signOut,
   sendPasswordResetEmail,
-  sendEmailVerification,
-  updateEmail,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
   User as FirebaseUser,
 } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp, collection, query, where, getDocs } from "firebase/firestore";
@@ -83,7 +78,6 @@ function getLocalizedString(value: string | LocalizedString | null | undefined, 
   );
 }
 
-// Country data with phone masks - Comprehensive list
 const countries = [
   { code: "UZ", name: "Uzbekistan", dialCode: "+998", mask: "+998 (##) ###-##-##" },
   { code: "US", name: "United States", dialCode: "+1", mask: "+1 (###) ###-####" },
@@ -166,22 +160,16 @@ const countries = [
   { code: "CY", name: "Cyprus", dialCode: "+357", mask: "+357 (##) ###-###" },
 ].sort((a, b) => a.name.localeCompare(b.name));
 
-// Phone mask function
 function formatPhoneNumber(value: string, mask: string): string {
-  // Remove all non-digits except the dial code part
   const numbers = value.replace(/\D/g, "");
-  
-  // Extract dial code from mask (e.g., "+998" from "+998 (##) ###-##-##")
   const dialCodeMatch = mask.match(/^\+?\d+/);
   const dialCode = dialCodeMatch ? dialCodeMatch[0] : "";
   
-  // Remove dial code digits from numbers if they match
   let phoneDigits = numbers;
   if (dialCode && numbers.startsWith(dialCode.replace(/\D/g, ""))) {
     phoneDigits = numbers.substring(dialCode.replace(/\D/g, "").length);
   }
   
-  // Build formatted string
   let formatted = mask;
   let digitIndex = 0;
   
@@ -192,10 +180,8 @@ function formatPhoneNumber(value: string, mask: string): string {
     }
   }
   
-  // Remove remaining # symbols
   formatted = formatted.replace(/#/g, "");
   
-  // Clean up trailing separators
   formatted = formatted.replace(/[()\s-]+$/, "");
   
   return formatted;
@@ -550,7 +536,6 @@ const Profile = () => {
   if (loading) {
     return (
       <div className="flex flex-col gap-10">
-        <HeaderforOther />
         <div className="max-w-[1400px] mx-auto px-6 pt-20">
           <Skeleton className="w-full h-[200px] rounded-3xl mb-8" />
           
@@ -594,8 +579,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="flex flex-col gap-10 min-h-screen">
-      <HeaderforOther />
+    <div className="flex mt-20 flex-col gap-10 min-h-screen">
       <div className="w-full max-w-[1400px] mx-auto px-6 pt-5 pb-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -632,7 +616,6 @@ const Profile = () => {
         <div className="mt-8 w-full">
           <Tabs defaultValue="settings" className="w-full">
             <div className="flex flex-col lg:flex-row gap-6">
-              {/* Sidebar */}
               <div className="w-full lg:w-64 flex-shrink-0">
                 <div className="bg-white border border-border rounded-2xl p-2 shadow-sm sticky top-24 flex flex-col">
                   <TabsList className="flex flex-col w-full h-auto bg-transparent p-0 gap-1 flex-1">
@@ -659,7 +642,6 @@ const Profile = () => {
                     </TabsTrigger>
                   </TabsList>
                   
-                  {/* Logout Button at Bottom */}
                   <div className="mt-auto pt-4 border-t border-border">
                     <Button
                       onClick={logout}
@@ -673,7 +655,6 @@ const Profile = () => {
                 </div>
               </div>
               
-              {/* Content Area */}
               <div className="flex-1 min-w-0">
 
             <TabsContent value="settings">
@@ -684,7 +665,6 @@ const Profile = () => {
               >
                 <Card className="p-6 rounded-2xl shadow-md bg-white">
                   <CardContent className="flex flex-col gap-6">
-                    {/* Header with Title and Change Button */}
                     <div className="flex items-center justify-between mb-2">
                       <h3 className="font-display text-2xl font-bold text-foreground">
                         Account Settings
@@ -960,7 +940,6 @@ const Profile = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Settings Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
@@ -998,7 +977,6 @@ const Profile = () => {
                 value={editForm.country}
                 onValueChange={(value) => {
                   const selectedCountry = countries.find(c => c.code === value);
-                  // Reset phone number when country changes
                   setEditForm({ ...editForm, country: value, phone: "" });
                 }}
               >
