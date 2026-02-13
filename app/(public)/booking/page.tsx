@@ -35,6 +35,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type Lang = keyof LocalizedString;
 
@@ -319,6 +320,64 @@ Comment: ${data.comment || "None"}
                       >
                         +
                       </button>
+
+                      <div className="mt-6 p-5 bg-gray-50 rounded-xl">
+                        <h3 className="font-display text-lg font-bold text-foreground mb-1">
+                          {t("room_options")}
+                        </h3>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {t("room_options_subtitle")}
+                        </p>
+                        <p className="text-xs text-gray-600 mb-4 leading-relaxed">
+                          {t("room_options_note")}
+                        </p>
+                        <p className="text-sm font-semibold text-foreground mb-3">
+                          {t("room_options_select")}
+                        </p>
+                        <div className="space-y-3 mb-4">
+                          <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-border hover:border-coral/30 transition-colors cursor-pointer">
+                            <Checkbox id="room-individual" />
+                            <label
+                              htmlFor="room-individual"
+                              className="flex-1 cursor-pointer"
+                            >
+                              <p className="font-medium text-foreground">
+                                {t("room_option_individual")}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {t("room_option_individual_price")}
+                              </p>
+                            </label>
+                          </div>
+                          <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-border hover:border-coral/30 transition-colors cursor-pointer">
+                            <Checkbox id="room-shared" />
+                            <label
+                              htmlFor="room-shared"
+                              className="flex-1 cursor-pointer"
+                            >
+                              <p className="font-medium text-foreground">
+                                {t("room_option_shared")}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {t("room_option_shared_cost")}
+                              </p>
+                            </label>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-600 mb-3">
+                          {t("room_sharing_info")}
+                        </p>
+                        <div>
+                          <label className="block text-xs font-semibold text-foreground mb-2">
+                            {t("friend_full_name")}
+                          </label>
+                          <Input
+                            type="text"
+                            placeholder="John Doe"
+                            className="h-10 rounded-lg text-sm"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                   {price && (
@@ -741,14 +800,16 @@ Comment: ${data.comment || "None"}
 
                     <div className="flex items-center justify-between mt-3">
                       <div>
-                        <p className="text-xs text-muted-foreground">Price</p>
+                        <p className="text-xs text-muted-foreground">
+                          {t("tour_card_price")}
+                        </p>
                         <p className="font-bold text-coral">
                           ${price || tourData.price || "—"}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="text-xs text-muted-foreground">
-                          Duration
+                          {t("tour_card_duration")}
                         </p>
                         <p className="font-medium">
                           {(tourData.duration &&

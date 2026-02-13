@@ -318,7 +318,7 @@ const AboutPage = () => {
               {t("plan_your_adventure")}
             </p>
             <Button variant="gradient" size="xl" asChild>
-              <Link href="/tours">
+              <Link href="/trips">
                 {t("see_all_trips")}
                 <ArrowRight size={20} />
               </Link>
