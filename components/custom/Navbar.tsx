@@ -51,6 +51,7 @@ export function Navbar() {
   const isHomePage = pathname === "/";
   const t = useTranslations("Navbar");
   const router = useRouter();
+  const tAuth = useTranslations("auth");
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
@@ -140,7 +141,7 @@ export function Navbar() {
         transition={{ duration: 0.6, ease: "easeOut" }}
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
-          navBackground
+          navBackground,
         )}
       >
         <nav className="container mx-auto px-6 py-4">
@@ -152,7 +153,7 @@ export function Navbar() {
                 whileTap={{ scale: 0.95 }}
                 className={cn(
                   "font-display text-2xl md:text-3xl font-bold tracking-tight transition-colors duration-300",
-                  logoColor
+                  logoColor,
                 )}
               >
                 pilavtour
@@ -168,7 +169,7 @@ export function Navbar() {
                   className={cn(
                     "relative px-5 py-2 font-body text-sm font-medium rounded-full transition-all duration-300",
                     textColor,
-                      pathname === link.href ? "bg-gray-100" : "hover:bg-gray-50"
+                    pathname === link.href ? "bg-gray-100" : "hover:bg-gray-50",
                   )}
                 >
                   {link.name}
@@ -184,32 +185,32 @@ export function Navbar() {
             <div className="flex items-center gap-4">
               {/* Desktop only: User/login */}
               <div className="hidden lg:flex items-center gap-4">
-              {user ? (
-                <div
-                  onClick={() => router.push("/profile")}
-                  className="cursor-pointer flex items-center gap-2"
-                >
-                  <Avatar className="rounded-xl">
-                    <AvatarImage
-                      src={
-                        dbUser?.avatar ||
-                        user?.photoURL ||
-                        "/avatar-default.svg"
-                      }
-                    />
-                    <AvatarFallback>
-                      {user?.displayName || dbUser?.name}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-              ) : (
-                <Button
-                  onClick={() => router.push("/login")}
+                {user ? (
+                  <div
+                    onClick={() => router.push("/profile")}
+                    className="cursor-pointer flex items-center gap-2"
+                  >
+                    <Avatar className="rounded-xl">
+                      <AvatarImage
+                        src={
+                          dbUser?.avatar ||
+                          user?.photoURL ||
+                          "/avatar-default.svg"
+                        }
+                      />
+                      <AvatarFallback>
+                        {user?.displayName || dbUser?.name}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                ) : (
+                  <Button
+                    onClick={() => router.push("/login")}
                     className="w-[90px] h-[40px] hover:bg-gray-200 bg-gray-100 text-black rounded-lg cursor-pointer"
-                >
-                  login
-                </Button>
-              )}
+                  >
+                    {tAuth("login_button")}
+                  </Button>
+                )}
               </div>
 
               {/* Language selector - visible on all screens */}
@@ -238,7 +239,7 @@ export function Navbar() {
                 className={cn(
                   "lg:hidden p-2 rounded-full transition-colors",
                   textColor,
-                  "hover:bg-gray-100"
+                  "hover:bg-gray-100",
                 )}
                 aria-label={t("toggle_menu")}
               >
@@ -291,7 +292,7 @@ export function Navbar() {
                           "block py-4 px-4 font-display text-2xl font-bold rounded-2xl transition-all",
                           pathname === link.href
                             ? "bg-primary/10 text-primary"
-                            : "text-foreground hover:bg-secondary"
+                            : "text-foreground hover:bg-secondary",
                         )}
                       >
                         {link.name}
@@ -311,7 +312,7 @@ export function Navbar() {
                     <AiOutlineGlobal size={20} className="text-foreground" />
                     <DropdownMenu>
                       <DropdownMenuTrigger className="cursor-pointer text-foreground font-body text-sm">
-                        Language
+                        {t("toggle_menu")}
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="bg-white text-black shadow-lg rounded-md px-2 py-2">
                         {langs.map(({ lang }, i) => (
@@ -350,7 +351,7 @@ export function Navbar() {
                       onClick={() => router.push("/login")}
                       className="w-[90px] h-[40px] hover:bg-gray-200 bg-gray-100 text-black rounded-lg cursor-pointer"
                     >
-                      login
+                      {tAuth("login_button")}
                     </Button>
                   )}
                 </motion.div>

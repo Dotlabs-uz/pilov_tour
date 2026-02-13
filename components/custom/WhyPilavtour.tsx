@@ -64,7 +64,7 @@ export function WhyPilavtour() {
           transition={{ duration: 0.6 }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <span className="inline-flex items-center gap-2 text-turquoise font-body text-sm font-semibold tracking-wide uppercase mb-4 block">
+          <span className="block items-center gap-2 text-turquoise font-body text-sm font-semibold tracking-wide uppercase mb-4">
             {t("why_us")}
           </span>
           <h2 className="text-section text-foreground mb-6">

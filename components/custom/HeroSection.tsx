@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, MapPin, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import {
   Carousel,
   CarouselContent,
@@ -11,13 +12,15 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
-const floatingTags = [
-  { text: "Samarkand", top: "20%", left: "60%", delay: 0 },
-  { text: "Bukhara", top: "35%", left: "75%", delay: 0.5 },
-  { text: "Khiva", top: "55%", left: "65%", delay: 1 },
-];
-
 export function HeroSection() {
+  const t = useTranslations("HeroSection");
+
+  const floatingTags = [
+    { text: t("location_samarkand"), top: "20%", left: "60%", delay: 0 },
+    { text: t("location_bukhara"), top: "35%", left: "75%", delay: 0.5 },
+    { text: t("location_khiva"), top: "55%", left: "65%", delay: 1 },
+  ];
+
   const handleScrollToTours = () => {
     const section = document.getElementById("tours-section");
     if (section) {
@@ -79,7 +82,7 @@ export function HeroSection() {
                       >
                         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral/90 text-white text-sm font-body font-medium shadow-glow">
                           <Sparkles size={14} />
-                          New Season 2025
+                          {t("slide1_badge")}
                         </span>
                       </motion.div>
 
@@ -89,8 +92,7 @@ export function HeroSection() {
                         transition={{ duration: 0.8, delay: 0.3 }}
                         className="text-hero text-white mb-6"
                       >
-                        Feel the{" "}
-                        <span className="text-gradient">Silk Road</span>
+                        {t("slide1_title")}
                       </motion.h1>
 
                       <motion.p
@@ -99,9 +101,9 @@ export function HeroSection() {
                         transition={{ duration: 0.8, delay: 0.5 }}
                         className="text-hero-sub text-white/80 max-w-xl mb-10"
                       >
-                        Ancient cities. Epic food. Real adventures.
+                        {t("slide1_subtitle")}
                         <br className="hidden sm:block" />
-                        Discover Central Asia your way.
+                        {t("slide1_subtitle2")}
                       </motion.p>
 
                       <motion.div
@@ -116,7 +118,7 @@ export function HeroSection() {
                           onClick={handleScrollToTours}
                           className="flex items-center gap-2"
                         >
-                          Explore Now
+                          {t("slide1_button")}
                           <ArrowRight size={20} />
                         </Button>
                       </motion.div>
@@ -147,7 +149,7 @@ export function HeroSection() {
                       >
                         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral/90 text-white text-sm font-body font-medium shadow-glow">
                           <Sparkles size={14} />
-                          New Stories 2025
+                          {t("slide2_badge")}
                         </span>
                       </motion.div>
 
@@ -157,8 +159,7 @@ export function HeroSection() {
                         transition={{ duration: 0.8, delay: 0.3 }}
                         className="text-hero text-white mb-6"
                       >
-                        Stories from the{" "}
-                        <span className="text-gradient">Silk Road</span>
+                        {t("slide2_title")}
                       </motion.h1>
 
                       <motion.p
@@ -167,9 +168,9 @@ export function HeroSection() {
                         transition={{ duration: 0.8, delay: 0.5 }}
                         className="text-hero-sub text-white/80 max-w-xl mb-10"
                       >
-                        Real travelers. Honest emotions. Unforgettable moments.
+                        {t("slide2_subtitle")}
                         <br className="hidden sm:block" />
-                        See Central Asia through their eyes.
+                        {t("slide2_subtitle2")}
                       </motion.p>
 
                       <motion.div
@@ -183,7 +184,7 @@ export function HeroSection() {
                             href="/articles"
                             className="flex items-center gap-2"
                           >
-                            Read Their Stories
+                            {t("slide2_button")}
                             <ArrowRight size={20} />
                           </Link>
                         </Button>
@@ -215,7 +216,7 @@ export function HeroSection() {
                       >
                         <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral/90 text-white text-sm font-body font-medium shadow-glow">
                           <Sparkles size={14} />
-                          Meet Pilav Tour
+                          {t("slide3_badge")}
                         </span>
                       </motion.div>
 
@@ -225,8 +226,7 @@ export function HeroSection() {
                         transition={{ duration: 0.8, delay: 0.3 }}
                         className="text-hero text-white mb-6"
                       >
-                        More Than a{" "}
-                        <span className="text-gradient">Tour Company</span>
+                        {t("slide3_title")}
                       </motion.h1>
 
                       <motion.p
@@ -235,9 +235,9 @@ export function HeroSection() {
                         transition={{ duration: 0.8, delay: 0.5 }}
                         className="text-hero-sub text-white/80 max-w-xl mb-10"
                       >
-                        We are local experts, storytellers, and hosts —
+                        {t("slide3_subtitle")}
                         <br className="hidden sm:block" />
-                        creating meaningful journeys across Central Asia.
+                        {t("slide3_subtitle2")}
                       </motion.p>
 
                       <motion.div
@@ -251,7 +251,7 @@ export function HeroSection() {
                             href="/about"
                             className="flex items-center gap-2"
                           >
-                            Meet Pilav Tour
+                            {t("slide3_button")}
                             <ArrowRight size={20} />
                           </Link>
                         </Button>

@@ -3,17 +3,20 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Calendar,
-  ArrowRight,
-  Heart,
-  Zap,
-  MapPin,
-} from "lucide-react";
+import { Calendar, ArrowRight, Heart, Zap, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TourData, LocalizedString } from "@/lib/types";
 import { useLocale, useTranslations } from "next-intl";
-import { collection, getDocs, doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { db, auth } from "@/app/(public)/firebase";
 import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 import { useRouter } from "next/navigation";
@@ -83,9 +86,9 @@ export function FeaturedTours() {
 
     fetchTours();
   }, [locale]);
-  const t = useTranslations("FeaturedTours");
 
   console.log({ tours });
+  const t = useTranslations("FeaturedTours");
 
   return (
     <section className="py-20 md:py-28 bg-cream overflow-hidden">
@@ -151,7 +154,6 @@ export function FeaturedTours() {
 
 export function TourCard({ tour, index }: { tour: TourCard; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const t = useTranslations("FeaturedTours");
   const router = useRouter();
   const { toast } = useToast();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -159,6 +161,10 @@ export function TourCard({ tour, index }: { tour: TourCard; index: number }) {
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const images = tour.images.length ? tour.images : ["/tourImage1.jpg"];
+  const t = useTranslations("FeaturedTours");
+  const tTours = useTranslations("tours");
+  const tCommon = useTranslations("common");
+  const tBooking = useTranslations("booking");
 
   // Check authentication and like status
   useEffect(() => {
@@ -168,7 +174,7 @@ export function TourCard({ tour, index }: { tour: TourCard; index: number }) {
         try {
           const userRef = doc(db, "users", firebaseUser.uid);
           const userSnap = await getDoc(userRef);
-          
+
           if (userSnap.exists()) {
             const userData = userSnap.data();
             const likedTours = userData.likedTours || [];
@@ -201,23 +207,23 @@ export function TourCard({ tour, index }: { tour: TourCard; index: number }) {
     // Optimistic update - show state immediately
     const newLikedState = !isLiked;
     setIsLiked(newLikedState);
-    
+
     // Show toast immediately
     toast({
       title: newLikedState
-        ? "Added to favorites"
-        : "Removed from favorites",
+        ? tCommon("added_to_favorites")
+        : tCommon("removed_from_favorites"),
       description: newLikedState
-        ? "This tour has been added to your favorites"
-        : "This tour has been removed from your favorites",
+        ? tCommon("added_to_favorites")
+        : tCommon("removed_from_favorites"),
     });
 
     try {
       const userRef = doc(db, "users", user.uid);
-      
+
       // Check if user document exists
       const userSnap = await getDoc(userRef);
-      
+
       if (!userSnap.exists()) {
         // Create user document with likedTours array
         await setDoc(userRef, {
@@ -242,8 +248,8 @@ export function TourCard({ tour, index }: { tour: TourCard; index: number }) {
       // Revert state on error
       setIsLiked(!newLikedState);
       toast({
-        title: "Failed to update favorites",
-        description: "Please try again",
+        title: tCommon("error") || "Failed to update favorites",
+        description: tCommon("try_again") || "Please try again",
         variant: "destructive",
       });
     }
@@ -342,7 +348,11 @@ export function TourCard({ tour, index }: { tour: TourCard; index: number }) {
               <div className="flex items-center gap-4 text-sm">
                 <span className="flex items-center gap-1.5">
                   <Calendar size={14} className="text-coral" />
-                  {t("duration") + " " + tour.duration.days + " days"}
+                  {t("duration") +
+                    " " +
+                    tour.duration.days +
+                    " " +
+                    tTours("days")}
                 </span>
               </div>
             </div>
@@ -351,13 +361,13 @@ export function TourCard({ tour, index }: { tour: TourCard; index: number }) {
             <div className="flex items-center justify-between pt-4 border-t border-border">
               <div>
                 <span className="block text-muted-foreground text-xs font-body uppercase tracking-wide">
-                  From
+                  {t("from")}
                 </span>
                 <span className="block font-display text-xl font-bold text-foreground">
                   US ${tour.price}
                 </span>
                 <span className="block text-xs text-muted-foreground font-body">
-                  per person
+                  {tBooking("price_per_person")}
                 </span>
               </div>
               <span className="inline-flex items-center justify-center px-5 py-2 rounded-full bg-gradient-to-r from-coral to-gold text-white text-sm md:text-base font-body font-semibold shadow-md group-hover:shadow-lg group-hover:translate-x-0.5 transition-all">

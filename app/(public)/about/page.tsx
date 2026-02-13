@@ -18,7 +18,7 @@ import artisanPottery from "@/public/artisan-pottery.jpg";
 import silkRoadDesert from "@/public/silk-road-desert.jpg";
 
 const AboutPage = () => {
-  const t = useTranslations("About");
+  const t = useTranslations("about");
 
   const values = [
     {

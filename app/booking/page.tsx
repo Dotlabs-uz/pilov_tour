@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,7 +40,7 @@ type Lang = keyof LocalizedString;
 
 type LocalizedValue = string | LocalizedString | null | undefined;
 
-function t(value: LocalizedValue, locale: Lang): string {
+function tLocalized(value: LocalizedValue, locale: Lang): string {
   if (typeof value === "string") return value;
   if (!value || typeof value !== "object") return "";
 
@@ -62,6 +62,8 @@ const BookingPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const locale = useLocale() as Lang;
+  const t = useTranslations("booking");
+  const commonT = useTranslations("common");
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -144,19 +146,19 @@ const BookingPage = () => {
     let isValid = true;
 
     if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
+      newErrors.name = t("name_required");
       isValid = false;
     }
 
     if (!formData.phone.trim()) {
-      newErrors.phone = "Phone is required";
+      newErrors.phone = t("phone_required");
       isValid = false;
     }
 
     if (!formData.whatsappTelegram.trim()) {
       newErrors.whatsappTelegram = `${
-        formData.contactMethod === "whatsapp" ? "WhatsApp" : "Telegram"
-      } is required`;
+        formData.contactMethod === "whatsapp" ? t("whatsapp") : t("telegram")
+      } ${t("required")}`;
       isValid = false;
     }
 
@@ -216,11 +218,10 @@ Comment: ${data.comment || "None"}
               className="mb-12"
             >
               <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-3">
-                Booking Request
+                {t("page_title")}
               </h1>
               <p className="text-muted-foreground max-w-lg">
-                Fill out the form below and we'll get back to you within 24
-                hours to confirm your booking.
+                {t("page_subtitle")}
               </p>
             </motion.div>
 
@@ -232,11 +233,13 @@ Comment: ${data.comment || "None"}
                 className="bg-white rounded-2xl p-6 mb-8 shadow-sm border border-border"
               >
                 <h2 className="font-display text-xl font-bold text-foreground mb-4">
-                  Selected Tour
+                  {t("selected_tour")}
                 </h2>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-sm text-muted-foreground">Tour</p>
+                    <p className="text-sm text-muted-foreground">
+                      {t("tour_label")}
+                    </p>
                     <p className="font-display font-semibold text-foreground">
                       {tourName}
                     </p>
@@ -245,7 +248,7 @@ Comment: ${data.comment || "None"}
                     {startDate && (
                       <div>
                         <p className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Calendar size={14} /> Start Date
+                          <Calendar size={14} /> {t("start_date")}
                         </p>
                         <p className="font-semibold text-foreground">
                           {new Date(startDate).toLocaleDateString("en-US", {
@@ -259,7 +262,7 @@ Comment: ${data.comment || "None"}
                     {endDate && (
                       <div>
                         <p className="text-sm text-muted-foreground flex items-center gap-1">
-                          <Calendar size={14} /> End Date
+                          <Calendar size={14} /> {t("end_date")}
                         </p>
                         <p className="font-semibold text-foreground">
                           {new Date(endDate).toLocaleDateString("en-US", {
@@ -274,7 +277,7 @@ Comment: ${data.comment || "None"}
                   {price && (
                     <div>
                       <p className="text-sm text-muted-foreground flex items-center gap-1">
-                        <DollarSign size={14} /> Price per person
+                        <DollarSign size={14} /> {t("price_per_person")}
                       </p>
                       <p className="font-display font-bold text-coral text-lg">
                         ${price}
@@ -283,7 +286,7 @@ Comment: ${data.comment || "None"}
                   )}
                   <div className="pt-3 border-t border-border">
                     <p className="text-sm text-muted-foreground mb-2">
-                      Number of travelers
+                      {t("number_of_travelers")}
                     </p>
                     <div className="flex items-center gap-3">
                       <button
@@ -321,7 +324,7 @@ Comment: ${data.comment || "None"}
                   {price && (
                     <div className="pt-3 border-t border-border bg-coral/5 -mx-6 px-6 py-3 rounded-b-xl">
                       <p className="text-xs text-muted-foreground mb-1">
-                        Total price
+                        {t("total_price")}
                       </p>
                       <p className="font-display font-bold text-coral text-2xl">
                         ${totalPrice}
@@ -350,18 +353,17 @@ Comment: ${data.comment || "None"}
                       <CheckCircle2 size={64} className="text-green-500" />
                     </motion.div>
                     <h2 className="font-display text-2xl font-bold text-foreground mb-3">
-                      ✅ Booking Confirmed
+                      ✅ {t("booking_success")}
                     </h2>
                     <p className="text-muted-foreground mb-6">
-                      Your request has been received. We'll contact you shortly
-                      to confirm the booking details.
+                      {t("booking_success_message")}
                     </p>
                     <p className="text-sm text-muted-foreground/70">
-                      Check your email and{" "}
+                      {t("check_email")}{" "}
                       {formData.contactMethod === "whatsapp"
-                        ? "WhatsApp"
-                        : "Telegram"}{" "}
-                      for updates.
+                        ? t("whatsapp")
+                        : t("telegram")}{" "}
+                      {t("for_updates")}.
                     </p>
                   </motion.div>
                 </motion.div>
@@ -377,11 +379,11 @@ Comment: ${data.comment || "None"}
             >
               <div>
                 <label className="block font-display text-sm font-semibold text-foreground mb-3">
-                  Full Name <span className="text-coral">*</span>
+                  {t("full_name")} <span className="text-coral">*</span>
                 </label>
                 <Input
                   type="text"
-                  placeholder="Your full name"
+                  placeholder={t("full_name_placeholder")}
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
@@ -397,11 +399,11 @@ Comment: ${data.comment || "None"}
 
               <div>
                 <label className="block font-display text-sm font-semibold text-foreground mb-3">
-                  Phone Number <span className="text-coral">*</span>
+                  {t("phone_number")} <span className="text-coral">*</span>
                 </label>
                 <Input
                   type="tel"
-                  placeholder="+998 (XX) XXX-XX-XX"
+                  placeholder={t("phone_placeholder")}
                   value={formData.phone}
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
@@ -417,7 +419,8 @@ Comment: ${data.comment || "None"}
 
               <div>
                 <label className="block font-display text-sm font-semibold text-foreground mb-3">
-                  Preferred Contact Method <span className="text-coral">*</span>
+                  {t("preferred_contact_method")}{" "}
+                  <span className="text-coral">*</span>
                 </label>
                 <div className="flex gap-4 mb-4">
                   <button
@@ -431,7 +434,7 @@ Comment: ${data.comment || "None"}
                         : "bg-gray-100 text-foreground hover:bg-gray-200"
                     }`}
                   >
-                    WhatsApp
+                    {t("whatsapp")}
                   </button>
                   <button
                     type="button"
@@ -444,15 +447,15 @@ Comment: ${data.comment || "None"}
                         : "bg-gray-100 text-foreground hover:bg-gray-200"
                     }`}
                   >
-                    Telegram
+                    {t("telegram")}
                   </button>
                 </div>
                 <Input
                   type="text"
                   placeholder={
                     formData.contactMethod === "whatsapp"
-                      ? "Enter your WhatsApp number"
-                      : "Enter your Telegram username"
+                      ? t("whatsapp_number")
+                      : t("telegram_username")
                   }
                   value={formData.whatsappTelegram}
                   onChange={(e) =>
@@ -474,7 +477,8 @@ Comment: ${data.comment || "None"}
 
               <div>
                 <label className="block font-display text-sm font-semibold text-foreground mb-3">
-                  Number of Travelers <span className="text-coral">*</span>
+                  {t("number_of_travelers")}{" "}
+                  <span className="text-coral">*</span>
                 </label>
                 <div className="flex items-center gap-4">
                   <button
@@ -521,7 +525,9 @@ Comment: ${data.comment || "None"}
                   </button>
                   {price && (
                     <div className="text-right">
-                      <p className="text-xs text-muted-foreground">Total</p>
+                      <p className="text-xs text-muted-foreground">
+                        {t("total_price")}
+                      </p>
                       <p className="font-display font-bold text-coral">
                         ${totalPrice}
                       </p>
@@ -532,12 +538,14 @@ Comment: ${data.comment || "None"}
 
               <div>
                 <label className="block font-display text-sm font-semibold text-foreground mb-3">
-                  Email{" "}
-                  <span className="text-gray-400 text-xs">(Optional)</span>
+                  {t("email")}{" "}
+                  <span className="text-gray-400 text-xs">
+                    ({t("email_optional")})
+                  </span>
                 </label>
                 <Input
                   type="email"
-                  placeholder="your.email@example.com"
+                  placeholder={t("email_placeholder")}
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
@@ -548,11 +556,13 @@ Comment: ${data.comment || "None"}
 
               <div>
                 <label className="block font-display text-sm font-semibold text-foreground mb-3">
-                  Special Requests{" "}
-                  <span className="text-gray-400 text-xs">(Optional)</span>
+                  {t("special_requests")}{" "}
+                  <span className="text-gray-400 text-xs">
+                    ({t("email_optional")})
+                  </span>
                 </label>
                 <Textarea
-                  placeholder="Any special requests or questions about your tour?"
+                  placeholder={t("special_requests_placeholder")}
                   value={formData.comment}
                   onChange={(e) =>
                     setFormData({ ...formData, comment: e.target.value })
@@ -573,27 +583,21 @@ Comment: ${data.comment || "None"}
                     {isLoading ? (
                       <>
                         <Loader2 size={18} className="animate-spin" />
-                        Sending...
+                        {t("sending")}
                       </>
                     ) : (
                       <>
                         <Send size={18} />
-                        Submit Booking Request
+                        {t("submit_button")}
                       </>
                     )}
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-sm">
                   <DialogHeader>
-                    <DialogTitle>
-                      Соглашение с политикой конфиденциальности
-                    </DialogTitle>
+                    <DialogTitle>{t("privacy_agreement_title")}</DialogTitle>
                     <DialogDescription>
-                      Нажимая "Подтвердить", вы соглашаетесь с нашей политикой
-                      конфиденциальности и условиями использования. Мы
-                      используем ваши данные только для обработки вашего
-                      бронирования и не передаем их третьим лицам без вашего
-                      согласия.
+                      {t("privacy_agreement_description")}
                     </DialogDescription>
                   </DialogHeader>
                   <div className="py-4">
@@ -605,13 +609,13 @@ Comment: ${data.comment || "None"}
                         className="w-5 h-5 rounded border border-border cursor-pointer"
                       />
                       <span className="text-sm text-muted-foreground">
-                        Я согласен(-на) с политикой конфиденциальности
+                        {t("privacy_agreement_checkbox")}
                       </span>
                     </label>
                   </div>
                   <DialogFooter>
                     <DialogClose asChild>
-                      <Button variant="outline">Отменить</Button>
+                      <Button variant="outline">{t("cancel")}</Button>
                     </DialogClose>
                     <DialogClose asChild>
                       <Button
@@ -621,8 +625,8 @@ Comment: ${data.comment || "None"}
                           e.preventDefault();
                           if (!validateForm()) {
                             toast({
-                              title: "Validation Error",
-                              description: "Please fill in all required fields",
+                              title: t("validation_error"),
+                              description: t("validation_message"),
                               variant: "destructive",
                             });
                             return;
@@ -666,9 +670,8 @@ Comment: ${data.comment || "None"}
                             });
                             setConfirmed(false);
                             toast({
-                              title: "Success",
-                              description:
-                                "Your booking request has been submitted!",
+                              title: t("booking_success"),
+                              description: t("booking_submitted"),
                             });
                             setTimeout(() => {
                               setIsSubmitted(false);
@@ -676,9 +679,8 @@ Comment: ${data.comment || "None"}
                           } catch (error) {
                             console.error("Booking error:", error);
                             toast({
-                              title: "Error",
-                              description:
-                                "Failed to submit booking. Please try again.",
+                              title: t("booking_error"),
+                              description: t("booking_error_message"),
                               variant: "destructive",
                             });
                           } finally {
@@ -686,7 +688,7 @@ Comment: ${data.comment || "None"}
                           }
                         }}
                       >
-                        Принять
+                        {t("accept")}
                       </Button>
                     </DialogClose>
                   </DialogFooter>
@@ -694,8 +696,7 @@ Comment: ${data.comment || "None"}
               </Dialog>
 
               <p className="text-sm text-muted-foreground">
-                We'll contact you shortly to confirm your booking and discuss
-                payment details.
+                {t("contact_info")}
               </p>
             </motion.form>
           </div>
@@ -719,8 +720,8 @@ Comment: ${data.comment || "None"}
                   <div className="p-4">
                     <h3 className="text-lg font-semibold mb-1">
                       {tourName ||
-                        t(tourData.title, locale) ||
-                        t(tourData.name, locale)}
+                        tLocalized(tourData.title, locale) ||
+                        tLocalized(tourData.name, locale)}
                     </h3>
                     {tourData.location && (
                       <p className="text-sm text-muted-foreground mb-2">
@@ -754,7 +755,7 @@ Comment: ${data.comment || "None"}
                     </div>
 
                     <p className="text-sm text-muted-foreground mt-3 line-clamp-3">
-                      {t(tourData.description, locale)}
+                      {tLocalized(tourData.description, locale)}
                     </p>
 
                     <div className="mt-4">
@@ -762,7 +763,7 @@ Comment: ${data.comment || "None"}
                         href={`/trips/${tourId}`}
                         className="text-sm text-foreground underline"
                       >
-                        View full tour
+                        {t("view_full_tour")}
                       </a>
                     </div>
                   </div>
@@ -770,7 +771,7 @@ Comment: ${data.comment || "None"}
               )}
               {!tourData && (
                 <div className="p-6 text-center text-sm text-muted-foreground">
-                  No tour selected
+                  {t("no_tour_selected")}
                 </div>
               )}
             </div>

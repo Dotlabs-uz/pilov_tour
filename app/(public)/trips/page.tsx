@@ -4,18 +4,18 @@ import Subscribe from "@/components/custom/Subcribe";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import {
-  Search,
-  Zap,
-} from "lucide-react";
+import { Search, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase";
 import { Navbar } from "@/components/custom/Navbar";
-import { TourCard, type TourCard as FeaturedTourCardType } from "@/components/custom/FeaturedTours";
+import {
+  TourCard,
+  type TourCard as FeaturedTourCardType,
+} from "@/components/custom/FeaturedTours";
 import { LocalizedString } from "@/lib/types";
 
 export type LangCodes = "en" | "ru" | "ge" | "it" | "sp" | "uk" | "uz";
@@ -54,6 +54,8 @@ const Tours = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const locale = useLocale();
+  const t = useTranslations("pages");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeCategory = searchParams.get("category");
@@ -80,11 +82,13 @@ const Tours = () => {
             typeof nameObj === "string"
               ? nameObj
               : nameObj && typeof nameObj === "object"
-              ? (nameObj as LocalizedString)[locale as keyof LocalizedString] ||
-                (nameObj as LocalizedString)["en"] ||
-                Object.values(nameObj)[0] ||
-                ""
-              : title; // Fallback to title if name doesn't exist
+                ? (nameObj as LocalizedString)[
+                    locale as keyof LocalizedString
+                  ] ||
+                  (nameObj as LocalizedString)["en"] ||
+                  Object.values(nameObj)[0] ||
+                  ""
+                : title; // Fallback to title if name doesn't exist
 
           const description =
             descObj[locale as keyof typeof descObj] ||
@@ -98,7 +102,10 @@ const Tours = () => {
           if (typeof locationObj === "string") {
             locationStr = locationObj;
           } else if (locationObj && typeof locationObj === "object") {
-            locationStr = (locationObj as LocalizedString)[locale as keyof LocalizedString] ||
+            locationStr =
+              (locationObj as LocalizedString)[
+                locale as keyof LocalizedString
+              ] ||
               (locationObj as LocalizedString)["en"] ||
               (Object.values(locationObj)[0] as string) ||
               "";
@@ -112,10 +119,12 @@ const Tours = () => {
             description,
             price: data.price || "",
             duration: {
-              days: (data.duration?.days?.toString() || ""),
-              nights: (data.duration?.nights?.toString() || ""),
+              days: data.duration?.days?.toString() || "",
+              nights: data.duration?.nights?.toString() || "",
             },
-            location: locationStr ? locationStr.split(",").map((loc: string) => loc.trim()) : [],
+            location: locationStr
+              ? locationStr.split(",").map((loc: string) => loc.trim())
+              : [],
             style: data.style || "",
             maxGroupCount: (data as any).maxGroupCount || 0,
           };
@@ -184,15 +193,15 @@ const Tours = () => {
               className="inline-flex items-center gap-2 text-gold font-body text-sm font-semibold tracking-wide uppercase mb-4"
             >
               <Zap size={16} />
-              Find your trip
+              {t("trips_badge")}
             </motion.span>
             <h1 className="text-hero text-white mb-4">
-              All
+              {t("trips_title")}
               <br />
-              <span className="text-coral">adventures</span>
+              <span className="text-coral">{t("trips_subtitle")}</span>
             </h1>
             <p className="text-xl text-white/70 font-body">
-              Pick your vibe. We'll handle the rest.
+              {t("trips_tagline")}
             </p>
           </motion.div>
         </div>
@@ -205,7 +214,7 @@ const Tours = () => {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
               <Input
                 type="text"
-                placeholder="Search trips..."
+                placeholder={`${tCommon("search")}...`}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-12 h-12 rounded-full border-2"
@@ -221,7 +230,7 @@ const Tours = () => {
                     "px-5 py-2.5 rounded-full text-sm font-body font-medium whitespace-nowrap transition-all",
                     activeCategory === cat.name
                       ? "bg-coral text-white shadow-glow"
-                      : "bg-secondary text-foreground hover:bg-secondary/80"
+                      : "bg-secondary text-foreground hover:bg-secondary/80",
                   )}
                 >
                   {cat.name}
@@ -235,7 +244,7 @@ const Tours = () => {
       <section className="py-12">
         <div className="container mx-auto px-6">
           <p className="text-muted-foreground font-body mb-8">
-            {tours.length} trips found
+            {t("trips_found", { count: tours.length })}
           </p>
 
           {tours.length > 0 ? (
@@ -247,10 +256,10 @@ const Tours = () => {
           ) : (
             <div className="text-center py-20">
               <p className="text-muted-foreground font-body text-lg mb-4">
-                No trips found. Try different filters!
+                {t("trips_no_results")}
               </p>
               <Button variant="outline" onClick={() => router.push("/trips")}>
-                Clear filters
+                {tCommon("try_again")}
               </Button>
             </div>
           )}

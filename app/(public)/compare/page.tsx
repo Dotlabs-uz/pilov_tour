@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { db } from "@/app/(public)/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
@@ -71,14 +71,19 @@ interface Tour {
 export default function ComparePage() {
   const router = useRouter();
   const locale = useLocale() as Lang;
+  const tr = useTranslations("compare");
+  const common = useTranslations("common");
+  const pages = useTranslations("pages");
   const [tours, setTours] = useState<Tour[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({});
+  const [expandedItems, setExpandedItems] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   useEffect(() => {
     const fetchTours = async () => {
       const compareIds = JSON.parse(
-        localStorage.getItem("compareTours") || "[]"
+        localStorage.getItem("compareTours") || "[]",
       ) as string[];
 
       if (compareIds.length === 0) {
@@ -135,14 +140,14 @@ export default function ComparePage() {
 
   const removeTour = (tourId: string) => {
     const compareIds = JSON.parse(
-      localStorage.getItem("compareTours") || "[]"
+      localStorage.getItem("compareTours") || "[]",
     ) as string[];
     const updatedIds = compareIds.filter((id) => id !== tourId);
     localStorage.setItem("compareTours", JSON.stringify(updatedIds));
-    
+
     // Update tours state
     setTours(tours.filter((tour) => tour.id !== tourId));
-    
+
     // Dispatch custom event to update CompareButton
     window.dispatchEvent(new Event("compareToursUpdated"));
   };
@@ -150,7 +155,7 @@ export default function ComparePage() {
   const removeAllTours = () => {
     localStorage.setItem("compareTours", JSON.stringify([]));
     setTours([]);
-    
+
     // Dispatch custom event to update CompareButton
     window.dispatchEvent(new Event("compareToursUpdated"));
   };
@@ -159,7 +164,7 @@ export default function ComparePage() {
     return (
       <div className="min-h-screen pt-24 pb-20 px-4 md:px-6 lg:px-8">
         <div className="container mx-auto">
-          <div className="text-center">Loading...</div>
+          <div className="text-center">{common("loading")}</div>
         </div>
       </div>
     );
@@ -170,10 +175,8 @@ export default function ComparePage() {
       <div className="min-h-screen pt-24 pb-20 px-4 md:px-6 lg:px-8">
         <div className="container mx-auto">
           <div className="text-center py-20">
-            <h1 className="text-3xl font-bold mb-4">Compare trips</h1>
-            <p className="text-muted-foreground mb-8">
-              No trips to compare. Add trips to compare them side by side.
-            </p>
+            <h1 className="text-3xl font-bold mb-4">{tr("compare_title")}</h1>
+            <p className="text-muted-foreground mb-8">{tr("compare_empty")}</p>
             <Button asChild>
               <Link href="/trips">Browse Trips</Link>
             </Button>
@@ -187,29 +190,37 @@ export default function ComparePage() {
   const comparisonFields = [
     {
       label: "Days",
+      labelKey: "days",
       getValue: (tour: Tour) => tour.duration.days?.toString() || "—",
     },
     {
       label: "Nights",
+      labelKey: "nights",
       getValue: (tour: Tour) => tour.duration.nights?.toString() || "—",
     },
     {
       label: "Price",
-      getValue: (tour: Tour) => tour.price ? `$${tour.price}` : "—",
+      labelKey: "price",
+      getValue: (tour: Tour) => (tour.price ? `$${tour.price}` : "—"),
     },
     {
       label: "Reviews",
+      labelKey: "reviews",
       getValue: (tour: Tour) => tour.reviewsCount?.toString() || "—",
     },
     {
       label: "Start",
+      labelKey: "start",
       getValue: (tour: Tour) => {
         if (!tour.start) return "—";
-        return typeof tour.start === "string" ? tour.start : t(tour.start, locale);
+        return typeof tour.start === "string"
+          ? tour.start
+          : t(tour.start, locale);
       },
     },
     {
       label: "End",
+      labelKey: "end",
       getValue: (tour: Tour) => {
         if (!tour.end) return "—";
         return typeof tour.end === "string" ? tour.end : t(tour.end, locale);
@@ -217,35 +228,45 @@ export default function ComparePage() {
     },
     {
       label: "Group Size",
-      getValue: (tour: Tour) => t(tour.groupSize, locale) || tour.maxGroupCount?.toString() || "—",
+      labelKey: "group_size",
+      getValue: (tour: Tour) =>
+        t(tour.groupSize, locale) || tour.maxGroupCount?.toString() || "—",
     },
     {
       label: "Style",
+      labelKey: "style",
       getValue: (tour: Tour) => tour.style || "—",
     },
     {
       label: "Theme",
+      labelKey: "theme",
       getValue: (tour: Tour) => {
         if (!tour.theme) return "—";
-        return typeof tour.theme === "string" ? tour.theme : t(tour.theme, locale);
+        return typeof tour.theme === "string"
+          ? tour.theme
+          : t(tour.theme, locale);
       },
     },
     {
       label: "Destinations",
+      labelKey: "destinations",
       getValue: (tour: Tour) => {
         if (tour.destinations && tour.destinations.length > 0) {
           return tour.destinations
-            .map((dest) => typeof dest === "string" ? dest : t(dest, locale))
+            .map((dest) => (typeof dest === "string" ? dest : t(dest, locale)))
             .join(", ");
         }
         if (tour.location) {
-          return typeof tour.location === "string" ? tour.location : t(tour.location, locale);
+          return typeof tour.location === "string"
+            ? tour.location
+            : t(tour.location, locale);
         }
         return "—";
       },
     },
     {
       label: "Itinerary",
+      labelKey: "itinerary",
       getValue: (tour: Tour) => {
         if (!tour.itinerary || tour.itinerary.length === 0) return "—";
         return "ITINERARY_LIST";
@@ -254,8 +275,10 @@ export default function ComparePage() {
     },
     {
       label: "Included activities",
+      labelKey: "included_activities",
       getValue: (tour: Tour) => {
-        if (!tour.includedActivities || tour.includedActivities.length === 0) return "—";
+        if (!tour.includedActivities || tour.includedActivities.length === 0)
+          return "—";
         return "ACTIVITIES_LIST";
       },
       renderAsList: true,
@@ -263,8 +286,10 @@ export default function ComparePage() {
     },
     {
       label: "Optional activities",
+      labelKey: "optional_activities",
       getValue: (tour: Tour) => {
-        if (!tour.optionalActivities || tour.optionalActivities.length === 0) return "—";
+        if (!tour.optionalActivities || tour.optionalActivities.length === 0)
+          return "—";
         return "ACTIVITIES_LIST";
       },
       renderAsList: true,
@@ -272,20 +297,27 @@ export default function ComparePage() {
     },
     {
       label: "Meals",
+      labelKey: "meals",
       getValue: (tour: Tour) => {
         if (!tour.meals) return "—";
-        return typeof tour.meals === "string" ? tour.meals : t(tour.meals, locale);
+        return typeof tour.meals === "string"
+          ? tour.meals
+          : t(tour.meals, locale);
       },
     },
     {
       label: "Transport",
+      labelKey: "transport",
       getValue: (tour: Tour) => {
         if (!tour.transport) return "—";
-        return typeof tour.transport === "string" ? tour.transport : t(tour.transport, locale);
+        return typeof tour.transport === "string"
+          ? tour.transport
+          : t(tour.transport, locale);
       },
     },
     {
       label: "Physical Rating",
+      labelKey: "physical_rating",
       getValue: (tour: Tour) => {
         if (!tour.physicalRating) return "—";
         return tour.physicalRating.toString();
@@ -301,19 +333,13 @@ export default function ComparePage() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
           <div>
             <h1 className="text-4xl font-bold text-foreground mb-2">
-              Compare trips
+              {tr("compare_title")}
             </h1>
-            <p className="text-muted-foreground">
-              Add up to 4 trips
-            </p>
+            <p className="text-muted-foreground">{tr("compare_subtitle")}</p>
           </div>
-          <Button
-            variant="outline"
-            onClick={removeAllTours}
-            className="w-fit"
-          >
+          <Button variant="outline" onClick={removeAllTours} className="w-fit">
             <X size={16} />
-            Remove all trips
+            {tr("remove_all")}
           </Button>
         </div>
 
@@ -322,7 +348,7 @@ export default function ComparePage() {
           {tours.map((tour) => {
             const name = t(tour.name, locale) || t(tour.title, locale);
             const mainImage = tour.images?.[0] || "/tourImage1.jpg";
-            
+
             return (
               <div
                 key={tour.id}
@@ -351,7 +377,10 @@ export default function ComparePage() {
                 <div className="p-4">
                   {/* Rating */}
                   <div className="flex items-center gap-2 mb-3">
-                    <Star size={20} className="fill-yellow-400 text-yellow-400" />
+                    <Star
+                      size={20}
+                      className="fill-yellow-400 text-yellow-400"
+                    />
                     <span className="font-semibold text-foreground">
                       {tour.rating?.toFixed(1) || "—"}
                     </span>
@@ -369,18 +398,16 @@ export default function ComparePage() {
 
                   {/* Price */}
                   <div className="mb-4">
-                    <span className="text-muted-foreground text-sm">From USD </span>
+                    <span className="text-muted-foreground text-sm">
+                      From USD{" "}
+                    </span>
                     <span className="font-bold text-foreground text-xl">
                       ${tour.price || "—"}
                     </span>
                   </div>
 
                   {/* View Trip Button */}
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    asChild
-                  >
+                  <Button variant="outline" className="w-full" asChild>
                     <Link href={`/trips/${tour.id}`}>View trip</Link>
                   </Button>
                 </div>
@@ -396,7 +423,7 @@ export default function ComparePage() {
               <thead>
                 <tr className="border-b border-border bg-gray-50">
                   <th className="text-left p-4 font-semibold text-foreground">
-                    Details
+                    {tr("details")}
                   </th>
                   {tours.map((tour) => {
                     const name = t(tour.name, locale) || t(tour.title, locale);
@@ -418,11 +445,16 @@ export default function ComparePage() {
                     className="border-b border-border last:border-b-0 hover:bg-gray-50/50"
                   >
                     <td className="p-4 font-medium text-foreground">
-                      {field.label}
+                      {typeof field.label === "string" && field.labelKey
+                        ? tr(`fields.${field.labelKey}`)
+                        : field.label}
                     </td>
                     {tours.map((tour) => {
                       const value = field.getValue(tour);
-                      const ratingValue = field.label === "Physical Rating" && tour.physicalRating ? tour.physicalRating : null;
+                      const ratingValue =
+                        field.label === "Physical Rating" && tour.physicalRating
+                          ? tour.physicalRating
+                          : null;
                       const expandedKey = `${tour.id}-${field.label}`;
                       const isExpanded = expandedItems[expandedKey];
 
@@ -446,7 +478,10 @@ export default function ComparePage() {
                               {field.label === "Itinerary" && tour.itinerary ? (
                                 <>
                                   <div className="text-sm">
-                                    {(isExpanded ? tour.itinerary : tour.itinerary.slice(0, 3)).map((day, idx) => (
+                                    {(isExpanded
+                                      ? tour.itinerary
+                                      : tour.itinerary.slice(0, 3)
+                                    ).map((day, idx) => (
                                       <div key={idx} className="mb-1">
                                         {t(day.title, locale)}
                                       </div>
@@ -462,7 +497,11 @@ export default function ComparePage() {
                                       }}
                                       className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 underline mt-1"
                                     >
-                                      {isExpanded ? "Show less" : `Show all (${tour.itinerary.length} days)`}
+                                      {isExpanded
+                                        ? pages("show_less")
+                                        : tr("show_all", {
+                                            count: tour.itinerary.length,
+                                          })}
                                       <ChevronDown
                                         size={12}
                                         className={`transition-transform ${isExpanded ? "rotate-180" : ""}`}
@@ -470,12 +509,18 @@ export default function ComparePage() {
                                     </button>
                                   )}
                                 </>
-                              ) : field.listType === "included" && tour.includedActivities ? (
+                              ) : field.listType === "included" &&
+                                tour.includedActivities ? (
                                 <>
                                   <div className="text-sm">
-                                    {(isExpanded ? tour.includedActivities : tour.includedActivities.slice(0, 3)).map((act, idx) => (
+                                    {(isExpanded
+                                      ? tour.includedActivities
+                                      : tour.includedActivities.slice(0, 3)
+                                    ).map((act, idx) => (
                                       <div key={idx} className="mb-1">
-                                        {typeof act === "string" ? act : t(act, locale)}
+                                        {typeof act === "string"
+                                          ? act
+                                          : t(act, locale)}
                                       </div>
                                     ))}
                                   </div>
@@ -489,7 +534,15 @@ export default function ComparePage() {
                                       }}
                                       className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 underline mt-1"
                                     >
-                                      {isExpanded ? "Show less" : `Show all (${tour.includedActivities.length})`}
+                                      {isExpanded
+                                        ? "Show less"
+                                        : `Show all (${tour.includedActivities.length})`}
+                                      {isExpanded
+                                        ? pages("show_less")
+                                        : tr("show_all", {
+                                            count:
+                                              tour.includedActivities.length,
+                                          })}
                                       <ChevronDown
                                         size={12}
                                         className={`transition-transform ${isExpanded ? "rotate-180" : ""}`}
@@ -497,12 +550,18 @@ export default function ComparePage() {
                                     </button>
                                   )}
                                 </>
-                              ) : field.listType === "optional" && tour.optionalActivities ? (
+                              ) : field.listType === "optional" &&
+                                tour.optionalActivities ? (
                                 <>
                                   <div className="text-sm">
-                                    {(isExpanded ? tour.optionalActivities : tour.optionalActivities.slice(0, 3)).map((act, idx) => (
+                                    {(isExpanded
+                                      ? tour.optionalActivities
+                                      : tour.optionalActivities.slice(0, 3)
+                                    ).map((act, idx) => (
                                       <div key={idx} className="mb-1">
-                                        {typeof act === "string" ? act : t(act, locale)}
+                                        {typeof act === "string"
+                                          ? act
+                                          : t(act, locale)}
                                       </div>
                                     ))}
                                   </div>
@@ -516,7 +575,15 @@ export default function ComparePage() {
                                       }}
                                       className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 underline mt-1"
                                     >
-                                      {isExpanded ? "Show less" : `Show all (${tour.optionalActivities.length})`}
+                                      {isExpanded
+                                        ? "Show less"
+                                        : `Show all (${tour.optionalActivities.length})`}
+                                      {isExpanded
+                                        ? pages("show_less")
+                                        : tr("show_all", {
+                                            count:
+                                              tour.optionalActivities.length,
+                                          })}
                                       <ChevronDown
                                         size={12}
                                         className={`transition-transform ${isExpanded ? "rotate-180" : ""}`}

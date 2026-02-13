@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { db } from "@/app/(public)/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -13,6 +13,7 @@ import { useToast } from "@/components/ui/use-toast";
 export default function Article() {
   const { id } = useParams();
   const locale = useLocale();
+  const t = useTranslations("pages");
 
   const { toast } = useToast();
 
@@ -65,14 +66,21 @@ export default function Article() {
         </div>
       </div>
     );
-  if (!article) return <div className="p-10 text-center">Not Found</div>;
+  if (!article) return <div className="p-10 text-center">{t("not_found")}</div>;
 
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast({ title: "Link copied", description: "Article link copied to clipboard" });
+      toast({
+        title: "Link copied",
+        description: "Article link copied to clipboard",
+      });
     } catch (err) {
-      toast({ title: "Copy failed", description: "Could not copy link", variant: "destructive" });
+      toast({
+        title: "Copy failed",
+        description: "Could not copy link",
+        variant: "destructive",
+      });
     }
   };
 
@@ -80,21 +88,29 @@ export default function Article() {
     <main className="min-h-screen bg-cream">
       <div className="max-w-6xl mx-auto px-4 lg:px-0 py-12">
         <div className="mb-6 flex items-center justify-between">
-          <Link href="/articles" className="text-sm text-muted-foreground hover:text-foreground">
-            ← Back to articles
+          <Link
+            href="/articles"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            ← {t("articles_title")}
           </Link>
           <div className="flex items-center gap-2">
             <button
               onClick={handleShare}
               className="text-sm px-3 py-2 bg-white rounded-full shadow-sm hover:shadow-md"
             >
-              Share
+              {t("common.share") || t("share")}
             </button>
           </div>
         </div>
 
         <div className="relative w-full h-[420px] md:h-[520px] rounded-xl overflow-hidden">
-          <Image src={article.coverImage} alt={article.title} fill className="object-cover" />
+          <Image
+            src={article.coverImage}
+            alt={article.title}
+            fill
+            className="object-cover"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
           <div className="absolute left-6 bottom-6">
             <h1 className="text-3xl md:text-4xl font-display font-bold text-white drop-shadow">

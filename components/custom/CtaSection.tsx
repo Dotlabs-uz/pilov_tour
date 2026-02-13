@@ -23,6 +23,8 @@ enum ContactEnum {
 
 export function CtaSection() {
   const t = useTranslations("CtaSection");
+  const tBooking = useTranslations("booking");
+  const tContact = useTranslations("contact");
   const [contact, setContact] = useState<ContactEnum>(ContactEnum.Email);
   const [email, setEmail] = useState("");
   const [telegramUsername, setTelegramUsername] = useState("");
@@ -126,7 +128,7 @@ export function CtaSection() {
                 }`}
               >
                 <Mail size={18} />
-                Email
+                {tBooking("email") || t("email_placeholder")}
               </button>
               <button
                 onClick={() => setContact(ContactEnum.Telegram)}
@@ -137,7 +139,7 @@ export function CtaSection() {
                 }`}
               >
                 <MessageCircle size={18} />
-                Telegram
+                {tBooking("telegram")}
               </button>
               <button
                 onClick={() => setContact(ContactEnum.Whatsapp)}
@@ -148,7 +150,7 @@ export function CtaSection() {
                 }`}
               >
                 <Phone size={18} />
-                WhatsApp
+                {tBooking("whatsapp")}
               </button>
             </div>
 
@@ -173,7 +175,7 @@ export function CtaSection() {
                 />
                 <Input
                   type="text"
-                  placeholder="Your name"
+                  placeholder={t("name_placeholder")}
                   className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-2xl text-lg"
                 />
                 <Button
@@ -205,13 +207,13 @@ export function CtaSection() {
               >
                 <Input
                   type="text"
-                  placeholder="Your Telegram username (e.g., @username)"
+                  placeholder={t("telegram_placeholder")}
                   value={telegramUsername}
                   onChange={(e) => setTelegramUsername(e.target.value)}
                   className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-2xl text-lg"
                 />
                 <p className="text-white/50 text-sm font-body">
-                  Or contact us directly:
+                  {t("or_contact_direct")}
                 </p>
                 <Button
                   variant="gradient"
@@ -223,7 +225,7 @@ export function CtaSection() {
                   }
                 >
                   <MessageCircle size={18} />
-                  Open Telegram
+                  {t("open_telegram")}
                 </Button>
               </form>
             )}
@@ -247,13 +249,13 @@ export function CtaSection() {
               >
                 <Input
                   type="tel"
-                  placeholder="Your WhatsApp phone number"
+                  placeholder={t("whatsapp_placeholder")}
                   value={whatsappPhone}
                   onChange={(e) => setWhatsappPhone(e.target.value)}
                   className="h-14 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-2xl text-lg"
                 />
                 <p className="text-white/50 text-sm font-body">
-                  We'll respond within 1 hour
+                  {t("response_time")}
                 </p>
                 <Button
                   variant="gradient"
@@ -265,7 +267,7 @@ export function CtaSection() {
                   }
                 >
                   <Phone size={18} />
-                  Open WhatsApp
+                  {t("open_whatsapp")}
                 </Button>
               </form>
             )}

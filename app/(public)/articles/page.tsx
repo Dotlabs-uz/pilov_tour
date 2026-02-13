@@ -11,7 +11,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface ArticleCard {
@@ -24,6 +24,7 @@ const ArticlesPage = () => {
   const [articles, setArticles] = useState<ArticleCard[]>([]);
   const [loading, setLoading] = useState(true);
   const locale = useLocale();
+  const t = useTranslations("pages");
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -61,11 +62,10 @@ const ArticlesPage = () => {
       <div className="max-w-6xl mx-auto px-4 lg:px-0 py-12">
         <div className="mt-8 mb-8 text-center">
           <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground">
-            Articles
+            {t("articles_title")}
           </h1>
           <p className="mt-2 text-muted-foreground max-w-2xl mx-auto">
-            Insights, stories and travel ideas from our team — curated for
-            curious explorers.
+            {t("articles_subtitle")}
           </p>
         </div>
 
