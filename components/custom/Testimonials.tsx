@@ -2,39 +2,51 @@
 import { motion } from "framer-motion";
 import { Star, Quote, ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
-const testimonials = [
-  {
-    id: 1,
-    name: "Sophie L.",
-    location: "Paris",
-    text: "Best trip ever! Our guide Rustam was amazing – felt like traveling with a friend who knows all the secret spots.",
-    rating: 5,
-    tour: "Silk Road Vibes",
-    avatar: "🇫🇷",
-  },
-  {
-    id: 2,
-    name: "Marcus W.",
-    location: "Berlin",
-    text: "The home-cooked meals were insane. And sleeping in a yurt under the stars? Unforgettable.",
-    rating: 5,
-    tour: "Desert Escape",
-    avatar: "🇩🇪",
-  },
-  {
-    id: 3,
-    name: "Emma B.",
-    location: "Amsterdam",
-    text: "Small group, personal attention, and they showed us Uzbekistan that tourists never see. 10/10.",
-    rating: 5,
-    tour: "Hidden Khiva",
-    avatar: "🇳🇱",
-  },
-];
+interface Testimonial {
+  id: number;
+  nameKey: string;
+  locationKey: string;
+  textKey: string;
+  rating: number;
+  tourKey: string;
+  avatar: string;
+}
 
 export function Testimonials() {
+  const t = useTranslations("testimonials");
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const testimonials: Testimonial[] = [
+    {
+      id: 1,
+      nameKey: "testimonial_1_name",
+      locationKey: "testimonial_1_location",
+      textKey: "testimonial_1_text",
+      rating: 5,
+      tourKey: "testimonial_1_tour",
+      avatar: "🇫🇷",
+    },
+    {
+      id: 2,
+      nameKey: "testimonial_2_name",
+      locationKey: "testimonial_2_location",
+      textKey: "testimonial_2_text",
+      rating: 5,
+      tourKey: "testimonial_2_tour",
+      avatar: "🇩🇪",
+    },
+    {
+      id: 3,
+      nameKey: "testimonial_3_name",
+      locationKey: "testimonial_3_location",
+      textKey: "testimonial_3_text",
+      rating: 5,
+      tourKey: "testimonial_3_tour",
+      avatar: "🇳🇱",
+    },
+  ];
 
   const next = () => setActiveIndex((i) => (i + 1) % testimonials.length);
   const prev = () =>
@@ -52,12 +64,12 @@ export function Testimonials() {
           className="text-center mb-16"
         >
           <span className="text-gold font-body text-sm font-semibold tracking-wide uppercase mb-4 block">
-            Happy travelers
+            {t("badge")}
           </span>
           <h2 className="text-section mb-4">
-            Don't take
+            {t("title")}
             <br />
-            our word for it
+            {t("title_highlight")}
           </h2>
         </motion.div>
 
@@ -87,7 +99,7 @@ export function Testimonials() {
 
             {/* Quote */}
             <p className="font-body text-xl md:text-2xl text-white leading-relaxed mb-8">
-              "{testimonials[activeIndex].text}"
+              "{t(testimonials[activeIndex].textKey)}"
             </p>
 
             {/* Author */}
@@ -97,11 +109,11 @@ export function Testimonials() {
               </div>
               <div>
                 <p className="font-display text-lg font-bold text-white">
-                  {testimonials[activeIndex].name}
+                  {t(testimonials[activeIndex].nameKey)}
                 </p>
                 <p className="font-body text-sm text-white/60">
-                  {testimonials[activeIndex].location} •{" "}
-                  {testimonials[activeIndex].tour}
+                  {t(testimonials[activeIndex].locationKey)} •{" "}
+                  {t(testimonials[activeIndex].tourKey)}
                 </p>
               </div>
             </div>
@@ -151,15 +163,17 @@ export function Testimonials() {
           className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto text-center"
         >
           {[
-            { value: "2.5k+", label: "Travelers" },
-            { value: "4.9", label: "Rating" },
-            { value: "98%", label: "Would return" },
+            { valueKey: "stat_travelers_value", labelKey: "stat_travelers" },
+            { valueKey: "stat_rating_value", labelKey: "stat_rating" },
+            { valueKey: "stat_return_value", labelKey: "stat_return" },
           ].map((stat) => (
-            <div key={stat.label}>
+            <div key={stat.labelKey}>
               <p className="font-display text-3xl md:text-4xl font-bold text-gold mb-1">
-                {stat.value}
+                {t(stat.valueKey)}
               </p>
-              <p className="font-body text-sm text-white/60">{stat.label}</p>
+              <p className="font-body text-sm text-white/60">
+                {t(stat.labelKey)}
+              </p>
             </div>
           ))}
         </motion.div>
