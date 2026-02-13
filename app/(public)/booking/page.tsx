@@ -617,80 +617,84 @@ Comment: ${data.comment || "None"}
                     <DialogClose asChild>
                       <Button variant="outline">{t("cancel")}</Button>
                     </DialogClose>
-                    <DialogClose asChild>
-                      <Button
-                        type="button"
-                        disabled={!confirmed}
-                        onClick={async (e) => {
-                          e.preventDefault();
-                          if (!validateForm()) {
-                            toast({
-                              title: t("validation_error"),
-                              description: t("validation_message"),
-                              variant: "destructive",
-                            });
-                            return;
-                          }
-                          setIsLoading(true);
-                          try {
-                            const bookingsCollection = collection(
-                              db,
-                              "bookings",
-                            );
-                            await addDoc(bookingsCollection, {
-                              tourId: tourId || null,
-                              tourName: tourName || null,
-                              startDate: startDate || null,
-                              endDate: endDate || null,
-                              userId: userId || null,
-                              pricePerPerson: price || null,
-                              numberOfPeople: formData.numberOfPeople,
-                              totalPrice: parseFloat(
-                                totalPrice.replace(/,/g, ""),
-                              ),
-                              name: formData.name,
-                              phone: formData.phone,
-                              contactMethod: formData.contactMethod,
-                              whatsappTelegram: formData.whatsappTelegram,
-                              email: formData.email,
-                              comment: formData.comment,
-                              createdAt: serverTimestamp(),
-                              status: "pending",
-                            });
-                            await sendTelegramNotification(formData);
-                            setIsSubmitted(true);
-                            setFormData({
-                              name: "",
-                              phone: "",
-                              contactMethod: "whatsapp",
-                              whatsappTelegram: "",
-                              email: "",
-                              comment: "",
-                              numberOfPeople: 1,
-                            });
-                            setConfirmed(false);
-                            toast({
-                              title: t("booking_success"),
-                              description: t("booking_submitted"),
-                            });
-                            setTimeout(() => {
-                              setIsSubmitted(false);
-                            }, 3000);
-                          } catch (error) {
-                            console.error("Booking error:", error);
-                            toast({
-                              title: t("booking_error"),
-                              description: t("booking_error_message"),
-                              variant: "destructive",
-                            });
-                          } finally {
-                            setIsLoading(false);
-                          }
-                        }}
-                      >
-                        {t("accept")}
-                      </Button>
-                    </DialogClose>
+                    <Button
+                      type="button"
+                      disabled={!confirmed || isLoading}
+                      onClick={async (e) => {
+                        e.preventDefault();
+                        if (!validateForm()) {
+                          toast({
+                            title: t("validation_error"),
+                            description: t("validation_message"),
+                            variant: "destructive",
+                          });
+                          return;
+                        }
+                        setIsLoading(true);
+                        try {
+                          const bookingsCollection = collection(db, "bookings");
+                          await addDoc(bookingsCollection, {
+                            tourId: tourId || null,
+                            tourName: tourName || null,
+                            startDate: startDate || null,
+                            endDate: endDate || null,
+                            userId: userId || null,
+                            pricePerPerson: price || null,
+                            numberOfPeople: formData.numberOfPeople,
+                            totalPrice: parseFloat(
+                              totalPrice.replace(/,/g, ""),
+                            ),
+                            name: formData.name,
+                            phone: formData.phone,
+                            contactMethod: formData.contactMethod,
+                            whatsappTelegram: formData.whatsappTelegram,
+                            email: formData.email,
+                            comment: formData.comment,
+                            createdAt: serverTimestamp(),
+                            status: "pending",
+                          });
+                          await sendTelegramNotification(formData);
+                          setIsSubmitted(true);
+                          setFormData({
+                            name: "",
+                            phone: "",
+                            contactMethod: "whatsapp",
+                            whatsappTelegram: "",
+                            email: "",
+                            comment: "",
+                            numberOfPeople: 1,
+                          });
+                          setConfirmed(false);
+                          toast({
+                            title: t("booking_success"),
+                            description: t("booking_submitted"),
+                          });
+                          // Close the dialog and redirect after 2 seconds
+                          setTimeout(() => {
+                            setIsSubmitted(false);
+                            router.push("/trips");
+                          }, 2000);
+                        } catch (error) {
+                          console.error("Booking error:", error);
+                          toast({
+                            title: t("booking_error"),
+                            description: t("booking_error_message"),
+                            variant: "destructive",
+                          });
+                        } finally {
+                          setIsLoading(false);
+                        }
+                      }}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 size={18} className="animate-spin mr-2" />
+                          {t("sending")}
+                        </>
+                      ) : (
+                        t("accept")
+                      )}
+                    </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
