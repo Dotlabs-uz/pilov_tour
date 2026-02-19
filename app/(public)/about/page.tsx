@@ -78,7 +78,7 @@ const AboutPage = () => {
             src={uzbekWoman}
             alt="Local Uzbek woman"
             fill
-            style={{ objectFit: "cover" }}
+            className="object-cover"
             objectPosition="top"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-navy/90 via-navy/60 to-transparent" />
