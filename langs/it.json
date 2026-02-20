@@ -540,6 +540,25 @@
     "form_sending": "Invio in corso...",
     "success_message": "Grazie! Il tuo messaggio è stato inviato."
   },
+  "terms": {
+    "title": "Termini e Condizioni",
+    "last_updated": "Ultimo aggiornamento: 20 febbraio 2026",
+    "introduction_title": "Introduzione",
+    "introduction_text": "Questi Termini e Condizioni regolano l'uso del sito Pilavtour e dei nostri servizi. Utilizzando il sito o prenotando un tour accetti questi termini.",
+    "booking_title": "Prenotazione e Pagamento",
+    "booking_text": "Per prenotare un tour segui il flusso di prenotazione e fornisci le informazioni richieste. Potrebbe essere richiesto un deposito per confermare la prenotazione.",
+    "cancellations_title": "Cancellazioni e Rimborsi",
+    "cancellations_text": "Le condizioni di cancellazione variano in base al tour. Generalmente, cancellazioni effettuate 30 giorni prima della partenza ricevono un rimborso completo; cancellazioni successive possono comportare costi.",
+    "liability_title": "Responsabilità",
+    "liability_text": "Pilavtour agisce come organizzatore e adotta misure ragionevoli nella fornitura dei servizi. Non siamo responsabili per eventi al di fuori del nostro controllo (forza maggiore).",
+    "privacy_title": "Privacy e Dati",
+    "privacy_text": "Raccogliamo e trattiamo dati personali per fornire i nostri servizi. Consulta la nostra Informativa sulla privacy per i dettagli.",
+    "changes_title": "Modifiche a questi Termini",
+    "changes_text": "Possiamo aggiornare questi Termini di tanto in tanto. L'uso continuato del sito dopo le modifiche costituisce accettazione dei termini aggiornati.",
+    "contact_title": "Contatto",
+    "contact_text": "Se hai domande su questi Termini, contatta il nostro team.",
+    "contact_button": "Contattaci"
+  },
   "faq": {
     "title": "Domande frequenti",
     "subtitle": "Trova risposte alle domande comuni sui nostri tour e il processo di prenotazione.",

@@ -540,6 +540,25 @@
     "form_sending": "Yuborilmoqda...",
     "success_message": "Rahmat! Sizning xabar yuborildi."
   },
+  "terms": {
+    "title": "Shartlar va Qoidalar",
+    "last_updated": "Oxirgi yangilanish: 2026 yil 20-fevral",
+    "introduction_title": "Kirish",
+    "introduction_text": "Ushbu Shartlar Pilavtour veb-sayti va xizmatlaridan foydalanishingizni tartibga soladi. Saytdan foydalanganda yoki turni bron qilganda, siz ushbu shartlarga rozilik bildirasiz.",
+    "booking_title": "Bron qilish va To'lov",
+    "booking_text": "Turni bron qilish uchun bron jarayoniga rioya qiling va kerakli ma'lumotlarni taqdim eting. Bronni tasdiqlash uchun depozit talab qilinishi mumkin.",
+    "cancellations_title": "Bekor qilish va Qaytarish",
+    "cancellations_text": "Bekor qilish qoidalari turga bog'liq. Odatda, jo'nashdan 30 kun oldingi bekor qilishlar to'liq qaytariladi; keyingi bekor qilishlar uchun to'lov bo'lishi mumkin.",
+    "liability_title": "Mas'uliyat",
+    "liability_text": "Pilavtour tashkilotchi sifatida xizmatlarni taqdim etishda oqilona g'amxo'rlik qiladi. Biz boshqaruvimizdan tashqari holatlar uchun javobgar emasmiz (force majeure).",
+    "privacy_title": "Maxfiylik va Ma'lumotlar",
+    "privacy_text": "Xizmatlarni taqdim etish uchun biz shaxsiy ma'lumotlarni yig'amiz va qayta ishlaymiz. Ma'lumotlaringizni qanday boshqarishimizni ko'rish uchun Maxfiylik Siyosatimizni ko'rib chiqing.",
+    "changes_title": "Shartlardagi O'zgarishlar",
+    "changes_text": "Biz bu Shartlarni vaqti-vaqti bilan yangilashimiz mumkin. O'zgartirishlardan so'ng saytdan foydalanishni davom ettirish yangilangan shartlarni qabul qilishni anglatadi.",
+    "contact_title": "Aloqa",
+    "contact_text": "Agar ushbu Shartlar bo'yicha savollaringiz bo'lsa, iltimos jamoamiz bilan bog'laning.",
+    "contact_button": "Biz bilan aloqa qiling"
+  },
   "faq": {
     "title": "Tez-tez so'raladigan savollar",
     "subtitle": "Bizning turlar va bron qilish jarayoni haqida tez-tez so'raladigan savollarga javoblar toping.",

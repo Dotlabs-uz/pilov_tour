@@ -107,7 +107,7 @@ export default function ContactPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-cream pt-20 pb-20">
+    <main className="min-h-screen bg-cream pt-20 mt-10 pb-20">
       <div className="container mx-auto px-6">
         {/* Hero Section */}
         <motion.div

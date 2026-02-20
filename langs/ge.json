@@ -525,6 +525,25 @@
     "form_sending": "Wird gesendet...",
     "success_message": "Danke! Ihre Nachricht wurde gesendet."
   },
+  "terms": {
+    "title": "Allgemeine Geschäftsbedingungen",
+    "last_updated": "Zuletzt aktualisiert: 20. Februar 2026",
+    "introduction_title": "Einleitung",
+    "introduction_text": "Diese Allgemeinen Geschäftsbedingungen regeln Ihre Nutzung der Pilavtour-Website und Dienste. Durch die Nutzung unserer Website oder die Buchung einer Tour stimmen Sie diesen Bedingungen zu.",
+    "booking_title": "Buchung & Zahlung",
+    "booking_text": "Um eine Tour zu buchen, folgen Sie dem Buchungsprozess und geben Sie die erforderlichen Informationen an. Zur Bestätigung einer Buchung kann eine Anzahlung erforderlich sein.",
+    "cancellations_title": "Stornierungen & Rückerstattungen",
+    "cancellations_text": "Stornobedingungen variieren je nach Tour. In der Regel erhalten Stornierungen 30 Tage vor Abreise eine volle Rückerstattung; spätere Stornierungen können Gebühren nach sich ziehen.",
+    "liability_title": "Haftung",
+    "liability_text": "Pilavtour handelt als Veranstalter und übernimmt angemessene Sorgfalt bei der Erbringung der Dienstleistungen. Für Ereignisse außerhalb unserer Kontrolle (höhere Gewalt) haften wir nicht.",
+    "privacy_title": "Datenschutz & Daten",
+    "privacy_text": "Wir erfassen und verarbeiten personenbezogene Daten, um unsere Dienstleistungen zu erbringen. Bitte lesen Sie unsere Datenschutzrichtlinie, um zu erfahren, wie wir Ihre Daten behandeln.",
+    "changes_title": "Änderungen dieser Bedingungen",
+    "changes_text": "Wir können diese Bedingungen von Zeit zu Zeit aktualisieren. Die fortgesetzte Nutzung der Website nach Änderungen gilt als Zustimmung zu den aktualisierten Bedingungen.",
+    "contact_title": "Kontakt",
+    "contact_text": "Wenn Sie Fragen zu diesen Bedingungen haben, kontaktieren Sie bitte unser Team.",
+    "contact_button": "Kontaktieren Sie uns"
+  },
   "faq": {
     "title": "Häufig gestellte Fragen",
     "subtitle": "Finden Sie Antworten auf häufige Fragen zu unseren Touren und zum Buchungsprozess.",
