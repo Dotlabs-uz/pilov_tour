@@ -127,13 +127,16 @@ const Tours = () => {
               : [],
             style: data.style || "",
             maxGroupCount: (data as any).maxGroupCount || 0,
-          };
+            category: data.category || (data as any).category || "",
+          } as any;
         })
         .filter(Boolean) as FeaturedTourCardType[];
 
       const filteredTours = toursData.filter((tour) => {
         const matchesCategory =
-          activeCategory === null || (tour as any).category === activeCategory;
+          !activeCategory ||
+          activeCategory === "All" ||
+          (tour as any).category === activeCategory;
         const matchesSearch =
           tour.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           tour.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -225,10 +228,17 @@ const Tours = () => {
               {categories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => router.push(`/trips?category=${cat.name}`)}
+                  onClick={() => {
+                    if (cat.id === "all") {
+                      router.push("/trips");
+                    } else {
+                      router.push(`/trips?category=${cat.name}`);
+                    }
+                  }}
                   className={cn(
                     "px-5 py-2.5 rounded-full text-sm font-body font-medium whitespace-nowrap transition-all",
-                    activeCategory === cat.name
+                    (cat.id === "all" && !activeCategory) ||
+                      activeCategory === cat.name
                       ? "bg-coral text-white shadow-glow"
                       : "bg-secondary text-foreground hover:bg-secondary/80",
                   )}
