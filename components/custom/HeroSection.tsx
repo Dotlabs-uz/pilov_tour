@@ -15,12 +15,6 @@ import {
 export function HeroSection() {
   const t = useTranslations("HeroSection");
 
-  const floatingTags = [
-    { text: t("location_samarkand"), top: "20%", left: "60%", delay: 0 },
-    { text: t("location_bukhara"), top: "35%", left: "75%", delay: 0.5 },
-    { text: t("location_khiva"), top: "55%", left: "65%", delay: 1 },
-  ];
-
   const handleScrollToTours = () => {
     const section = document.getElementById("tours-section");
     if (section) {
@@ -30,22 +24,7 @@ export function HeroSection() {
 
   return (
     <section className="relative pt-20 md:pt-24 overflow-hidden bg-white md:overflow-visible">
-      {/* Floating Location Tags */}
-      {/* {floatingTags.map((tag, index) => (
-				<motion.div
-					key={tag.text}
-					initial={{ opacity: 0, scale: 0.8 }}
-					animate={{ opacity: 1, scale: 1 }}
-					transition={{ delay: 1 + tag.delay, duration: 0.5 }}
-					className="absolute hidden lg:flex items-center gap-2 px-4 py-2 rounded-full glass-dark text-white text-sm font-body"
-					style={{ top: tag.top, left: tag.left }}
-				>
-					<MapPin size={14} className="text-coral" />
-					{tag.text}
-				</motion.div>
-			))} */}
 
-      {/* Carousel with video slides */}
       <div className="relative h-[550px] md:h-[calc(100vh-6rem)] px-4 md:px-6 lg:px-8 pb-4 md:pb-6 lg:pb-8">
         <Carousel
           className="h-full rounded-2xl overflow-hidden"
@@ -54,13 +33,12 @@ export function HeroSection() {
           }}
         >
           <CarouselContent className="h-full">
-            {/* Slide 1 */}
             <CarouselItem className="h-full">
               <div className="relative h-full rounded-2xl overflow-hidden">
                 <div className="absolute inset-0 h-full w-full overflow-hidden bg-gray-700 rounded-2xl">
                   <video
                     className="h-full w-full object-cover"
-                    src="/banner1.mp4" // положи файл в public/ или укажи свой путь
+                    src="/banner1.mp4" 
                     autoPlay
                     muted
                     loop
@@ -128,7 +106,6 @@ export function HeroSection() {
               </div>
             </CarouselItem>
 
-            {/* Slide 2 */}
             <CarouselItem className="h-full">
               <div className="relative h-full rounded-2xl overflow-hidden">
                 <div
@@ -195,7 +172,6 @@ export function HeroSection() {
               </div>
             </CarouselItem>
 
-            {/* Slide 3 */}
             <CarouselItem className="h-full">
               <div className="relative h-full rounded-2xl overflow-hidden">
                 <div
@@ -267,29 +243,6 @@ export function HeroSection() {
           <CarouselNext className="hidden md:flex bg-white text-navy hover:bg-white/90 shadow-lg !right-2 !top-1/2 -translate-y-1/2" />
         </Carousel>
       </div>
-
-      {/* Scroll Indicator */}
-      {/* <motion.div
-				initial={{ opacity: 0 }}
-				animate={{ opacity: 1 }}
-				transition={{ delay: 1.5 }}
-				className="absolute bottom-10 left-1/2 -translate-x-1/2"
-			>
-				<motion.div
-					animate={{ y: [0, 10, 0] }}
-					transition={{ duration: 1.5, repeat: Infinity }}
-					className="flex flex-col items-center gap-2 text-white/60 text-sm font-body"
-				>
-					<span>Scroll to explore</span>
-					<div className="w-6 h-10 rounded-full border-2 border-white/30 flex items-start justify-center p-2">
-						<motion.div
-							animate={{ y: [0, 12, 0] }}
-							transition={{ duration: 1.5, repeat: Infinity }}
-							className="w-1.5 h-3 rounded-full bg-coral"
-						/>
-					</div>
-				</motion.div>
-			</motion.div> */}
     </section>
   );
 }
