@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { db } from "@/app/(public)/firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -69,7 +68,6 @@ interface Tour {
 }
 
 export default function ComparePage() {
-  const router = useRouter();
   const locale = useLocale() as Lang;
   const tr = useTranslations("compare");
   const common = useTranslations("common");
